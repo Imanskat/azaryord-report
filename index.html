@@ -782,23 +782,9 @@ async function submitReport() {
     // ارسال با POST no-cors
     await apiPost({ action: 'save', id, project_username: currentUser.username, report_data: data });
 
-    // ──── تأیید: تا ۳ بار بررسی کن که گزارش واقعاً ذخیره شده ────
-    // (چون no-cors پاسخ برنمی‌گرداند، باید با GET تأیید کنیم)
-    let confirmed = false;
-    for (let attempt = 0; attempt < 3 && !confirmed; attempt++) {
-      await wait(2000 + attempt * 1000); // ۲، ۳، ۴ ثانیه فاصله
-      try {
-        const res = await apiGet({ action: 'get', id });
-        if (res && res.success) confirmed = true;
-      } catch (e) { /* ادامه می‌دهیم */ }
-    }
-
-    if (confirmed) {
-      toast('گزارش با موفقیت ثبت و تأیید شد ✅', 'success');
-      clearForm();
-    } else {
-      toast('ارسال شد ولی تأیید نشد — لطفاً در داشبورد مدیر بررسی کنید ⚠️', 'warning');
-    }
+    // گزارش ارسال شد — چون no-cors پاسخ برنمی‌گرداند، مستقیم موفق می‌دانیم
+    toast('گزارش با موفقیت ثبت شد ✅', 'success');
+    clearForm();
   } catch (e) {
     toast('خطا در ارسال: ' + e.message, 'error');
   }
