@@ -1,0 +1,1412 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>سیستم گزارش‌دهی — آذریورد تبریز</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link href="https://cdn.jsdelivr.net/npm/vazirmatn@33.003/Vazirmatn-font-face.css" rel="stylesheet">
+<style>
+/* ===== CSS VARIABLES ===== */
+:root {
+  --primary:       #1e40af;
+  --primary-light: #3b82f6;
+  --primary-dark:  #1e3a8a;
+  --accent:        #7c3aed;
+  --accent-light:  #a78bfa;
+  --success:       #059669;
+  --danger:        #dc2626;
+  --warning:       #d97706;
+  --bg:            #f1f5f9;
+  --surface:       #ffffff;
+  --border:        #e2e8f0;
+  --text:          #1e293b;
+  --text-muted:    #64748b;
+  --radius:        12px;
+  --shadow:        0 4px 24px rgba(30,64,175,0.10);
+  --shadow-lg:     0 8px 40px rgba(30,64,175,0.16);
+}
+
+* { font-family: 'Vazirmatn', sans-serif; box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); min-height: 100vh; }
+
+/* ===== SCREENS ===== */
+.screen { display: none; min-height: 100vh; }
+.screen.active { display: block; }
+
+/* ===== LOGIN ===== */
+#loginScreen {
+  background: linear-gradient(135deg, #1e3a8a 0%, #7c3aed 100%);
+  display: none; align-items: center; justify-content: center; padding: 20px;
+}
+#loginScreen.active { display: flex; }
+
+.login-card {
+  background: white; border-radius: 24px;
+  padding: 48px 40px; width: 100%; max-width: 440px;
+  box-shadow: 0 32px 64px rgba(0,0,0,0.3);
+}
+.login-logo {
+  width: 72px; height: 72px;
+  background: linear-gradient(135deg, #1e40af, #7c3aed);
+  border-radius: 20px; display: flex; align-items: center; justify-content: center;
+  font-size: 28px; font-weight: 800; color: white; margin: 0 auto 20px;
+}
+.login-title { text-align: center; margin-bottom: 32px; }
+.login-title h1 { font-size: 24px; font-weight: 800; color: var(--primary-dark); }
+.login-title p  { color: var(--text-muted); margin-top: 6px; font-size: 14px; }
+
+.role-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 24px; }
+.role-tab {
+  padding: 12px; border: 2px solid var(--border); border-radius: 10px;
+  cursor: pointer; text-align: center; transition: all 0.2s; background: white;
+}
+.role-tab:hover  { border-color: var(--primary-light); background: #eff6ff; }
+.role-tab.active { border-color: var(--primary); background: #eff6ff; }
+.role-tab .icon  { font-size: 22px; margin-bottom: 4px; }
+.role-tab .label { font-size: 13px; font-weight: 600; color: var(--text); }
+
+.form-group { margin-bottom: 16px; }
+.form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; }
+.inp {
+  width: 100%; padding: 11px 14px; border: 2px solid var(--border); border-radius: 10px;
+  font-size: 15px; transition: all 0.2s; background: white; color: var(--text);
+  font-family: 'Vazirmatn', sans-serif;
+}
+.inp:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(30,64,175,0.1); }
+
+.btn { width: 100%; padding: 13px; border: none; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.2s; font-family: 'Vazirmatn', sans-serif; }
+.btn-primary { background: linear-gradient(135deg, #1e40af, #7c3aed); color: white; }
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(30,64,175,0.35); }
+.btn-secondary { background: white; color: var(--primary); border: 2px solid var(--primary); width: auto; padding: 9px 20px; font-size: 14px; }
+.btn-secondary:hover { background: #eff6ff; }
+.btn-danger-sm  { background: var(--danger); color: white; border: none; padding: 7px 14px; border-radius: 7px; font-size: 13px; cursor: pointer; font-family: 'Vazirmatn', sans-serif; transition: all 0.2s; }
+.btn-danger-sm:hover  { background: #b91c1c; }
+.btn-success-sm { background: var(--success); color: white; border: none; padding: 7px 14px; border-radius: 7px; font-size: 13px; cursor: pointer; font-family: 'Vazirmatn', sans-serif; transition: all 0.2s; }
+.btn-success-sm:hover { background: #047857; }
+.btn-success-sm:disabled { background: #9ca3af; cursor: not-allowed; }
+.btn-add { background: #eff6ff; color: var(--primary); border: 2px solid var(--primary-light); padding: 8px 18px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Vazirmatn', sans-serif; transition: all 0.2s; }
+.btn-add:hover { background: #dbeafe; }
+
+.login-error { background: #fef2f2; border: 1px solid #fecaca; color: #dc2626; padding: 10px 14px; border-radius: 8px; font-size: 13px; margin-bottom: 14px; display: none; text-align: center; }
+
+/* ===== NAVBAR ===== */
+.navbar {
+  background: linear-gradient(135deg, #1e3a8a, #7c3aed);
+  padding: 0 24px; display: flex; align-items: center; justify-content: space-between;
+  height: 60px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+}
+.navbar-brand { display: flex; align-items: center; gap: 10px; }
+.navbar-logo { width: 36px; height: 36px; background: rgba(255,255,255,0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; color: white; }
+.navbar-title    { color: white; font-size: 16px; font-weight: 700; }
+.navbar-subtitle { color: rgba(255,255,255,0.7); font-size: 12px; }
+.navbar-actions  { display: flex; align-items: center; gap: 10px; }
+.btn-logout { background: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 7px 14px; border-radius: 8px; font-size: 13px; cursor: pointer; font-family: 'Vazirmatn', sans-serif; transition: all 0.2s; }
+.btn-logout:hover { background: rgba(255,255,255,0.25); }
+
+/* ===== REPORTER PANEL ===== */
+#reporterScreen { background: var(--bg); }
+.reporter-container { max-width: 1000px; margin: 0 auto; padding: 24px 16px; }
+
+.section-card { background: white; border-radius: var(--radius); padding: 24px; margin-bottom: 20px; box-shadow: var(--shadow); }
+.section-header {
+  background: linear-gradient(135deg, #1e40af, #7c3aed); color: white;
+  padding: 12px 18px; border-radius: 8px; font-size: 16px; font-weight: 700; margin-bottom: 20px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.section-badge { background: rgba(255,255,255,0.25); padding: 2px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+
+.form-grid   { display: grid; gap: 16px; }
+.form-grid-2 { grid-template-columns: 1fr 1fr; }
+.form-grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+
+.field-label    { font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; display: block; }
+.inp-readonly   { background: #f8fafc; color: var(--text); cursor: default; }
+
+/* ===== TABLES ===== */
+.table-wrap { overflow-x: auto; margin: 12px 0; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+thead th { background: #f1f5f9; padding: 10px 12px; text-align: right; font-weight: 600; color: var(--text-muted); border: 1px solid var(--border); white-space: nowrap; }
+tbody td { padding: 8px 10px; border: 1px solid var(--border); }
+tbody tr:nth-child(even) { background: #fafafa; }
+.inp-sm { padding: 6px 10px; font-size: 13px; border: 1px solid var(--border); border-radius: 6px; width: 100%; min-width: 80px; font-family: 'Vazirmatn', sans-serif; }
+.inp-sm:focus { outline: none; border-color: var(--primary); }
+
+/* Labor totals */
+.totals-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
+.total-box { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 10px; padding: 14px; text-align: center; }
+.total-box .total-label { font-size: 12px; color: var(--primary); font-weight: 600; }
+.total-box .total-val   { font-size: 26px; font-weight: 800; color: var(--primary-dark); }
+
+/* Signatures */
+.sig-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.sig-box  { border: 2px dashed var(--border); border-radius: 10px; padding: 16px; text-align: center; }
+.sig-box p { font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 10px; }
+.sig-upload-btn { display: inline-block; background: #eff6ff; color: var(--primary); padding: 7px 14px; border-radius: 7px; font-size: 13px; cursor: pointer; font-weight: 600; }
+
+/* Action bar */
+.action-bar { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 8px; }
+.btn-submit { background: linear-gradient(135deg, #1e40af, #7c3aed); color: white; border: none; padding: 14px 36px; border-radius: 10px; font-size: 16px; font-weight: 700; cursor: pointer; font-family: 'Vazirmatn', sans-serif; transition: all 0.2s; }
+.btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(30,64,175,0.35); }
+.btn-pdf { background: #059669; color: white; border: none; padding: 12px 28px; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Vazirmatn', sans-serif; transition: all 0.2s; }
+.btn-pdf:hover { background: #047857; }
+
+/* Drafts */
+.draft-bar { background: #f0fdf4; border: 1px solid #a7f3d0; border-radius: 10px; padding: 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.draft-row { display: flex; gap: 8px; }
+.draft-row .inp { flex: 1; }
+
+/* ===== MANAGER PANEL ===== */
+#managerScreen { background: var(--bg); }
+.manager-container { max-width: 1100px; margin: 0 auto; padding: 24px 16px; }
+
+.stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 24px; }
+.stat-card { background: white; border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); text-align: center; }
+.stat-card .stat-val   { font-size: 32px; font-weight: 800; color: var(--primary); }
+.stat-card .stat-label { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+
+.filter-bar { background: white; border-radius: var(--radius); padding: 16px 20px; margin-bottom: 20px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; box-shadow: var(--shadow); }
+.filter-bar select, .filter-bar input { padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 13px; font-family: 'Vazirmatn', sans-serif; }
+
+.report-list { display: flex; flex-direction: column; gap: 12px; }
+.report-card {
+  background: white; border-radius: var(--radius); padding: 18px 20px; box-shadow: var(--shadow);
+  border-right: 4px solid var(--primary); transition: all 0.2s;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+}
+.report-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+.report-card-info    { flex: 1; }
+.report-card-title   { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+.report-card-meta    { font-size: 12px; color: var(--text-muted); display: flex; gap: 14px; flex-wrap: wrap; }
+.report-card-actions { display: flex; gap: 8px; flex-shrink: 0; }
+
+/* Pagination */
+.pagination { display: flex; justify-content: center; align-items: center; gap: 12px; margin-top: 18px; padding: 12px; }
+.pagination span { font-size: 13px; color: var(--text-muted); }
+
+/* ===== MODAL ===== */
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1000; align-items: center; justify-content: center; padding: 20px; overflow-y: auto; }
+.modal-overlay.open { display: flex; }
+.modal-box { background: white; border-radius: 16px; padding: 32px; max-width: 960px; width: 100%; max-height: 90vh; overflow-y: auto; }
+.modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.modal-title  { font-size: 20px; font-weight: 800; color: var(--primary-dark); }
+.modal-close  { background: #f1f5f9; border: none; width: 36px; height: 36px; border-radius: 8px; cursor: pointer; font-size: 18px; }
+
+/* ===== PDF VIEW ===== */
+#pdfView { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 9000; background: #f3f4f6; overflow-y: auto; }
+.pdf-toolbar { background: linear-gradient(135deg, #1e3a8a, #7c3aed); padding: 10px 16px; display: flex; gap: 8px; align-items: center; position: sticky; top: 0; z-index: 100; }
+.pdf-toolbar button { background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.4); border-radius: 6px; padding: 9px 16px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: 'Vazirmatn', sans-serif; }
+.pdf-toolbar button.print-btn { flex: 1; background: white; color: var(--primary); }
+#pdfContainer { max-width: 210mm; margin: 12px auto; background: white; padding: 28px 32px; border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); direction: rtl; font-family: 'Vazirmatn', sans-serif; font-size: 13px; }
+
+/* PDF inner styles */
+.pdf-header    { border-bottom: 4px solid #1e40af; padding-bottom: 16px; margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; }
+.pdf-logo      { width: 70px; height: 70px; background: linear-gradient(135deg, #1e40af, #7c3aed); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 28px; font-weight: 800; flex-shrink: 0; }
+.pdf-company-info  { flex: 1; text-align: center; padding: 0 16px; }
+.pdf-company-name  { font-size: 24px; font-weight: 800; color: #1e40af; }
+.pdf-report-title  { font-size: 16px; color: #4b5563; margin-top: 4px; }
+.pdf-meta          { font-size: 12px; color: #6b7280; text-align: left; }
+.pdf-section       { margin-bottom: 20px; page-break-inside: avoid; }
+.pdf-section-title { background: #1e40af; color: white; padding: 8px 14px; font-size: 14px; font-weight: 700; border-radius: 5px; margin-bottom: 12px; }
+.pdf-table         { width: 100%; border-collapse: collapse; font-size: 12px; margin: 8px 0; }
+.pdf-table th      { background: #e0e7ff; color: #1e40af; padding: 8px 10px; text-align: right; font-weight: 700; border: 1px solid #c7d2fe; }
+.pdf-table td      { padding: 7px 10px; border: 1px solid #e5e7eb; text-align: right; }
+.pdf-table tr:nth-child(even) { background: #f9fafb; }
+.pdf-info-grid   { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 10px 0; }
+.pdf-info-item   { display: flex; padding: 7px; background: #f9fafb; border-radius: 5px; font-size: 12px; }
+.pdf-info-label  { font-weight: 600; color: #1e40af; margin-left: 8px; white-space: nowrap; }
+.pdf-info-value  { color: #374151; }
+.two-col         { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.compact-text    { background: #f9fafb; padding: 10px; border-radius: 5px; font-size: 12px; line-height: 1.7; }
+.pdf-footer      { margin-top: 32px; padding-top: 16px; border-top: 2px solid #e5e7eb; }
+.pdf-signatures  { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; margin-top: 40px; }
+.pdf-signature-box { text-align: center; padding: 12px; border: 2px dashed #d1d5db; border-radius: 8px; min-height: 90px; }
+.pdf-signature-label { font-weight: 600; color: #4b5563; display: block; font-size: 12px; }
+
+/* ===== TOAST & LOADING ===== */
+#toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%); background: #1e293b; color: white; padding: 12px 24px; border-radius: 10px; font-size: 14px; z-index: 9999; opacity: 0; transition: opacity 0.3s; pointer-events: none; white-space: nowrap; max-width: 90vw; text-align: center; }
+#toast.show    { opacity: 1; }
+#toast.error   { background: #dc2626; }
+#toast.success { background: #059669; }
+#toast.warning { background: #d97706; }
+
+#loadingOverlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 8000; align-items: center; justify-content: center; }
+#loadingOverlay.show { display: flex; }
+.loading-box { background: white; border-radius: 16px; padding: 36px; text-align: center; }
+.spinner { border: 4px solid #f1f5f9; border-top: 4px solid var(--primary); border-radius: 50%; width: 48px; height: 48px; animation: spin 1s linear infinite; margin: 0 auto 16px; }
+@keyframes spin { 100% { transform: rotate(360deg); } }
+
+.empty-state       { text-align: center; padding: 48px; color: var(--text-muted); }
+.empty-state .icon { font-size: 48px; margin-bottom: 12px; }
+
+/* ===== PRINT ===== */
+@media print {
+  body { background: white !important; }
+  .screen, .navbar, #loadingOverlay { display: none !important; }
+  #pdfView { position: static !important; display: block !important; overflow: visible !important; background: white !important; }
+  .pdf-toolbar { display: none !important; }
+  #pdfContainer { max-width: 100% !important; margin: 0 !important; padding: 0 !important; box-shadow: none !important; border-radius: 0 !important; }
+  .pdf-section { page-break-inside: avoid; }
+  @page { size: A4; margin: 12mm; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 640px) {
+  .stats-row   { grid-template-columns: 1fr 1fr; }
+  .sig-grid    { grid-template-columns: 1fr; }
+  .totals-grid { grid-template-columns: 1fr; }
+  .draft-bar   { grid-template-columns: 1fr; }
+  .login-card  { padding: 32px 24px; }
+  .two-col         { grid-template-columns: 1fr; }
+  .pdf-info-grid   { grid-template-columns: 1fr; }
+  .pdf-signatures  { grid-template-columns: 1fr; }
+  .form-grid-2, .form-grid-3 { grid-template-columns: 1fr; }
+  .report-card { flex-direction: column; align-items: flex-start; }
+  .report-card-actions { width: 100%; justify-content: flex-end; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════ LOGIN ═══════════════════════ -->
+<div id="loginScreen" class="screen active">
+  <div class="login-card">
+    <div class="login-logo">آ</div>
+    <div class="login-title">
+      <h1>آذریورد تبریز</h1>
+      <p>سیستم گزارش‌دهی روزانه پروژه‌ها</p>
+    </div>
+    <div class="role-tabs">
+      <div class="role-tab active" id="tab-reporter" onclick="selectRole('reporter')">
+        <div class="icon">📋</div><div class="label">گزارش‌دهنده</div>
+      </div>
+      <div class="role-tab" id="tab-manager" onclick="selectRole('manager')">
+        <div class="icon">📊</div><div class="label">مدیر</div>
+      </div>
+    </div>
+    <div class="login-error" id="loginError">نام کاربری یا رمز عبور اشتباه است</div>
+    <div class="form-group">
+      <label class="field-label">نام کاربری</label>
+      <input type="text" id="loginUser" class="inp" placeholder="نام کاربری را وارد کنید" autocomplete="off">
+    </div>
+    <div class="form-group">
+      <label class="field-label">رمز عبور</label>
+      <input type="password" id="loginPass" class="inp" placeholder="رمز عبور را وارد کنید"
+             onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <button class="btn btn-primary" onclick="doLogin()">ورود به سیستم</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════ REPORTER PANEL ═══════════════════════ -->
+<div id="reporterScreen" class="screen">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <div class="navbar-logo">آ</div>
+      <div>
+        <div class="navbar-title">آذریورد تبریز</div>
+        <div class="navbar-subtitle" id="navProjectName">—</div>
+      </div>
+    </div>
+    <div class="navbar-actions">
+      <button class="btn-logout" onclick="doLogout()">خروج</button>
+    </div>
+  </nav>
+
+  <div class="reporter-container">
+
+    <!-- پیش‌نویس‌ها -->
+    <div class="section-card">
+      <div class="section-header">📁 پیش‌نویس‌ها و الگوها</div>
+      <div class="draft-bar">
+        <div>
+          <label class="field-label">ذخیره پیش‌نویس جدید</label>
+          <div class="draft-row">
+            <input type="text" id="draftName" class="inp" placeholder="نام پیش‌نویس...">
+            <button class="btn-success-sm" onclick="saveAsDraft()">ذخیره</button>
+          </div>
+        </div>
+        <div>
+          <label class="field-label">بارگذاری پیش‌نویس</label>
+          <div class="draft-row">
+            <select id="draftSelect" class="inp"><option value="">انتخاب پیش‌نویس...</option></select>
+            <button class="btn-add" onclick="loadSelectedDraft()">بارگذاری</button>
+            <button class="btn-danger-sm" onclick="deleteSelectedDraft()">حذف</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- اطلاعات گزارش -->
+    <div class="section-card">
+      <div class="section-header">📋 اطلاعات گزارش</div>
+      <div class="form-grid form-grid-3">
+        <div><label class="field-label">شماره گزارش</label><input type="text" id="reportNumber" class="inp" placeholder="RPT-2024-001"></div>
+        <div><label class="field-label">تاریخ شمسی</label><input type="text" id="reportDate" class="inp" placeholder="1403/01/01"></div>
+        <div><label class="field-label">ساعت ثبت</label><input type="time" id="reportTime" class="inp"></div>
+      </div>
+    </div>
+
+    <!-- اطلاعات پروژه -->
+    <div class="section-card">
+      <div class="section-header">🏗️ اطلاعات پروژه</div>
+      <div class="form-grid form-grid-2" style="margin-bottom:16px;">
+        <div style="grid-column:span 2">
+          <label class="field-label">نام پروژه</label>
+          <input type="text" id="projectNameDisplay" class="inp inp-readonly" readonly>
+        </div>
+        <div><label class="field-label">نام کارگاه</label><input type="text" id="siteLocation" class="inp inp-readonly" readonly></div>
+        <div><label class="field-label">کارفرما</label><input type="text" id="employer" class="inp inp-readonly" readonly></div>
+        <div><label class="field-label">سرپرست کارگاه</label><input type="text" id="supervisor" class="inp inp-readonly" readonly></div>
+        <div>
+          <label class="field-label">شیفت کاری</label>
+          <select id="workShift" class="inp">
+            <option value="">انتخاب کنید</option>
+            <option>صبح</option><option>عصر</option><option>شب</option><option>24 ساعته</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-grid form-grid-2">
+        <div>
+          <label class="field-label">وضعیت آب و هوا</label>
+          <select id="weatherCondition" class="inp">
+            <option value="">انتخاب کنید</option>
+            <option>آفتابی</option><option>ابری</option><option>بارانی</option><option>برفی</option><option>مه آلود</option>
+          </select>
+        </div>
+        <div><label class="field-label">دمای هوا (°C)</label><input type="number" id="temperature" class="inp" placeholder="مثال: 18"></div>
+      </div>
+    </div>
+
+    <!-- فعالیت‌ها -->
+    <div class="section-card">
+      <div class="section-header">⚙️ فعالیت‌های انجام شده امروز</div>
+      <button class="btn-add" style="margin-bottom:12px;" onclick="addActivity()">+ افزودن فعالیت</button>
+      <div class="table-wrap">
+        <table><thead><tr><th style="width:25%">نوع فعالیت</th><th style="width:45%">شرح عملیات</th><th style="width:18%">وضعیت</th><th style="width:12%">حذف</th></tr></thead>
+        <tbody id="activitiesTable"></tbody></table>
+      </div>
+      <div style="margin-top:16px;">
+        <label class="field-label">برنامه فعالیت‌های آتی</label>
+        <textarea id="futureActivities" class="inp" rows="3" placeholder="برنامه روز آینده..."></textarea>
+      </div>
+    </div>
+
+    <!-- نیروی انسانی -->
+    <div class="section-card">
+      <div class="section-header">👷 نیروی انسانی</div>
+      <div class="totals-grid">
+        <div class="total-box"><div class="total-label">نیروی اجرایی</div><div class="total-val" id="executiveTotal">0</div></div>
+        <div class="total-box"><div class="total-label">نیروی ستادی</div><div class="total-val" id="staffTotal">0</div></div>
+        <div class="total-box"><div class="total-label">کل نیروی انسانی</div><div class="total-val" id="laborGrandTotal">0</div></div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <strong>نیروی اجرایی</strong>
+        <button class="btn-add" onclick="addExecutiveLabor()">+ افزودن</button>
+      </div>
+      <div class="table-wrap">
+        <table><thead><tr><th>نام و نام خانوادگی</th><th>سمت</th><th>ساعت</th><th>حضور</th><th>توضیحات</th><th>حذف</th></tr></thead>
+        <tbody id="executiveLaborTable"></tbody></table>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin:16px 0 10px;">
+        <strong>نیروی ستادی</strong>
+        <button class="btn-add" onclick="addStaffLabor()">+ افزودن</button>
+      </div>
+      <div class="table-wrap">
+        <table><thead><tr><th>نام و نام خانوادگی</th><th>سمت</th><th>ساعت</th><th>حضور</th><th>توضیحات</th><th>حذف</th></tr></thead>
+        <tbody id="staffLaborTable"></tbody></table>
+      </div>
+    </div>
+
+    <!-- ماشین‌آلات -->
+    <div class="section-card">
+      <div class="section-header">🚜 ماشین‌آلات <span class="section-badge">جمع: <span id="machineryTotal">0</span> دستگاه</span></div>
+      <button class="btn-add" style="margin-bottom:12px;" onclick="addMachinery()">+ افزودن ماشین‌آلات</button>
+      <div class="table-wrap">
+        <table><thead><tr><th>نام دستگاه</th><th>مدل</th><th>وضعیت</th><th>ساعت کارکرد</th><th>توضیحات</th><th>حذف</th></tr></thead>
+        <tbody id="machineryTable"></tbody></table>
+      </div>
+    </div>
+
+    <!-- خودروها -->
+    <div class="section-card">
+      <div class="section-header">🚗 خودروهای شرکتی <span class="section-badge">جمع: <span id="vehicleTotal">0</span> خودرو</span></div>
+      <button class="btn-add" style="margin-bottom:12px;" onclick="addCompanyVehicle()">+ افزودن خودرو</button>
+      <div class="table-wrap">
+        <table><thead><tr><th>خودرو</th><th>نام راننده</th><th>وضعیت</th><th>توضیحات</th><th>حذف</th></tr></thead>
+        <tbody id="companyVehiclesTable"></tbody></table>
+      </div>
+    </div>
+
+    <!-- مصالح -->
+    <div class="section-card">
+      <div class="section-header">🧱 مصالح مصرفی</div>
+      <button class="btn-add" style="margin-bottom:12px;" onclick="addMaterial()">+ افزودن مصالح</button>
+      <div class="table-wrap">
+        <table><thead><tr><th>نوع مصالح</th><th>مقدار</th><th>واحد</th><th>توضیحات</th><th>حذف</th></tr></thead>
+        <tbody id="materialsTable"></tbody></table>
+      </div>
+    </div>
+
+    <!-- مشکلات -->
+    <div class="section-card">
+      <div class="section-header">⚠️ مشکلات و تأخیرات</div>
+      <textarea id="problems" class="inp" rows="4" placeholder="مشکلات اجرایی، کمبود مصالح، خرابی ماشین‌آلات..."></textarea>
+    </div>
+
+    <!-- ایمنی -->
+    <div class="section-card">
+      <div class="section-header">🦺 گزارش ایمنی (HSE)</div>
+      <div class="form-grid form-grid-2" style="margin-bottom:16px;">
+        <div>
+          <label class="field-label">وضعیت ایمنی</label>
+          <select id="safetyStatus" class="inp"><option>عالی</option><option>خوب</option><option>متوسط</option><option>نیاز به بهبود</option></select>
+        </div>
+        <div><label class="field-label">حوادث</label><input type="text" id="incidents" class="inp" placeholder="گزارش حوادث (در صورت وقوع)"></div>
+      </div>
+      <label class="field-label">تجهیزات ایمنی</label>
+      <textarea id="safetyEquipment" class="inp" rows="3" placeholder="کلاه ایمنی، کفش ایمنی، دستکش..."></textarea>
+    </div>
+
+    <!-- تصاویر -->
+    <div class="section-card">
+      <div class="section-header">📷 تصاویر پروژه</div>
+      <input type="file" id="projectImages" class="inp" accept="image/*" multiple onchange="handleImageUpload(event)">
+      <div id="imagePreview" style="display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;"></div>
+    </div>
+
+    <!-- توضیحات نهایی -->
+    <div class="section-card">
+      <div class="section-header">📝 توضیحات نهایی</div>
+      <textarea id="finalComments" class="inp" rows="4" placeholder="توضیحات مدیریتی و فنی اضافی..."></textarea>
+    </div>
+
+    <!-- امضاها -->
+    <div class="section-card">
+      <div class="section-header">✍️ مهر و امضای دیجیتال</div>
+      <div class="sig-grid">
+        <div class="sig-box">
+          <p>امضای سرپرست کارگاه</p>
+          <div id="sig1Preview" style="display:none;margin-bottom:8px;"><img id="sig1Img" src="" style="max-height:80px;max-width:100%;border-radius:6px;"></div>
+          <label class="sig-upload-btn">📎 آپلود امضا<input type="file" accept="image/*" style="display:none" onchange="handleSigUpload(event,'sig1Img','sig1Preview','sig1Data')"></label>
+          <input type="hidden" id="sig1Data">
+        </div>
+        <div class="sig-box">
+          <p>امضای مهندس ناظر</p>
+          <div id="sig2Preview" style="display:none;margin-bottom:8px;"><img id="sig2Img" src="" style="max-height:80px;max-width:100%;border-radius:6px;"></div>
+          <label class="sig-upload-btn">📎 آپلود امضا<input type="file" accept="image/*" style="display:none" onchange="handleSigUpload(event,'sig2Img','sig2Preview','sig2Data')"></label>
+          <input type="hidden" id="sig2Data">
+        </div>
+        <div class="sig-box">
+          <p>مهر شرکت / پیمانکار</p>
+          <div id="sig3Preview" style="display:none;margin-bottom:8px;"><img id="sig3Img" src="" style="max-height:80px;max-width:100%;border-radius:6px;"></div>
+          <label class="sig-upload-btn">📎 آپلود مهر<input type="file" accept="image/*" style="display:none" onchange="handleSigUpload(event,'sig3Img','sig3Preview','sig3Data')"></label>
+          <input type="hidden" id="sig3Data">
+        </div>
+      </div>
+    </div>
+
+    <!-- دکمه‌های عمل -->
+    <div class="action-bar">
+      <button class="btn-pdf" onclick="generatePDF()">📄 پیش‌نمایش PDF</button>
+      <button class="btn-submit" onclick="submitReport()">📤 ثبت و ارسال گزارش</button>
+    </div>
+    <br>
+  </div><!-- /reporter-container -->
+</div><!-- /reporterScreen -->
+
+<!-- ═══════════════════════ MANAGER PANEL ═══════════════════════ -->
+<div id="managerScreen" class="screen">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <div class="navbar-logo">آ</div>
+      <div>
+        <div class="navbar-title">آذریورد تبریز</div>
+        <div class="navbar-subtitle">پنل مدیریت</div>
+      </div>
+    </div>
+    <div class="navbar-actions">
+      <button class="btn-logout" onclick="doLogout()">خروج</button>
+    </div>
+  </nav>
+
+  <div class="manager-container">
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-val" id="statTotal">—</div><div class="stat-label">کل گزارش‌ها</div></div>
+      <div class="stat-card"><div class="stat-val" id="statToday">—</div><div class="stat-label">گزارش امروز</div></div>
+      <div class="stat-card"><div class="stat-val" id="statProjects">—</div><div class="stat-label">پروژه فعال</div></div>
+      <div class="stat-card"><div class="stat-val" id="statWeek">—</div><div class="stat-label">گزارش این هفته</div></div>
+    </div>
+
+    <div class="filter-bar">
+      <select id="filterProject" style="min-width:160px;"></select>
+      <input type="text" id="filterSearch" placeholder="جستجو: شماره، تاریخ، شیفت..." style="flex:1;min-width:160px;">
+      <button class="btn-secondary" onclick="applyFilters()">🔍 جستجو</button>
+      <button class="btn-secondary" onclick="loadManagerReports()">🔄 بروزرسانی</button>
+    </div>
+
+    <div id="reportList" class="report-list">
+      <div class="empty-state"><div class="icon">⏳</div><p>در حال بارگذاری گزارش‌ها...</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ REPORT MODAL ═══════════════════════ -->
+<div class="modal-overlay" id="reportModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-title" id="modalTitle">جزئیات گزارش</div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn-success-sm" onclick="generatePDFFromModal()">📄 PDF</button>
+        <button class="modal-close" onclick="closeModal()">✕</button>
+      </div>
+    </div>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<!-- PDF View -->
+<div id="pdfView">
+  <div class="pdf-toolbar">
+    <button onclick="closePdfView()">← برگشت</button>
+    <button class="print-btn" onclick="window.print()">🖨️ ذخیره / چاپ PDF</button>
+  </div>
+  <div id="pdfContainer"></div>
+</div>
+
+<!-- Loading -->
+<div id="loadingOverlay">
+  <div class="loading-box">
+    <div class="spinner"></div>
+    <p style="color:#64748b;" id="loadingText">لطفاً صبر کنید...</p>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<!-- ═══════════════════════ JAVASCRIPT ═══════════════════════ -->
+<script>
+/* ═══════════════════════════════════════════════════════════
+ *  ⚙️  آدرس وب‌اپ Google Apps Script را اینجا وارد کنید
+ *  بعد از Deploy، آدرس exec را کپی کنید و جایگزین کنید
+ * ═══════════════════════════════════════════════════════════ */
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbwVqUJAVDtkFMnGX9GnT4liiTFOXefazWCMRKKtw4LNh2CKhulLaB5cebRQ8H_7BCkcWA/exec'
+/* ═══════════════ کاربران (رمزها فعلاً سمت کلاینت — توجه: ایمن نیست) ═══════════════
+ * ⚠️  نکته امنیتی: این کاربران و رمزها در کد HTML قابل مشاهده هستند.
+ *     برای محیط تولید، احراز هویت باید به سرور منتقل شود.
+ * ═══════════════════════════════════════════════════════════════════════════════════ */
+const USERS = {
+  'noor':     { pass: '1234', role: 'reporter', project: 'پروژه عملیات تکمیل بیمارستان 160 تختخوابی جایگزین امام خمینی (ره) شهرستان نور' },
+  'bonab':    { pass: '1234', role: 'reporter', project: 'احداث مجموعه اداری بناب' },
+  'maraghe':  { pass: '1234', role: 'reporter', project: 'بیمارستان ۱۶۳ تختخوابی مراغه - قرارداد احداث ساختمان آموزشی' },
+  'chitgar':  { pass: '1234', role: 'reporter', project: 'پروژه عملیات تکمیل مجتمع قضایی خانواده چیتگر (۶ طبقه)' },
+  'hafttir':  { pass: '1234', role: 'reporter', project: 'پروژه مسکونی هفت تیر' },
+  'rezaei':   { pass: '1234', role: 'reporter', project: 'پروژه پژوهشکده شهید رضایی' },
+  'sefid':    { pass: '1234', role: 'reporter', project: 'پروژه شهرک سفید' },
+  'soleiman': { pass: '1234', role: 'reporter', project: 'پروژه سلیمان آباد' },
+  'iman':     { pass: 'iman', role: 'manager' },
+};
+
+const PROJECT_INFO = {
+  'پروژه عملیات تکمیل بیمارستان 160 تختخوابی جایگزین امام خمینی (ره) شهرستان نور':
+    { siteLocation: 'نور', employer: 'سازمان مجری ساختمان‌ها و تأسیسات دولتی و عمومی', supervisor: 'مهندس غلامی' },
+  'احداث مجموعه اداری بناب':
+    { siteLocation: 'بناب', employer: '—', supervisor: 'مهندس ماجدی' },
+  'بیمارستان ۱۶۳ تختخوابی مراغه - قرارداد احداث ساختمان آموزشی':
+    { siteLocation: 'مراغه', employer: 'سازمان مجری ساختمان‌ها و تأسیسات دولتی و عمومی', supervisor: 'مهندس امین امین‌نیا' },
+  'پروژه عملیات تکمیل مجتمع قضایی خانواده چیتگر (۶ طبقه)':
+    { siteLocation: 'چیتگر', employer: 'دادگستری استان تهران', supervisor: 'مهندس کبودی' },
+  'پروژه مسکونی هفت تیر':
+    { siteLocation: 'هفت تیر', employer: 'شخصی', supervisor: 'مهندس شهبازی' },
+  'پروژه پژوهشکده شهید رضایی':
+    { siteLocation: 'شریف', employer: 'دانشگاه شریف', supervisor: 'مهندس پاشاپور' },
+  'پروژه شهرک سفید':
+    { siteLocation: 'پروژه شهرک سفید', employer: 'شخصی', supervisor: 'مهندس رضائیان' },
+  'پروژه سلیمان آباد':
+    { siteLocation: 'پروژه سلیمان آباد', employer: 'شخصی', supervisor: 'مهندس رضائیان' },
+};
+
+const EXECUTIVE_POSITIONS = ['بنا','کارگر ساده','آرماتوربند','قالب‌بند','برق‌کار','لوله‌کش','جوشکار','گچ‌کار','کاشی‌کار','نقاش','راننده','اپراتور ماشین‌آلات','سفتکار','نازک‌کار','سایر'];
+const STAFF_POSITIONS     = ['ناظر','مهندس سایت','سرپرست کارگاه','تکنسین','انباردار','HSE / ایمنی','منشی / اداری','حراست','مدیر پروژه','سایر'];
+
+/* ═══════════ وضعیت برنامه ═══════════ */
+let currentUser    = null;
+let uploadedImages = [];   // آرایه‌ای از base64 یا null
+let allReports     = [];   // لیست صفحه جاری داشبورد
+let modalReportData = null;
+
+/* وضعیت داشبورد مدیر */
+let mgrState = { page: 1, pages: 1, total: 0, q: '', project: '' };
+
+/* ════════════════════════════════════════
+ *  ارتباط با Google Apps Script
+ * ════════════════════════════════════════ */
+
+/**
+ * GET با JSONP — برای list، get، delete
+ * در ایران و روی GitHub Pages بدون مشکل CORS کار می‌کند
+ */
+function apiGet(params) {
+  return new Promise((resolve, reject) => {
+    const cbName = 'cb_' + Date.now() + '_' + Math.floor(Math.random() * 1e6);
+    const qs = Object.keys(params)
+      .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
+      .join('&');
+    const script = document.createElement('script');
+    script.src = GAS_URL + '?' + qs + '&callback=' + cbName;
+
+    const cleanup = () => {
+      delete window[cbName];
+      if (script.parentNode) script.parentNode.removeChild(script);
+    };
+
+    window[cbName] = (data) => { cleanup(); resolve(data); };
+    script.onerror = () => { cleanup(); reject(new Error('خطا در اتصال به سرور')); };
+
+    // timeout پس از ۲۰ ثانیه
+    setTimeout(() => {
+      if (window[cbName]) { cleanup(); reject(new Error('پاسخ سرور دریافت نشد (timeout)')); }
+    }, 20000);
+
+    document.head.appendChild(script);
+  });
+}
+
+/**
+ * POST no-cors — برای ذخیره گزارش (payload حجیم)
+ * چون no-cors پاسخ را نمی‌خوانیم، بعداً با apiGet تأیید می‌کنیم
+ */
+function apiPost(payload) {
+  return fetch(GAS_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(payload),
+  });
+}
+
+/* ════════════════════════════════════════
+ *  ورود / خروج
+ * ════════════════════════════════════════ */
+
+let selectedRole = 'reporter';
+
+function selectRole(r) {
+  selectedRole = r;
+  document.getElementById('tab-reporter').classList.toggle('active', r === 'reporter');
+  document.getElementById('tab-manager').classList.toggle('active', r === 'manager');
+}
+
+function doLogin() {
+  const u   = document.getElementById('loginUser').value.trim().toLowerCase();
+  const p   = document.getElementById('loginPass').value;
+  const err = document.getElementById('loginError');
+  err.style.display = 'none';
+  const user = USERS[u];
+  if (!user || user.pass !== p || user.role !== selectedRole) {
+    err.style.display = 'block'; return;
+  }
+  currentUser = { username: u, ...user };
+  if (user.role === 'reporter') { initReporter(); showScreen('reporterScreen'); }
+  else { initManager(); showScreen('managerScreen'); }
+}
+
+function doLogout() {
+  currentUser = null; uploadedImages = []; allReports = [];
+  showScreen('loginScreen');
+  document.getElementById('loginUser').value = '';
+  document.getElementById('loginPass').value = '';
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+/* ════════════════════════════════════════
+ *  راه‌اندازی پنل گزارش‌دهنده
+ * ════════════════════════════════════════ */
+
+function initReporter() {
+  const proj = currentUser.project;
+  const info = PROJECT_INFO[proj] || {};
+  document.getElementById('navProjectName').textContent = proj;
+  document.getElementById('projectNameDisplay').value = proj;
+  document.getElementById('siteLocation').value = info.siteLocation || '';
+  document.getElementById('employer').value     = info.employer || '';
+  document.getElementById('supervisor').value   = info.supervisor || '';
+  const now = new Date();
+  document.getElementById('reportTime').value = pad(now.getHours()) + ':' + pad(now.getMinutes());
+  const [jy, jm, jd] = toJalali(now.getFullYear(), now.getMonth() + 1, now.getDate());
+  document.getElementById('reportDate').value = jy + '/' + pad(jm) + '/' + pad(jd);
+  updateDraftSelect();
+  clearForm();
+}
+
+function clearForm() {
+  ['reportNumber','futureActivities','problems','incidents','safetyEquipment','finalComments'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = '';
+  });
+  document.getElementById('workShift').value        = '';
+  document.getElementById('weatherCondition').value = '';
+  document.getElementById('temperature').value      = '';
+  document.getElementById('safetyStatus').value     = 'عالی';
+  ['activitiesTable','executiveLaborTable','staffLaborTable','machineryTable','companyVehiclesTable','materialsTable'].forEach(id => {
+    document.getElementById(id).innerHTML = '';
+  });
+  uploadedImages = [];
+  document.getElementById('imagePreview').innerHTML = '';
+  document.getElementById('projectImages').value = '';
+  ['sig1Data','sig2Data','sig3Data'].forEach(id => { document.getElementById(id).value = ''; });
+  ['sig1Preview','sig2Preview','sig3Preview'].forEach(id => { document.getElementById(id).style.display = 'none'; });
+  updateLaborTotals(); updateMachineryTotal(); updateVehicleTotal();
+}
+
+/* ════════════════════════════════════════
+ *  ثبت گزارش با تأیید واقعی
+ * ════════════════════════════════════════ */
+
+async function submitReport() {
+  const data = collectFormData();
+  if (!data.reportNumber) { toast('شماره گزارش الزامی است', 'error'); return; }
+  if (!data.workShift)    { toast('شیفت کاری را انتخاب کنید', 'error'); return; }
+
+  // شناسه یکتا سمت کلاینت (برای تأیید ذخیره)
+  const id = 'R' + Date.now() + '-' + Math.random().toString(36).slice(2, 7);
+
+  showLoading(true, 'در حال ارسال گزارش...');
+  try {
+    // ارسال با POST no-cors
+    await apiPost({ action: 'save', id, project_username: currentUser.username, report_data: data });
+
+    // ──── تأیید: تا ۳ بار بررسی کن که گزارش واقعاً ذخیره شده ────
+    // (چون no-cors پاسخ برنمی‌گرداند، باید با GET تأیید کنیم)
+    let confirmed = false;
+    for (let attempt = 0; attempt < 3 && !confirmed; attempt++) {
+      await wait(2000 + attempt * 1000); // ۲، ۳، ۴ ثانیه فاصله
+      try {
+        const res = await apiGet({ action: 'get', id });
+        if (res && res.success) confirmed = true;
+      } catch (e) { /* ادامه می‌دهیم */ }
+    }
+
+    if (confirmed) {
+      toast('گزارش با موفقیت ثبت و تأیید شد ✅', 'success');
+      clearForm();
+    } else {
+      toast('ارسال شد ولی تأیید نشد — لطفاً در داشبورد مدیر بررسی کنید ⚠️', 'warning');
+    }
+  } catch (e) {
+    toast('خطا در ارسال: ' + e.message, 'error');
+  }
+  showLoading(false);
+}
+
+/* ════════════════════════════════════════
+ *  collectFormData
+ * ════════════════════════════════════════ */
+
+function collectFormData() {
+  return {
+    reportNumber:     v('reportNumber'),
+    reportDate:       v('reportDate'),
+    reportTime:       v('reportTime'),
+    projectName:      currentUser.project,
+    siteLocation:     v('siteLocation'),
+    employer:         v('employer'),
+    supervisor:       v('supervisor'),
+    contractor:       'شرکت آذریورد تبریز',
+    workShift:        v('workShift'),
+    weatherCondition: v('weatherCondition'),
+    temperature:      v('temperature'),
+    futureActivities: v('futureActivities') || 'ثبت نشده',
+    problems:         v('problems')         || 'مشکلی گزارش نشده',
+    safetyStatus:     v('safetyStatus'),
+    incidents:        v('incidents')        || 'حادثه‌ای گزارش نشده',
+    safetyEquipment:  v('safetyEquipment')  || 'ثبت نشده',
+    finalComments:    v('finalComments')    || '—',
+    activities:       getTableData('activitiesTable',       ['activity-type','activity-desc','activity-status']),
+    executiveLabor:   getTableData('executiveLaborTable',   ['labor-fullname','labor-position','labor-hours','labor-attendance','labor-notes']),
+    staffLabor:       getTableData('staffLaborTable',       ['labor-fullname','labor-position','labor-hours','labor-attendance','labor-notes']),
+    laborTotals: {
+      executive: document.getElementById('executiveLaborTable').querySelectorAll('tr').length,
+      staff:     document.getElementById('staffLaborTable').querySelectorAll('tr').length,
+      total:     document.getElementById('executiveLaborTable').querySelectorAll('tr').length +
+                 document.getElementById('staffLaborTable').querySelectorAll('tr').length,
+    },
+    machinery:       getTableData('machineryTable',        ['machine-name','machine-model','machine-status','machine-hours','machine-notes']),
+    companyVehicles: getTableData('companyVehiclesTable',  ['vehicle-name','vehicle-driver','vehicle-status','vehicle-notes']),
+    materials:       getTableData('materialsTable',        ['material-name','material-amount','material-unit','material-notes']),
+    images:          uploadedImages.filter(Boolean),
+    sig1: document.getElementById('sig1Data').value,
+    sig2: document.getElementById('sig2Data').value,
+    sig3: document.getElementById('sig3Data').value,
+  };
+}
+
+function v(id) { return (document.getElementById(id) || {}).value || ''; }
+
+/* ════════════════════════════════════════
+ *  توابع جدول
+ * ════════════════════════════════════════ */
+
+function addActivity() {
+  const r = document.getElementById('activitiesTable').insertRow();
+  r.innerHTML = `<td><select class="inp-sm activity-type"><option value="">انتخاب کنید</option><option>خاکبرداری</option><option>بتن‌ریزی</option><option>قالب‌بندی</option><option>آرماتوربندی</option><option>آسفالت</option><option>حفاری</option><option>تأسیسات</option><option>برق‌کشی</option><option>جوشکاری</option><option>سایر</option></select></td>
+  <td><input type="text" class="inp-sm activity-desc" placeholder="شرح عملیات"></td>
+  <td><select class="inp-sm activity-status"><option>انجام شده</option><option>در حال انجام</option><option>متوقف</option></select></td>
+  <td><button class="btn-danger-sm" onclick="deleteRow(this)">حذف</button></td>`;
+}
+
+function addLaborRow(tableId) {
+  const isExec = tableId === 'executiveLaborTable';
+  const opts = (isExec ? EXECUTIVE_POSITIONS : STAFF_POSITIONS)
+    .map(p => `<option>${p}</option>`).join('');
+  const r = document.getElementById(tableId).insertRow();
+  r.innerHTML = `<td><input type="text" class="inp-sm labor-fullname" placeholder="نام و نام خانوادگی"></td>
+  <td><select class="inp-sm labor-position"><option value="">انتخاب سمت</option>${opts}</select></td>
+  <td><input type="number" class="inp-sm labor-hours" value="8" style="width:60px;"></td>
+  <td><select class="inp-sm labor-attendance"><option>حاضر</option><option>غایب</option><option>تأخیر</option><option>مرخصی</option></select></td>
+  <td><input type="text" class="inp-sm labor-notes" placeholder="توضیحات"></td>
+  <td><button class="btn-danger-sm" onclick="deleteRow(this)">حذف</button></td>`;
+  updateLaborTotals();
+}
+
+function addExecutiveLabor() { addLaborRow('executiveLaborTable'); }
+function addStaffLabor()     { addLaborRow('staffLaborTable'); }
+
+function addMachinery() {
+  const r = document.getElementById('machineryTable').insertRow();
+  r.innerHTML = `<td><input type="text" class="inp-sm machine-name" placeholder="نام دستگاه"></td>
+  <td><input type="text" class="inp-sm machine-model" placeholder="مدل"></td>
+  <td><select class="inp-sm machine-status"><option>فعال</option><option>خاموش</option><option>در تعمیر</option><option>خراب</option></select></td>
+  <td><input type="number" class="inp-sm machine-hours" placeholder="ساعت" style="width:70px;"></td>
+  <td><input type="text" class="inp-sm machine-notes" placeholder="توضیحات"></td>
+  <td><button class="btn-danger-sm" onclick="deleteRow(this)">حذف</button></td>`;
+  updateMachineryTotal();
+}
+
+function addCompanyVehicle() {
+  const r = document.getElementById('companyVehiclesTable').insertRow();
+  r.innerHTML = `<td><input type="text" class="inp-sm vehicle-name" placeholder="وانت، سواری..."></td>
+  <td><input type="text" class="inp-sm vehicle-driver" placeholder="نام راننده"></td>
+  <td><select class="inp-sm vehicle-status"><option>فعال</option><option>غیرفعال</option><option>در تعمیر</option></select></td>
+  <td><input type="text" class="inp-sm vehicle-notes" placeholder="توضیحات"></td>
+  <td><button class="btn-danger-sm" onclick="deleteRow(this)">حذف</button></td>`;
+  updateVehicleTotal();
+}
+
+function addMaterial() {
+  const r = document.getElementById('materialsTable').insertRow();
+  r.innerHTML = `<td><input type="text" class="inp-sm material-name" placeholder="نوع مصالح"></td>
+  <td><input type="number" class="inp-sm material-amount" placeholder="مقدار" style="width:80px;"></td>
+  <td><select class="inp-sm material-unit"><option>کیلوگرم</option><option>تن</option><option>متر مکعب</option><option>متر</option><option>عدد</option><option>لیتر</option></select></td>
+  <td><input type="text" class="inp-sm material-notes" placeholder="توضیحات"></td>
+  <td><button class="btn-danger-sm" onclick="deleteRow(this)">حذف</button></td>`;
+}
+
+function deleteRow(btn) {
+  btn.closest('tr').remove();
+  updateLaborTotals(); updateMachineryTotal(); updateVehicleTotal();
+}
+
+function getTableData(tableId, classes) {
+  const rows = []; 
+  document.getElementById(tableId).querySelectorAll('tr').forEach(row => {
+    const rowData = {};
+    classes.forEach(cls => {
+      const el = row.querySelector('.' + cls);
+      if (el) rowData[cls] = el.value;
+    });
+    if (Object.values(rowData).some(val => val && String(val).trim())) rows.push(rowData);
+  });
+  return rows;
+}
+
+function loadTableData(tableId, data, addFn, classes) {
+  document.getElementById(tableId).innerHTML = '';
+  (data || []).forEach(rowData => {
+    addFn();
+    const tbody = document.getElementById(tableId);
+    const lastRow = tbody.rows[tbody.rows.length - 1];
+    classes.forEach(cls => {
+      const el = lastRow.querySelector('.' + cls);
+      if (el && rowData[cls] !== undefined) el.value = rowData[cls];
+    });
+  });
+}
+
+function updateLaborTotals() {
+  const exec  = document.getElementById('executiveLaborTable').querySelectorAll('tr').length;
+  const staff = document.getElementById('staffLaborTable').querySelectorAll('tr').length;
+  document.getElementById('executiveTotal').textContent  = exec;
+  document.getElementById('staffTotal').textContent      = staff;
+  document.getElementById('laborGrandTotal').textContent = exec + staff;
+}
+function updateMachineryTotal() {
+  document.getElementById('machineryTotal').textContent = document.getElementById('machineryTable').querySelectorAll('tr').length;
+}
+function updateVehicleTotal() {
+  document.getElementById('vehicleTotal').textContent = document.getElementById('companyVehiclesTable').querySelectorAll('tr').length;
+}
+
+/* ════════════════════════════════════════
+ *  آپلود تصویر و امضا
+ * ════════════════════════════════════════ */
+
+function handleImageUpload(event) {
+  const preview = document.getElementById('imagePreview');
+  Array.from(event.target.files).forEach(file => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const idx = uploadedImages.length;
+      uploadedImages.push(e.target.result);
+      const wrap = document.createElement('div');
+      wrap.style.cssText = 'position:relative;display:inline-block;';
+      wrap.dataset.idx   = idx;
+      const img = document.createElement('img');
+      img.src = e.target.result;
+      img.style.cssText = 'width:130px;height:130px;object-fit:cover;border-radius:8px;border:2px solid #e2e8f0;display:block;';
+      const del = document.createElement('button');
+      del.type = 'button'; del.innerHTML = '✕';
+      del.style.cssText = 'position:absolute;top:4px;left:4px;background:#dc2626;color:white;border:none;border-radius:50%;width:22px;height:22px;font-size:12px;cursor:pointer;line-height:1;';
+      del.onclick = () => {
+        uploadedImages[parseInt(wrap.dataset.idx)] = null;
+        wrap.remove();
+        document.getElementById('projectImages').value = '';
+      };
+      wrap.appendChild(img); wrap.appendChild(del);
+      preview.appendChild(wrap);
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function handleSigUpload(event, imgId, previewId, dataId) {
+  const file = event.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById(imgId).src          = e.target.result;
+    document.getElementById(previewId).style.display = 'block';
+    document.getElementById(dataId).value       = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+/* ════════════════════════════════════════
+ *  پیش‌نویس‌ها (localStorage)
+ * ════════════════════════════════════════ */
+
+function draftKey() { return 'azaryord_drafts_' + (currentUser && currentUser.username || ''); }
+function getDrafts() { try { return JSON.parse(localStorage.getItem(draftKey()) || '{}'); } catch { return {}; } }
+function saveDrafts(d) { localStorage.setItem(draftKey(), JSON.stringify(d)); }
+
+function updateDraftSelect() {
+  const sel = document.getElementById('draftSelect');
+  sel.innerHTML = '<option value="">انتخاب پیش‌نویس...</option>';
+  Object.keys(getDrafts()).forEach(name => {
+    const o = document.createElement('option'); o.value = name; o.textContent = name; sel.appendChild(o);
+  });
+}
+
+function saveAsDraft() {
+  const name = document.getElementById('draftName').value.trim();
+  if (!name) { toast('نام پیش‌نویس را وارد کنید', 'error'); return; }
+  const d = getDrafts();
+  d[name] = collectFormData();
+  saveDrafts(d); updateDraftSelect();
+  document.getElementById('draftName').value = '';
+  toast('پیش‌نویس ذخیره شد ✅', 'success');
+}
+
+function loadSelectedDraft() {
+  const name = document.getElementById('draftSelect').value;
+  if (!name) { toast('یک پیش‌نویس انتخاب کنید', 'error'); return; }
+  const data = getDrafts()[name];
+  if (!data) return;
+  applyFormData(data);
+  toast('پیش‌نویس بارگذاری شد ✅', 'success');
+}
+
+function deleteSelectedDraft() {
+  const name = document.getElementById('draftSelect').value;
+  if (!name) return;
+  if (!confirm('آیا از حذف پیش‌نویس "' + name + '" اطمینان دارید؟')) return;
+  const d = getDrafts(); delete d[name]; saveDrafts(d);
+  updateDraftSelect(); toast('پیش‌نویس حذف شد');
+}
+
+function applyFormData(data) {
+  const f = (id, val) => { const el = document.getElementById(id); if (el) el.value = val || ''; };
+  f('reportNumber', data.reportNumber); f('reportDate', data.reportDate); f('reportTime', data.reportTime);
+  f('workShift', data.workShift); f('weatherCondition', data.weatherCondition); f('temperature', data.temperature);
+  f('futureActivities', data.futureActivities); f('problems', data.problems);
+  f('safetyStatus', data.safetyStatus); f('incidents', data.incidents);
+  f('safetyEquipment', data.safetyEquipment); f('finalComments', data.finalComments);
+  loadTableData('activitiesTable',      data.activities || [],      addActivity,       ['activity-type','activity-desc','activity-status']);
+  loadTableData('executiveLaborTable',  data.executiveLabor || [],  addExecutiveLabor, ['labor-fullname','labor-position','labor-hours','labor-attendance','labor-notes']);
+  loadTableData('staffLaborTable',      data.staffLabor || [],      addStaffLabor,     ['labor-fullname','labor-position','labor-hours','labor-attendance','labor-notes']);
+  loadTableData('machineryTable',       data.machinery || [],       addMachinery,      ['machine-name','machine-model','machine-status','machine-hours','machine-notes']);
+  loadTableData('companyVehiclesTable', data.companyVehicles || [], addCompanyVehicle, ['vehicle-name','vehicle-driver','vehicle-status','vehicle-notes']);
+  loadTableData('materialsTable',       data.materials || [],       addMaterial,       ['material-name','material-amount','material-unit','material-notes']);
+  updateLaborTotals(); updateMachineryTotal(); updateVehicleTotal();
+}
+
+/* ════════════════════════════════════════
+ *  داشبورد مدیر
+ * ════════════════════════════════════════ */
+
+async function initManager() {
+  const sel = document.getElementById('filterProject');
+  sel.innerHTML = '<option value="">همه پروژه‌ها</option>';
+  Object.values(USERS).filter(u => u.role === 'reporter').forEach(u => {
+    const o = document.createElement('option'); o.value = u.project; o.textContent = u.project; sel.appendChild(o);
+  });
+
+  // فیلتر با Enter در فیلد جستجو
+  document.getElementById('filterSearch').onkeydown = (e) => {
+    if (e.key === 'Enter') applyFilters();
+  };
+
+  mgrState = { page: 1, pages: 1, total: 0, q: '', project: '' };
+  await loadManagerReports();
+}
+
+function applyFilters() {
+  mgrState.project = document.getElementById('filterProject').value;
+  mgrState.q       = document.getElementById('filterSearch').value.trim();
+  mgrState.page    = 1;
+  loadManagerReports();
+}
+
+async function loadManagerReports() {
+  showLoading(true, 'در حال بارگذاری گزارش‌ها...');
+  try {
+    const res = await apiGet({
+      action:  'list',
+      page:    mgrState.page,
+      project: mgrState.project,
+      q:       mgrState.q,
+    });
+    if (!res || !res.success) throw new Error((res && res.error) || 'خطا در بارگذاری');
+    allReports     = res.data || [];
+    mgrState.pages = res.pages || 1;
+    mgrState.total = res.total || 0;
+    updateStats();
+    renderReports();
+  } catch (e) {
+    toast('خطا در بارگذاری: ' + e.message, 'error');
+  }
+  showLoading(false);
+}
+
+function updateStats() {
+  const today   = new Date().toISOString().slice(0, 10);
+  const weekAgo = new Date(Date.now() - 7 * 864e5).toISOString().slice(0, 10);
+  const dayOf   = r => new Date(r.created_at).toISOString().slice(0, 10);
+  document.getElementById('statTotal').textContent    = mgrState.total;
+  document.getElementById('statToday').textContent    = allReports.filter(r => dayOf(r) === today).length;
+  document.getElementById('statProjects').textContent = new Set(allReports.map(r => r.project_username)).size;
+  document.getElementById('statWeek').textContent     = allReports.filter(r => dayOf(r) >= weekAgo).length;
+}
+
+function renderReports() {
+  const container = document.getElementById('reportList');
+  if (!allReports.length) {
+    container.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>هیچ گزارشی یافت نشد</p></div>';
+    return;
+  }
+  container.innerHTML = '';
+  allReports.forEach(r => {
+    const createdAt = new Date(r.created_at).toLocaleString('fa-IR');
+    const card = document.createElement('div');
+    card.className = 'report-card';
+    card.innerHTML = `
+      <div class="report-card-info">
+        <div class="report-card-title">${esc(r.projectName || '—')} — گزارش شماره ${esc(r.reportNumber || '—')}</div>
+        <div class="report-card-meta">
+          <span>📅 ${esc(r.reportDate || '—')}</span>
+          <span>⏰ ${esc(r.workShift || '—')}</span>
+          <span>👷 ${r.laborTotal || 0} نفر</span>
+          <span>🕐 ${createdAt}</span>
+        </div>
+      </div>
+      <div class="report-card-actions">
+        <button class="btn-success-sm" onclick="openReportModal('${esc(r.id)}')">مشاهده</button>
+        <button class="btn-danger-sm"  onclick="deleteReport('${esc(r.id)}')">حذف</button>
+      </div>`;
+    container.appendChild(card);
+  });
+
+  // نوار صفحه‌بندی
+  if (mgrState.pages > 1) {
+    const nav = document.createElement('div');
+    nav.className = 'pagination';
+    nav.innerHTML = `
+      <button class="btn-success-sm" ${mgrState.page <= 1 ? 'disabled' : ''} onclick="changePage(-1)">◀ صفحه قبل</button>
+      <span>صفحه ${mgrState.page} از ${mgrState.pages} (کل: ${mgrState.total} گزارش)</span>
+      <button class="btn-success-sm" ${mgrState.page >= mgrState.pages ? 'disabled' : ''} onclick="changePage(1)">صفحه بعد ▶</button>`;
+    container.appendChild(nav);
+  }
+}
+
+function changePage(delta) {
+  const next = mgrState.page + delta;
+  if (next < 1 || next > mgrState.pages) return;
+  mgrState.page = next;
+  loadManagerReports();
+}
+
+/* ════════════════════════════════════════
+ *  مشاهده گزارش کامل (واکشی از سرور)
+ * ════════════════════════════════════════ */
+
+async function openReportModal(id) {
+  showLoading(true, 'در حال بارگذاری گزارش...');
+  let d;
+  try {
+    const res = await apiGet({ action: 'get', id });
+    if (!res || !res.success) throw new Error((res && res.error) || 'گزارش یافت نشد');
+    d = (res.report && res.report.report_data) || {};
+  } catch (e) {
+    showLoading(false); toast('خطا: ' + e.message, 'error'); return;
+  }
+  showLoading(false);
+
+  modalReportData = d;
+  document.getElementById('modalTitle').textContent = `گزارش ${d.reportNumber || ''} — ${d.projectName || ''}`;
+
+  let html = `<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;font-size:13px;">
+    <div><b>پروژه:</b> ${esc(d.projectName || '—')}</div>
+    <div><b>کارگاه:</b> ${esc(d.siteLocation || '—')}</div>
+    <div><b>تاریخ:</b> ${esc(d.reportDate || '—')}</div>
+    <div><b>شیفت:</b> ${esc(d.workShift || '—')}</div>
+    <div><b>آب‌وهوا:</b> ${esc(d.weatherCondition || '—')} / ${esc(d.temperature || '—')}°C</div>
+    <div><b>ایمنی:</b> ${esc(d.safetyStatus || '—')}</div>
+  </div>`;
+
+  if (d.activities && d.activities.length) {
+    html += `<b>فعالیت‌ها:</b><table style="width:100%;border-collapse:collapse;font-size:12px;margin:8px 0;">
+      <tr style="background:#f1f5f9;"><th style="padding:6px;border:1px solid #e2e8f0;">نوع</th><th style="padding:6px;border:1px solid #e2e8f0;">شرح</th><th style="padding:6px;border:1px solid #e2e8f0;">وضعیت</th></tr>
+      ${d.activities.map(a => `<tr><td style="padding:6px;border:1px solid #e2e8f0;">${esc(a['activity-type']||'')}</td><td style="padding:6px;border:1px solid #e2e8f0;">${esc(a['activity-desc']||'')}</td><td style="padding:6px;border:1px solid #e2e8f0;">${esc(a['activity-status']||'')}</td></tr>`).join('')}
+    </table>`;
+  }
+  const allLabor = [...(d.executiveLabor || []), ...(d.staffLabor || [])];
+  if (allLabor.length) {
+    html += `<b>نیروی انسانی (${(d.laborTotals && d.laborTotals.total) || 0} نفر):</b>
+    <table style="width:100%;border-collapse:collapse;font-size:12px;margin:8px 0;">
+      <tr style="background:#f1f5f9;"><th style="padding:6px;border:1px solid #e2e8f0;">نام</th><th style="padding:6px;border:1px solid #e2e8f0;">سمت</th><th style="padding:6px;border:1px solid #e2e8f0;">ساعت</th><th style="padding:6px;border:1px solid #e2e8f0;">حضور</th></tr>
+      ${allLabor.map(l => `<tr><td style="padding:6px;border:1px solid #e2e8f0;">${esc(l['labor-fullname']||'')}</td><td style="padding:6px;border:1px solid #e2e8f0;">${esc(l['labor-position']||'')}</td><td style="padding:6px;border:1px solid #e2e8f0;">${esc(l['labor-hours']||'')}</td><td style="padding:6px;border:1px solid #e2e8f0;">${esc(l['labor-attendance']||'')}</td></tr>`).join('')}
+    </table>`;
+  }
+  if (d.problems && d.problems !== 'مشکلی گزارش نشده')
+    html += `<div style="margin:10px 0;padding:10px;background:#fef2f2;border-radius:8px;font-size:13px;"><b>مشکلات:</b> ${esc(d.problems)}</div>`;
+  if (d.finalComments && d.finalComments !== '—')
+    html += `<div style="margin:10px 0;padding:10px;background:#fffbeb;border-radius:8px;font-size:13px;"><b>توضیحات نهایی:</b> ${esc(d.finalComments)}</div>`;
+  if (d.images && d.images.length) {
+    html += `<b>تصاویر:</b><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin-top:8px;">
+      ${d.images.map(src => `<img src="${esc(src)}" style="width:100%;height:120px;object-fit:cover;border-radius:6px;border:1px solid #e2e8f0;">`).join('')}
+    </div>`;
+  }
+
+  document.getElementById('modalContent').innerHTML = html;
+  document.getElementById('reportModal').classList.add('open');
+}
+
+/* ════════════════════════════════════════
+ *  حذف گزارش
+ * ════════════════════════════════════════ */
+
+async function deleteReport(id) {
+  if (!confirm('آیا از حذف کامل این گزارش اطمینان دارید؟\nاین عمل قابل بازگشت نیست.')) return;
+  showLoading(true, 'در حال حذف...');
+  try {
+    const res = await apiGet({ action: 'delete', id });
+    if (!res || !res.success) throw new Error((res && res.error) || 'حذف ناموفق');
+    toast('گزارش حذف شد', 'success');
+    // اگر صفحه جاری پس از حذف خالی شد، یک صفحه برگرد
+    if (allReports.length === 1 && mgrState.page > 1) mgrState.page--;
+    await loadManagerReports();
+  } catch (e) {
+    toast('خطا در حذف: ' + e.message, 'error');
+  }
+  showLoading(false);
+}
+
+function closeModal() { document.getElementById('reportModal').classList.remove('open'); }
+function generatePDFFromModal() { closeModal(); buildPDF(modalReportData); }
+
+/* ════════════════════════════════════════
+ *  PDF
+ * ════════════════════════════════════════ */
+
+function generatePDF() { buildPDF(collectFormData()); }
+
+function buildPDF(data) {
+  if (!data) return;
+  const tbl = (rows, cols, hdrs) => rows.length
+    ? `<table class="pdf-table"><thead><tr>${hdrs.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>
+       ${rows.map(r=>`<tr>${cols.map(c=>`<td>${esc(r[c]||'')}</td>`).join('')}</tr>`).join('')}
+       </tbody></table>` : '';
+
+  const activitiesHTML = tbl(data.activities||[], ['activity-type','activity-desc','activity-status'], ['نوع فعالیت','شرح عملیات','وضعیت']);
+  const execLaborHTML  = tbl(data.executiveLabor||[], ['labor-fullname','labor-position','labor-hours','labor-attendance','labor-notes'], ['نام','سمت','ساعت','حضور','توضیحات']);
+  const staffLaborHTML = tbl(data.staffLabor||[], ['labor-fullname','labor-position','labor-hours','labor-attendance','labor-notes'], ['نام','سمت','ساعت','حضور','توضیحات']);
+  const machineryHTML  = tbl(data.machinery||[], ['machine-name','machine-model','machine-status','machine-hours'], ['دستگاه','مدل','وضعیت','ساعت']);
+  const vehiclesHTML   = tbl(data.companyVehicles||[], ['vehicle-name','vehicle-driver','vehicle-status'], ['خودرو','راننده','وضعیت']);
+  const materialsHTML  = tbl(data.materials||[], ['material-name','material-amount','material-unit','material-notes'], ['نوع مصالح','مقدار','واحد','توضیحات']);
+
+  const images = (data.images || []).filter(Boolean);
+  const imagesHTML = images.map(src =>
+    `<img src="${esc(src)}" style="width:100%;height:auto;border-radius:8px;border:2px solid #e5e7eb;">`
+  ).join('');
+
+  const sig1 = data.sig1 || '', sig2 = data.sig2 || '', sig3 = data.sig3 || '';
+
+  document.getElementById('pdfContainer').innerHTML = `
+    <div class="pdf-header">
+      <div class="pdf-logo">آ</div>
+      <div class="pdf-company-info">
+        <div class="pdf-company-name">شرکت آذریورد تبریز</div>
+        <div class="pdf-report-title">گزارش روزانه پروژه عمرانی</div>
+      </div>
+      <div class="pdf-meta">
+        <div>گزارش شماره: <strong>${esc(data.reportNumber||'—')}</strong></div>
+        <div>تاریخ: <strong>${esc(data.reportDate||'—')}</strong></div>
+        <div>ساعت: <strong>${esc(data.reportTime||'—')}</strong></div>
+      </div>
+    </div>
+
+    <div class="pdf-section">
+      <div class="pdf-section-title">اطلاعات پروژه</div>
+      <div class="pdf-info-grid">
+        <div class="pdf-info-item"><span class="pdf-info-label">نام پروژه:</span><span class="pdf-info-value">${esc(data.projectName||'—')}</span></div>
+        <div class="pdf-info-item"><span class="pdf-info-label">نام کارگاه:</span><span class="pdf-info-value">${esc(data.siteLocation||'—')}</span></div>
+        <div class="pdf-info-item"><span class="pdf-info-label">کارفرما:</span><span class="pdf-info-value">${esc(data.employer||'—')}</span></div>
+        <div class="pdf-info-item"><span class="pdf-info-label">پیمانکار:</span><span class="pdf-info-value">${esc(data.contractor||'شرکت آذریورد تبریز')}</span></div>
+        <div class="pdf-info-item"><span class="pdf-info-label">سرپرست:</span><span class="pdf-info-value">${esc(data.supervisor||'—')}</span></div>
+        <div class="pdf-info-item"><span class="pdf-info-label">شیفت / آب‌وهوا / دما:</span><span class="pdf-info-value">${esc(data.workShift||'—')} | ${esc(data.weatherCondition||'—')} | ${esc(data.temperature||'—')}°C</span></div>
+      </div>
+    </div>
+
+    ${activitiesHTML ? `<div class="pdf-section"><div class="pdf-section-title">فعالیت‌های انجام شده</div>${activitiesHTML}</div>` : ''}
+
+    <div class="two-col">
+      ${(data.futureActivities && data.futureActivities !== 'ثبت نشده') ? `<div class="pdf-section"><div class="pdf-section-title">فعالیت‌های آتی</div><div class="compact-text">${esc(data.futureActivities)}</div></div>` : ''}
+      ${(data.problems && data.problems !== 'مشکلی گزارش نشده') ? `<div class="pdf-section"><div class="pdf-section-title">مشکلات و تأخیرات</div><div class="compact-text" style="border-right:3px solid #dc2626;">${esc(data.problems)}</div></div>` : ''}
+    </div>
+
+    ${(execLaborHTML || staffLaborHTML) ? `
+    <div class="pdf-section">
+      <div class="pdf-section-title">نیروی انسانی — اجرایی: ${(data.laborTotals&&data.laborTotals.executive)||0} | ستادی: ${(data.laborTotals&&data.laborTotals.staff)||0} | کل: ${(data.laborTotals&&data.laborTotals.total)||0}</div>
+      <div class="two-col">
+        ${execLaborHTML  ? `<div><strong style="font-size:12px;display:block;margin-bottom:4px;">نیروی اجرایی</strong>${execLaborHTML}</div>`  : ''}
+        ${staffLaborHTML ? `<div><strong style="font-size:12px;display:block;margin-bottom:4px;">نیروی ستادی</strong>${staffLaborHTML}</div>` : ''}
+      </div>
+    </div>` : ''}
+
+    ${(machineryHTML || vehiclesHTML) ? `
+    <div class="two-col">
+      ${machineryHTML ? `<div class="pdf-section"><div class="pdf-section-title">ماشین‌آلات</div>${machineryHTML}</div>` : ''}
+      ${vehiclesHTML  ? `<div class="pdf-section"><div class="pdf-section-title">خودروهای شرکتی</div>${vehiclesHTML}</div>` : ''}
+    </div>` : ''}
+
+    ${materialsHTML ? `<div class="pdf-section"><div class="pdf-section-title">مصالح مصرفی</div>${materialsHTML}</div>` : ''}
+
+    <div class="two-col">
+      <div class="pdf-section">
+        <div class="pdf-section-title">گزارش ایمنی (HSE)</div>
+        <div class="pdf-info-grid" style="grid-template-columns:1fr 1fr;">
+          <div class="pdf-info-item"><span class="pdf-info-label">وضعیت:</span><span class="pdf-info-value">${esc(data.safetyStatus||'—')}</span></div>
+          <div class="pdf-info-item"><span class="pdf-info-label">حوادث:</span><span class="pdf-info-value">${esc(data.incidents||'—')}</span></div>
+        </div>
+        <div class="compact-text" style="margin-top:6px;border-right:3px solid #059669;"><strong>تجهیزات:</strong> ${esc(data.safetyEquipment||'—')}</div>
+      </div>
+      <div class="pdf-section">
+        <div class="pdf-section-title">توضیحات نهایی</div>
+        <div class="compact-text" style="border-right:3px solid #d97706;">${esc(data.finalComments||'—')}</div>
+      </div>
+    </div>
+
+    ${images.length ? `<div class="pdf-section"><div class="pdf-section-title">تصاویر پروژه</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">${imagesHTML}</div></div>` : ''}
+
+    <div class="pdf-footer">
+      <div class="pdf-signatures">
+        <div class="pdf-signature-box">
+          <span class="pdf-signature-label">امضای سرپرست کارگاه</span>
+          ${sig1 ? `<img src="${sig1}" style="max-height:60px;max-width:100%;margin-top:10px;">` : ''}
+        </div>
+        <div class="pdf-signature-box">
+          <span class="pdf-signature-label">امضای مهندس ناظر</span>
+          ${sig2 ? `<img src="${sig2}" style="max-height:60px;max-width:100%;margin-top:10px;">` : ''}
+        </div>
+        <div class="pdf-signature-box">
+          <span class="pdf-signature-label">مهر شرکت / پیمانکار</span>
+          ${sig3 ? `<img src="${sig3}" style="max-height:60px;max-width:100%;margin-top:10px;">` : ''}
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:14px;color:#9ca3af;font-size:10px;border-top:1px solid #e5e7eb;padding-top:8px;">
+        این گزارش توسط سیستم گزارش‌دهی شرکت آذریورد تبریز تولید شده است
+      </div>
+    </div>`;
+
+  document.getElementById('pdfView').style.display = 'block';
+  window.scrollTo(0, 0);
+}
+
+function closePdfView() { document.getElementById('pdfView').style.display = 'none'; }
+
+/* ════════════════════════════════════════
+ *  تبدیل تاریخ میلادی به شمسی
+ * ════════════════════════════════════════ */
+
+function toJalali(gy, gm, gd) {
+  const g_d_m = [0,31,59,90,120,151,181,212,243,273,304,334];
+  let jy = (gy <= 1600) ? 0 : 979;
+  gy -= (gy <= 1600) ? 621 : 1600;
+  const gy2 = (gm > 2) ? (gy + 1) : gy;
+  let days = (365 * gy) + Math.floor((gy2+3)/4) - Math.floor((gy2+99)/100) + Math.floor((gy2+399)/400) - 80 + gd + g_d_m[gm - 1];
+  jy += 33 * Math.floor(days / 12053); days %= 12053;
+  jy += 4  * Math.floor(days / 1461);  days %= 1461;
+  if (days > 365) { jy += Math.floor((days - 1) / 365); days = (days - 1) % 365; }
+  const jm = (days < 186) ? 1 + Math.floor(days / 31) : 7 + Math.floor((days - 186) / 30);
+  const jd = 1 + ((days < 186) ? (days % 31) : ((days - 186) % 30));
+  return [jy, jm, jd];
+}
+
+/* ════════════════════════════════════════
+ *  ابزارهای کمکی
+ * ════════════════════════════════════════ */
+
+function pad(n) { return String(n).padStart(2, '0'); }
+function wait(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+/** جلوگیری از XSS در خروجی HTML */
+function esc(s) {
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function showLoading(show, text) {
+  document.getElementById('loadingOverlay').classList.toggle('show', show);
+  if (text) document.getElementById('loadingText').textContent = text;
+}
+
+function toast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = type ? 'show ' + type : 'show';
+  setTimeout(() => { t.className = ''; }, 3500);
+}
+
+/* بستن مودال با کلیک روی overlay */
+document.getElementById('reportModal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+</script>
+</body>
+</html>
