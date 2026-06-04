@@ -656,7 +656,7 @@ function apiGet(params) {
       .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
       .join('&');
     const script = document.createElement('script');
-    script.src = GAS_URL + '?' + qs + '&callback=' + cbName;
+    script.src = GAS_URL + '?' + qs + '&callback=' + cbName + '&authuser=0';
 
     const cleanup = () => {
       delete window[cbName];
