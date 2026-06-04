@@ -1258,15 +1258,20 @@ function buildPDF(data) {
   const materialsHTML  = tbl(data.materials||[], ['material-name','material-amount','material-unit','material-notes'], ['نوع مصالح','مقدار','واحد','توضیحات']);
 
   const images = (data.images || []).filter(Boolean);
-  const imagesHTML = images.map(src =>
-    `<img src="${esc(src)}" style="width:100%;height:auto;border-radius:8px;border:2px solid #e5e7eb;">`
-  ).join('');
-
   const sig1 = data.sig1 || '', sig2 = data.sig2 || '', sig3 = data.sig3 || '';
+
+  /* لوگو — SVG inline تا نیازی به فایل خارجی نباشد */
+  const logoSVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 70 70" width="70" height="70">
+    <defs><linearGradient id="lg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e40af"/><stop offset="100%" style="stop-color:#7c3aed"/>
+    </linearGradient></defs>
+    <circle cx="35" cy="35" r="35" fill="url(#lg)"/>
+    <text x="35" y="47" text-anchor="middle" font-family="Vazirmatn,sans-serif" font-size="28" font-weight="800" fill="white">آ</text>
+  </svg>`;
 
   document.getElementById('pdfContainer').innerHTML = `
     <div class="pdf-header">
-<div class="pdf-logo"><img src="Logo.png" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" style="width:100%;height:100%;object-fit:contain;border-radius:50%"><div style="display:none;width:70px;height:70px;background:linear-gradient(135deg,#1e40af,#7c3aed);border-radius:50%;align-items:center;justify-content:center;font-size:28px;font-weight:800;color:white;">آ</div></div>
+      <div class="pdf-logo" id="pdfLogoSlot"></div>
       <div class="pdf-company-info">
         <div class="pdf-company-name">شرکت آذریورد تبریز</div>
         <div class="pdf-report-title">گزارش روزانه پروژه عمرانی</div>
@@ -1329,27 +1334,59 @@ function buildPDF(data) {
       </div>
     </div>
 
-    ${images.length ? `<div class="pdf-section"><div class="pdf-section-title">تصاویر پروژه</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">${imagesHTML}</div></div>` : ''}
+    ${images.length ? `<div class="pdf-section"><div class="pdf-section-title">تصاویر پروژه</div><div id="pdfImagesGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;"></div></div>` : ''}
 
     <div class="pdf-footer">
       <div class="pdf-signatures">
         <div class="pdf-signature-box">
           <span class="pdf-signature-label">امضای سرپرست کارگاه</span>
-          ${sig1 ? `<img src="${sig1}" style="max-height:60px;max-width:100%;margin-top:10px;">` : ''}
+          <div id="pdfSig1Slot" style="min-height:20px;margin-top:10px;"></div>
         </div>
         <div class="pdf-signature-box">
           <span class="pdf-signature-label">امضای مهندس ناظر</span>
-          ${sig2 ? `<img src="${sig2}" style="max-height:60px;max-width:100%;margin-top:10px;">` : ''}
+          <div id="pdfSig2Slot" style="min-height:20px;margin-top:10px;"></div>
         </div>
         <div class="pdf-signature-box">
           <span class="pdf-signature-label">مهر شرکت / پیمانکار</span>
-          ${sig3 ? `<img src="${sig3}" style="max-height:60px;max-width:100%;margin-top:10px;">` : ''}
+          <div id="pdfSig3Slot" style="min-height:20px;margin-top:10px;"></div>
         </div>
       </div>
       <div style="text-align:center;margin-top:14px;color:#9ca3af;font-size:10px;border-top:1px solid #e5e7eb;padding-top:8px;">
         این گزارش توسط سیستم گزارش‌دهی شرکت آذریورد تبریز تولید شده است
       </div>
     </div>`;
+
+  /* ── لوگو: اول فایل خارجی، در صورت خطا SVG inline ── */
+  const logoSlot = document.getElementById('pdfLogoSlot');
+  const logoImg = new Image();
+  logoImg.style.cssText = 'width:70px;height:70px;object-fit:contain;border-radius:50%;';
+  logoImg.onload = () => { logoSlot.innerHTML = ''; logoSlot.appendChild(logoImg); };
+  logoImg.onerror = () => { logoSlot.innerHTML = logoSVG; };
+  logoImg.src = 'Logo.png';
+
+  /* ── امضاها: مستقیم با DOM تا data: URL ها درست کار کنند ── */
+  const setSig = (slotId, src) => {
+    if (!src) return;
+    const img = new Image();
+    img.style.cssText = 'max-height:60px;max-width:100%;display:block;margin:0 auto;';
+    img.src = src;
+    const slot = document.getElementById(slotId);
+    if (slot) slot.appendChild(img);
+  };
+  setSig('pdfSig1Slot', sig1);
+  setSig('pdfSig2Slot', sig2);
+  setSig('pdfSig3Slot', sig3);
+
+  /* ── تصاویر پروژه ── */
+  const imgGrid = document.getElementById('pdfImagesGrid');
+  if (imgGrid) {
+    images.forEach(src => {
+      const img = new Image();
+      img.style.cssText = 'width:100%;height:auto;border-radius:8px;border:2px solid #e5e7eb;';
+      img.src = src;
+      imgGrid.appendChild(img);
+    });
+  }
 
   document.getElementById('pdfView').style.display = 'block';
   window.scrollTo(0, 0);
