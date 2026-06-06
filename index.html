@@ -314,15 +314,12 @@ tbody tr:nth-child(even) { background: #fafafa; }
       <h1>آذریورد تبریز</h1>
       <p>سیستم گزارش‌دهی روزانه پروژه‌ها</p>
     </div>
-    <div class="role-tabs" style="grid-template-columns:1fr 1fr 1fr;">
+    <div class="role-tabs">
       <div class="role-tab active" id="tab-reporter" onclick="selectRole('reporter')">
         <div class="icon">📋</div><div class="label">گزارش‌دهنده</div>
       </div>
       <div class="role-tab" id="tab-manager" onclick="selectRole('manager')">
         <div class="icon">📊</div><div class="label">مدیر</div>
-      </div>
-      <div class="role-tab" id="tab-ceo" onclick="selectRole('ceo')">
-        <div class="icon">👔</div><div class="label">مدیرعامل</div>
       </div>
     </div>
     <div class="login-error" id="loginError">نام کاربری یا رمز عبور اشتباه است</div>
@@ -558,62 +555,6 @@ tbody tr:nth-child(even) { background: #fafafa; }
 </div><!-- /reporterScreen -->
 
 
-<!-- ═══════════════════════ CEO PANEL ═══════════════════════ -->
-<div id="ceoScreen" class="screen">
-  <nav class="navbar">
-    <div class="navbar-brand">
-      <div class="navbar-logo"><img class="brand-logo" alt="آذریورد"></div>
-      <div>
-        <div class="navbar-title">آذریورد تبریز</div>
-        <div class="navbar-subtitle">پنل مدیرعامل</div>
-      </div>
-    </div>
-    <div class="navbar-actions">
-      <button class="btn-logout" onclick="doLogout()">خروج</button>
-    </div>
-  </nav>
-
-  <div class="ceo-container">
-
-    <!-- فرم نوشتن نت -->
-    <div class="note-form-card">
-      <div class="section-header" style="margin-bottom:20px;">✍️ ارسال نت / اطلاعیه</div>
-      <div class="form-grid form-grid-1" style="gap:14px;">
-        <div>
-          <label class="field-label">گیرنده</label>
-          <select id="noteTarget" class="inp">
-            <option value="all">📢 همهٔ سرپرست‌ها (اطلاعیهٔ عمومی)</option>
-            <option value="noor">سرپرست نور</option>
-            <option value="bonab">سرپرست بناب</option>
-            <option value="maraghe">سرپرست مراغه</option>
-            <option value="chitgar">سرپرست چیتگر</option>
-            <option value="hafttir">سرپرست هفت‌تیر</option>
-            <option value="rezaei">سرپرست رضایی</option>
-            <option value="sefid">سرپرست شهرک سفید</option>
-            <option value="soleiman">سرپرست سلیمان‌آباد</option>
-          </select>
-        </div>
-        <div>
-          <label class="field-label">متن نت / پیام</label>
-          <textarea id="noteMessage" class="inp" rows="4" placeholder="پیام یا دستورالعمل برای سرپرست..."></textarea>
-        </div>
-        <div>
-          <button class="btn-submit" onclick="submitNote()" style="width:auto;padding:12px 32px;">📤 ارسال نت</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- لیست نت‌های ارسال‌شده -->
-    <div class="note-list-card">
-      <div class="section-header" style="margin-bottom:16px;">
-        📋 نت‌های ارسال‌شده
-        <button onclick="loadCEONotes()" style="background:rgba(255,255,255,0.25);border:none;color:white;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:12px;margin-right:8px;">🔄 بروزرسانی</button>
-      </div>
-      <div id="ceoNoteList"><div class="empty-state"><div class="icon">📭</div><p>هنوز نتی ارسال نشده</p></div></div>
-    </div>
-
-  </div>
-</div>
 
 <!-- ═══════════════════════ MANAGER PANEL ═══════════════════════ -->
 <div id="managerScreen" class="screen">
@@ -708,7 +649,6 @@ const USERS = {
   'sefid':    { pass: '1234', role: 'reporter', project: 'پروژه شهرک سفید' },
   'soleiman': { pass: '1234', role: 'reporter', project: 'پروژه سلیمان آباد' },
   'iman':     { pass: 'iman', role: 'manager' },
-  'ceo':      { pass: 'ceo123', role: 'ceo' },
 };
 
 const PROJECT_INFO = {
@@ -799,7 +739,6 @@ function selectRole(r) {
   selectedRole = r;
   document.getElementById('tab-reporter').classList.toggle('active', r === 'reporter');
   document.getElementById('tab-manager').classList.toggle('active', r === 'manager');
-  document.getElementById('tab-ceo').classList.toggle('active', r === 'ceo');
 }
 
 function doLogin() {
@@ -813,7 +752,6 @@ function doLogin() {
   }
   currentUser = { username: u, ...user };
   if (user.role === 'reporter') { initReporter(); showScreen('reporterScreen'); }
-  else if (user.role === 'ceo')     { initCEO();     showScreen('ceoScreen');     }
   else { initManager(); showScreen('managerScreen'); }
 }
 
@@ -834,106 +772,6 @@ function showScreen(id) {
  * ════════════════════════════════════════ */
 
 
-/* ════════════════════════════════════════
- *  پنل مدیرعامل — نت‌ها
- * ════════════════════════════════════════ */
-
-function initCEO() {
-  loadCEONotes();
-}
-
-async function submitNote() {
-  const target  = document.getElementById('noteTarget').value;
-  const message = document.getElementById('noteMessage').value.trim();
-  if (!message) { toast('متن پیام را بنویسید', 'error'); return; }
-
-  showLoading(true, 'در حال ارسال...');
-  try {
-    await fetch(GAS_URL, {
-      method: 'POST', mode: 'no-cors',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ action: 'saveNote', to: target, message: message }),
-    });
-    await new Promise(r => setTimeout(r, 1200));
-    toast('نت ارسال شد ✅', 'success');
-    document.getElementById('noteMessage').value = '';
-    await loadCEONotes();
-  } catch(e) { toast('خطا: ' + e.message, 'error'); }
-  showLoading(false);
-}
-
-async function loadCEONotes() {
-  try {
-    const res = await apiGet({ action: 'getNotes', username: 'all' });
-    if (!res || !res.success) throw new Error(res && res.error || 'خطا');
-    renderCEONotes(res.notes || []);
-  } catch(e) { toast('خطا در بارگذاری نت‌ها: ' + e.message, 'error'); }
-}
-
-function renderCEONotes(notes) {
-  const container = document.getElementById('ceoNoteList');
-  if (!notes.length) {
-    container.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>هنوز نتی ارسال نشده</p></div>';
-    return;
-  }
-  container.innerHTML = '';
-  [...notes].reverse().forEach(n => {
-    const isAll = n.to === 'all';
-    const targetLabel = isAll ? '📢 همهٔ سرپرست‌ها' : '👤 سرپرست ' + n.to;
-    const date = new Date(n.created_at).toLocaleString('fa-IR');
-    const div = document.createElement('div');
-    div.className = 'note-list-item' + (isAll ? ' to-all' : '');
-    div.innerHTML = `
-      <div style="flex:1;">
-        <div class="note-list-target">${esc(targetLabel)}</div>
-        <div class="note-list-msg">${esc(n.message)}</div>
-        <div class="note-list-meta">📅 ${date}</div>
-      </div>
-      <button class="btn-danger-sm" onclick="deleteCEONote('${esc(n.id)}')">حذف</button>`;
-    container.appendChild(div);
-  });
-}
-
-async function deleteCEONote(id) {
-  if (!confirm('این نت حذف شود؟')) return;
-  showLoading(true);
-  try {
-    const res = await apiGet({ action: 'deleteNote', id: id });
-    if (!res || !res.success) throw new Error(res && res.error || 'خطا');
-    toast('نت حذف شد', 'success');
-    await loadCEONotes();
-  } catch(e) { toast('خطا: ' + e.message, 'error'); }
-  showLoading(false);
-}
-
-/* ════════════════════════════════════════
- *  بنر نت برای سرپرست‌ها
- * ════════════════════════════════════════ */
-
-async function loadReporterNotes() {
-  const banner = document.getElementById('noteBanner');
-  if (!banner) return;
-  try {
-    const res = await apiGet({ action: 'getNotes', username: currentUser.username });
-    if (!res || !res.success || !res.notes || !res.notes.length) return;
-    banner.innerHTML = '';
-    res.notes.forEach(n => {
-      const isPublic = n.to === 'all';
-      const card = document.createElement('div');
-      card.className = 'note-card ' + (isPublic ? 'public' : 'private');
-      card.id = 'note-' + n.id;
-      const date = new Date(n.created_at).toLocaleString('fa-IR');
-      card.innerHTML = `
-        <div class="note-card-body">
-          <div class="note-card-label">${isPublic ? '📢 اطلاعیهٔ عمومی مدیرعامل' : '📩 پیام اختصاصی مدیرعامل'}</div>
-          <div class="note-card-msg">${esc(n.message)}</div>
-          <div class="note-card-date">📅 ${date}</div>
-        </div>
-        <button class="note-dismiss" onclick="document.getElementById('note-${esc(n.id)}').remove()" title="بستن">×</button>`;
-      banner.appendChild(card);
-    });
-  } catch(e) { /* نت نیامد — بی‌صدا رد کن */ }
-}
 
 function initReporter() {
   const proj = currentUser.project;
@@ -1389,6 +1227,8 @@ function renderReports() {
       </div>
       <div class="report-card-actions">
         <button class="btn-success-sm" onclick="openReportModal('${esc(r.id)}')">مشاهده</button>
+        <button style="background:#d97706;color:white;border:none;padding:7px 12px;border-radius:7px;font-size:13px;cursor:pointer;font-family:'Vazirmatn',sans-serif;"
+          onclick="openNoteModal('${esc(r.project_username)}','${esc(r.projectName||r.project_username)}')">📝 نت</button>
         <button class="btn-danger-sm"  onclick="deleteReport('${esc(r.id)}')">حذف</button>
       </div>`;
     container.appendChild(card);
