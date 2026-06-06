@@ -276,34 +276,40 @@ tbody tr:nth-child(even) { background: #fafafa; }
 .note-list-target { font-size: 11px; font-weight: 700; color: var(--primary); margin-bottom: 3px; }
 .note-list-item.to-all .note-list-target { color: #d97706; }
 
-/* ===== MANAGER TABS ===== */
-.mgr-tabs { display:flex; gap:8px; margin-bottom:20px; background:white; padding:8px; border-radius:12px; box-shadow:var(--shadow); }
-.mgr-tab  { flex:1; padding:10px 16px; border:2px solid transparent; border-radius:8px; font-size:14px; font-weight:700; cursor:pointer; background:transparent; font-family:'Vazirmatn',sans-serif; color:var(--text-muted); transition:all 0.2s; }
-.mgr-tab:hover  { background:#f1f5f9; color:var(--text); }
-.mgr-tab.active { background:linear-gradient(135deg,#1e40af,#7c3aed); color:white; border-color:transparent; }
 
-/* ===== NOTE ITEMS ===== */
-.note-item { background:#f8fafc; border-radius:10px; padding:14px 16px; margin-bottom:10px; border-right:4px solid var(--primary); display:flex; align-items:flex-start; justify-content:space-between; gap:12px; transition:box-shadow 0.2s; }
-.note-item:hover { box-shadow:var(--shadow); }
-.note-item.cat-safety   { border-color:#dc2626; }
-.note-item.cat-technical{ border-color:#7c3aed; }
-.note-item.cat-financial{ border-color:#059669; }
-.note-item.cat-urgent   { border-color:#dc2626; background:#fef2f2; }
-.note-item.cat-general  { border-color:var(--primary); }
-.note-item-body { flex:1; }
-.note-item-tags { display:flex; gap:6px; margin-bottom:6px; flex-wrap:wrap; }
-.note-tag { font-size:11px; font-weight:700; padding:2px 8px; border-radius:20px; }
-.note-tag-project  { background:#dbeafe; color:#1e40af; }
-.note-tag-cat      { background:#ede9fe; color:#7c3aed; }
-.note-tag-cat.urgent   { background:#fecaca; color:#dc2626; }
-.note-tag-cat.safety   { background:#fecaca; color:#dc2626; }
-.note-tag-cat.financial{ background:#d1fae5; color:#059669; }
-.note-tag-to       { background:#fef9c3; color:#92400e; }
-.note-item-msg  { font-size:14px; color:#1e293b; line-height:1.7; white-space:pre-wrap; margin-bottom:4px; }
-.note-item-date { font-size:11px; color:#94a3b8; }
-.note-highlight { background:#fef08a; border-radius:2px; padding:0 2px; }
+/* ===== PANEL TABS ===== */
+.panel-tabs { display: flex; gap: 8px; margin-bottom: 20px; background: white; padding: 6px; border-radius: 12px; box-shadow: var(--shadow); }
+.panel-tab { flex: 1; padding: 12px 16px; border: none; background: transparent; border-radius: 8px; font-family: 'Vazirmatn', sans-serif; font-size: 14px; font-weight: 700; color: #64748b; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 7px; }
+.panel-tab.active { background: linear-gradient(135deg, var(--primary), var(--primary-2, #7c3aed)); color: white; }
+.panel-tab .badge { background: #ef4444; color: white; border-radius: 10px; padding: 1px 7px; font-size: 11px; }
+.panel-tab.active .badge { background: rgba(255,255,255,0.3); }
 
+/* ===== MESSAGE CENTER ===== */
+.msg-search-bar { background: white; border-radius: var(--radius); padding: 16px 18px; margin-bottom: 18px; box-shadow: var(--shadow); display: grid; grid-template-columns: 2fr 1.2fr 1fr 1fr auto auto; gap: 10px; align-items: end; }
+.msg-search-bar .fld { display: flex; flex-direction: column; gap: 4px; }
+.msg-search-bar label { font-size: 11px; color: #94a3b8; font-weight: 600; }
+.msg-search-bar input, .msg-search-bar select { padding: 9px 11px; border: 1px solid var(--border); border-radius: 8px; font-size: 13px; font-family: 'Vazirmatn', sans-serif; width: 100%; }
+.msg-search-btn { padding: 9px 18px; border: none; border-radius: 8px; font-family: 'Vazirmatn', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; white-space: nowrap; }
+.msg-search-btn.primary { background: linear-gradient(135deg, var(--primary), #7c3aed); color: white; }
+.msg-search-btn.ghost { background: #f1f5f9; color: #475569; }
+@media (max-width: 768px) { .msg-search-bar { grid-template-columns: 1fr 1fr; } .msg-search-bar .fld.wide { grid-column: 1 / -1; } }
 
+.msg-count { font-size: 13px; color: #64748b; margin-bottom: 12px; padding: 0 4px; }
+.msg-item { background: white; border-radius: 12px; padding: 16px 18px; margin-bottom: 12px; box-shadow: var(--shadow); border-right: 4px solid var(--primary); display: flex; justify-content: space-between; gap: 14px; align-items: flex-start; }
+.msg-item.is-public { border-color: #d97706; }
+.msg-item-body { flex: 1; }
+.msg-item-tags { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; flex-wrap: wrap; }
+.msg-tag { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; }
+.msg-tag.public  { background: #fef3c7; color: #b45309; }
+.msg-tag.private { background: #dbeafe; color: #1d4ed8; }
+.msg-tag.date    { background: #f1f5f9; color: #64748b; }
+.msg-item-text { font-size: 14px; color: #1e293b; line-height: 1.7; white-space: pre-wrap; }
+.msg-item-actions { flex-shrink: 0; }
+.msg-empty { text-align: center; padding: 50px 20px; color: #94a3b8; }
+.msg-empty .icon { font-size: 44px; margin-bottom: 12px; }
+.msg-highlight { background: #fde68a; border-radius: 3px; padding: 0 2px; }
+
+/* ===== PRINT ===== */
 @media print {
   body { background: white !important; }
   .screen, .navbar, #loadingOverlay { display: none !important; }
@@ -374,21 +380,20 @@ tbody tr:nth-child(even) { background: #fafafa; }
       </div>
     </div>
     <div class="navbar-actions">
-      <button class="mgr-tab" id="repTabBtnReport" onclick="switchRepTab('report')"
-        style="background:rgba(255,255,255,0.15);color:white;border:1px solid rgba(255,255,255,0.35);padding:7px 14px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Vazirmatn',sans-serif;">
-        📋 گزارش
-      </button>
-      <button id="repTabBtnNotes" onclick="switchRepTab('notes')"
-        style="background:rgba(255,255,255,0.15);color:white;border:1px solid rgba(255,255,255,0.35);padding:7px 14px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Vazirmatn',sans-serif;position:relative;">
-        📝 نت‌ها
-        <span id="repNotesBadge" style="display:none;position:absolute;top:-6px;right:-6px;background:#dc2626;color:white;border-radius:50%;width:18px;height:18px;font-size:10px;font-weight:800;line-height:18px;text-align:center;">!</span>
-      </button>
       <button class="btn-logout" onclick="doLogout()">خروج</button>
     </div>
   </nav>
 
-  <!-- تب گزارش -->
-  <div id="repTabReport" class="reporter-container">
+  <div class="reporter-container">
+
+    <!-- تب‌ها -->
+    <div class="panel-tabs">
+      <button class="panel-tab active" id="rtab-form" onclick="switchRepTab('form')">📝 ثبت گزارش</button>
+      <button class="panel-tab" id="rtab-notes" onclick="switchRepTab('notes')">💬 پیام‌های من <span class="badge" id="repNoteBadge" style="display:none;">0</span></button>
+    </div>
+
+    <!-- ═══ نمای فرم گزارش ═══ -->
+    <div id="repFormView">
     <div id="noteBanner"></div>
 
     <!-- پیش‌نویس‌ها -->
@@ -588,54 +593,41 @@ tbody tr:nth-child(even) { background: #fafafa; }
       <button class="btn-submit" onclick="submitReport()">📤 ثبت و ارسال گزارش</button>
     </div>
     <br>
-  </div><!-- /repTabReport -->
+    </div><!-- /repFormView -->
 
-  <!-- تب نت‌ها -->
-  <div id="repTabNotes" style="display:none;" class="reporter-container">
-
-    <!-- نت‌های دریافتی از مدیر -->
-    <div class="section-card" style="margin-bottom:20px;">
-      <div class="section-header" style="display:flex;align-items:center;justify-content:space-between;">
-        <span>📥 پیام‌های دریافتی از مدیریت</span>
-        <button onclick="loadReporterNotes()" style="background:rgba(255,255,255,0.2);border:none;color:white;padding:4px 12px;border-radius:6px;cursor:pointer;font-size:12px;font-family:'Vazirmatn',sans-serif;">🔄 بروزرسانی</button>
-      </div>
-      <div id="repInboxNotes">
-        <div class="empty-state"><div class="icon">⏳</div><p>در حال بارگذاری...</p></div>
-      </div>
-    </div>
-
-    <!-- ارسال نت به مدیر -->
-    <div class="section-card">
-      <div class="section-header">📤 ارسال نت / یادداشت به مدیریت</div>
-      <div style="margin-bottom:14px;">
-        <label class="field-label">دسته‌بندی</label>
-        <select id="repNoteCat" class="inp">
-          <option value="general">عمومی</option>
-          <option value="technical">فنی</option>
-          <option value="safety">ایمنی (HSE)</option>
-          <option value="financial">مالی</option>
-          <option value="urgent">فوری 🚨</option>
-        </select>
-      </div>
-      <div style="margin-bottom:16px;">
-        <label class="field-label">متن یادداشت</label>
-        <textarea id="repNoteMsg" class="inp" rows="4"
-          placeholder="یادداشت، سوال، گزارش مشکل یا هر پیامی برای مدیریت..."></textarea>
-      </div>
-      <button class="btn-submit" style="padding:11px 28px;" onclick="sendRepNote()">📤 ارسال به مدیریت</button>
-
-      <!-- نت‌های ارسال‌شده توسط این گزارش‌دهنده -->
-      <div style="margin-top:24px;border-top:1px solid var(--border);padding-top:18px;">
-        <div style="font-size:14px;font-weight:700;color:var(--text-muted);margin-bottom:12px;">📋 نت‌های ارسال‌شده توسط شما</div>
-        <div id="repSentNotes">
-          <div class="empty-state" style="padding:20px;"><p style="font-size:13px;">بعد از بروزرسانی نمایش داده می‌شود</p></div>
+    <!-- ═══ نمای پیام‌های من ═══ -->
+    <div id="repNotesView" style="display:none;">
+      <div class="msg-search-bar">
+        <div class="fld wide">
+          <label>جستجو در پیام‌ها</label>
+          <input type="text" id="rNoteText" placeholder="کلمه یا عبارت..." oninput="applyRepNoteFilters()">
         </div>
+        <div class="fld">
+          <label>نوع پیام</label>
+          <select id="rNoteType" onchange="applyRepNoteFilters()">
+            <option value="">همه</option>
+            <option value="all">📢 عمومی</option>
+            <option value="me">📩 اختصاصی من</option>
+          </select>
+        </div>
+        <div class="fld">
+          <label>از تاریخ</label>
+          <input type="date" id="rNoteFrom" onchange="applyRepNoteFilters()">
+        </div>
+        <div class="fld">
+          <label>تا تاریخ</label>
+          <input type="date" id="rNoteTo" onchange="applyRepNoteFilters()">
+        </div>
+        <button class="msg-search-btn ghost" onclick="clearRepNoteFilters()">پاک کردن</button>
+        <button class="msg-search-btn primary" onclick="loadMyNotes()">🔄 بروزرسانی</button>
+      </div>
+      <div class="msg-count" id="rNoteCount"></div>
+      <div id="repNoteList">
+        <div class="msg-empty"><div class="icon">⏳</div><p>در حال بارگذاری...</p></div>
       </div>
     </div>
 
-    <br>
-  </div><!-- /repTabNotes -->
-
+  </div><!-- /reporter-container -->
 </div><!-- /reporterScreen -->
 
 
@@ -656,113 +648,103 @@ tbody tr:nth-child(even) { background: #fafafa; }
   </nav>
 
   <div class="manager-container">
-    <!-- آمار -->
-    <div class="stats-row">
-      <div class="stat-card"><div class="stat-val" id="statTotal">—</div><div class="stat-label">کل گزارش‌ها</div></div>
-      <div class="stat-card"><div class="stat-val" id="statToday">—</div><div class="stat-label">گزارش امروز</div></div>
-      <div class="stat-card"><div class="stat-val" id="statProjects">—</div><div class="stat-label">پروژه فعال</div></div>
-      <div class="stat-card"><div class="stat-val" id="statWeek">—</div><div class="stat-label">گزارش این هفته</div></div>
+
+    <!-- تب‌ها -->
+    <div class="panel-tabs">
+      <button class="panel-tab active" id="mtab-reports" onclick="switchMgrTab('reports')">📋 گزارش‌ها</button>
+      <button class="panel-tab" id="mtab-notes" onclick="switchMgrTab('notes')">💬 پیام‌ها و نت‌ها</button>
     </div>
 
-    <!-- تب‌های پنل مدیر -->
-    <div class="mgr-tabs">
-      <button class="mgr-tab active" id="tabReports" onclick="switchMgrTab('reports')">📋 گزارش‌ها</button>
-      <button class="mgr-tab" id="tabNotes"   onclick="switchMgrTab('notes')">📝 نت‌های پروژه</button>
-    </div>
+    <!-- ═══ نمای گزارش‌ها ═══ -->
+    <div id="mgrReportsView">
+      <div class="stats-row">
+        <div class="stat-card"><div class="stat-val" id="statTotal">—</div><div class="stat-label">کل گزارش‌ها</div></div>
+        <div class="stat-card"><div class="stat-val" id="statToday">—</div><div class="stat-label">گزارش امروز</div></div>
+        <div class="stat-card"><div class="stat-val" id="statProjects">—</div><div class="stat-label">پروژه فعال</div></div>
+        <div class="stat-card"><div class="stat-val" id="statWeek">—</div><div class="stat-label">گزارش این هفته</div></div>
+      </div>
 
-    <!-- تب گزارش‌ها -->
-    <div id="mgrTabReports">
       <div class="filter-bar">
         <select id="filterProject" style="min-width:160px;"></select>
         <input type="text" id="filterSearch" placeholder="جستجو: شماره، تاریخ، شیفت..." style="flex:1;min-width:160px;">
         <button class="btn-secondary" onclick="applyFilters()">🔍 جستجو</button>
         <button class="btn-secondary" onclick="loadManagerReports()">🔄 بروزرسانی</button>
       </div>
+
       <div id="reportList" class="report-list">
         <div class="empty-state"><div class="icon">⏳</div><p>در حال بارگذاری گزارش‌ها...</p></div>
       </div>
     </div>
 
-    <!-- تب نت‌های پروژه -->
-    <div id="mgrTabNotes" style="display:none;">
-      <!-- فرم ارسال نت جدید -->
-      <div class="section-card" style="margin-bottom:20px;">
-        <div class="section-header">📝 ارسال نت جدید</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:14px;">
-          <div>
-            <label class="field-label">مخاطب</label>
-            <select id="noteToSelect" class="inp">
-              <option value="all">📢 همه گزارش‌دهنده‌ها (عمومی)</option>
-            </select>
-          </div>
-          <div>
-            <label class="field-label">دسته‌بندی</label>
-            <select id="noteCategorySelect" class="inp">
-              <option value="general">عمومی</option>
-              <option value="safety">ایمنی (HSE)</option>
-              <option value="technical">فنی</option>
-              <option value="financial">مالی</option>
-              <option value="urgent">فوری 🚨</option>
-            </select>
-          </div>
-        </div>
-        <div style="margin-bottom:14px;">
-          <label class="field-label">متن نت</label>
-          <textarea id="newNoteMessage" class="inp" rows="3" placeholder="متن نت / دستورالعمل / یادداشت مدیریتی..."></textarea>
-        </div>
-        <button class="btn-submit" style="padding:10px 28px;font-size:14px;" onclick="sendNoteFromPanel()">📤 ارسال نت</button>
+    <!-- ═══ نمای پیام‌ها و نت‌ها ═══ -->
+    <div id="mgrNotesView" style="display:none;">
+
+      <!-- ارسال نت عمومی -->
+      <div style="display:flex;justify-content:flex-end;margin-bottom:16px;">
+        <button onclick="openNoteModal('all','همهٔ سرپرست‌ها')"
+          style="background:linear-gradient(135deg,#d97706,#f59e0b);color:white;border:none;padding:12px 24px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Vazirmatn',sans-serif;display:flex;align-items:center;gap:7px;">
+          📢 نت عمومی برای همهٔ سرپرست‌ها
+        </button>
       </div>
 
-      <!-- جستجوی هوشمند RAG -->
-      <div class="section-card" style="margin-bottom:20px;">
-        <div class="section-header">🤖 جستجوی هوشمند در نت‌ها
-          <span class="section-badge">RAG / AI</span>
+      <!-- جستجوی پیشرفته -->
+      <div class="msg-search-bar">
+        <div class="fld wide">
+          <label>جستجو در متن پیام</label>
+          <input type="text" id="mNoteText" placeholder="کلمه یا عبارت..." oninput="applyNoteFilters()">
         </div>
-        <div style="display:flex;gap:10px;align-items:flex-end;">
-          <div style="flex:1;">
-            <label class="field-label">سوال یا عبارت جستجو</label>
-            <input type="text" id="ragQuery" class="inp" placeholder="مثال: نت‌های مربوط به ایمنی پروژه چیتگر... یا دستورالعمل‌های فنی این هفته..."
-                   onkeydown="if(event.key==='Enter')doRagSearch()">
-          </div>
-          <button class="btn-submit" style="padding:11px 22px;font-size:14px;white-space:nowrap;" onclick="doRagSearch()">🔍 جستجوی هوشمند</button>
+        <div class="fld">
+          <label>گیرنده</label>
+          <select id="mNoteRecipient" onchange="applyNoteFilters()">
+            <option value="">همهٔ گیرنده‌ها</option>
+            <option value="all">📢 عمومی (همه)</option>
+            <option value="noor">سرپرست نور</option>
+            <option value="bonab">سرپرست بناب</option>
+            <option value="maraghe">سرپرست مراغه</option>
+            <option value="chitgar">سرپرست چیتگر</option>
+            <option value="hafttir">سرپرست هفت‌تیر</option>
+            <option value="rezaei">سرپرست رضایی</option>
+            <option value="sefid">سرپرست شهرک سفید</option>
+            <option value="soleiman">سرپرست سلیمان‌آباد</option>
+          </select>
         </div>
-        <div id="ragResult" style="display:none;margin-top:16px;background:#f0fdf4;border:1.5px solid #a7f3d0;border-radius:10px;padding:16px;">
-          <div style="font-size:12px;font-weight:700;color:#059669;margin-bottom:8px;">🤖 پاسخ هوش مصنوعی</div>
-          <div id="ragAnswer" style="font-size:14px;line-height:1.8;color:#1e293b;white-space:pre-wrap;"></div>
-          <div id="ragSources" style="margin-top:12px;border-top:1px solid #a7f3d0;padding-top:10px;"></div>
+        <div class="fld">
+          <label>از تاریخ</label>
+          <input type="date" id="mNoteFrom" onchange="applyNoteFilters()">
         </div>
-        <div id="ragLoading" style="display:none;margin-top:12px;text-align:center;color:#64748b;font-size:13px;">
-          <div class="spinner" style="width:28px;height:28px;margin:0 auto 8px;"></div>
-          در حال جستجوی هوشمند...
+        <div class="fld">
+          <label>تا تاریخ</label>
+          <input type="date" id="mNoteTo" onchange="applyNoteFilters()">
         </div>
+        <button class="msg-search-btn ghost" onclick="clearNoteFilters()">پاک کردن</button>
+        <button class="msg-search-btn primary" onclick="loadAllNotes()">🔄 بروزرسانی</button>
       </div>
 
-      <!-- فیلتر و لیست نت‌ها -->
-      <div class="section-card">
-        <div class="section-header">
-          📋 همه نت‌ها
-          <span class="section-badge" id="noteCountBadge">۰ نت</span>
-        </div>
-        <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
-          <select id="noteFilterProject" class="inp" style="flex:1;min-width:140px;" onchange="renderNotesList()">
-            <option value="">همه پروژه‌ها</option>
-          </select>
-          <select id="noteFilterCategory" class="inp" style="width:140px;" onchange="renderNotesList()">
-            <option value="">همه دسته‌ها</option>
-            <option value="general">عمومی</option>
-            <option value="safety">ایمنی</option>
-            <option value="technical">فنی</option>
-            <option value="financial">مالی</option>
-            <option value="urgent">فوری</option>
-          </select>
-          <input type="text" id="noteFilterText" class="inp" style="flex:2;min-width:160px;" placeholder="جستجوی متنی ساده..."
-                 oninput="renderNotesList()">
-          <button class="btn-secondary" onclick="loadAllNotes()">🔄 بروزرسانی</button>
-        </div>
-        <div id="notesList"></div>
+      <div class="msg-count" id="mNoteCount"></div>
+      <div id="mgrNoteList">
+        <div class="msg-empty"><div class="icon">⏳</div><p>در حال بارگذاری...</p></div>
       </div>
     </div>
 
+  </div>
+</div>
+
+
+<!-- ═══════════════════════ NOTE MODAL ═══════════════════════ -->
+<div class="modal-overlay" id="noteModal">
+  <div class="modal-box" style="max-width:480px;">
+    <div class="modal-header">
+      <div class="modal-title" id="noteModalTitle">ارسال نت</div>
+      <button class="modal-close" onclick="closeNoteModal()">✕</button>
+    </div>
+    <div>
+      <label class="field-label">متن پیام / دستورالعمل</label>
+      <textarea id="noteModalMsg" class="inp" rows="5" placeholder="پیام یا دستورالعمل را بنویسید..."></textarea>
+    </div>
+    <div style="margin-top:16px;display:flex;gap:10px;justify-content:flex-end;">
+      <button class="btn-secondary" onclick="closeNoteModal()">انصراف</button>
+      <button class="btn-submit" style="padding:10px 28px;font-size:14px;" onclick="sendNote()">📤 ارسال نت</button>
+    </div>
   </div>
 </div>
 
@@ -805,7 +787,7 @@ tbody tr:nth-child(even) { background: #fafafa; }
  *  ⚙️  آدرس وب‌اپ Google Apps Script را اینجا وارد کنید
  *  بعد از Deploy، آدرس exec را کپی کنید و جایگزین کنید
  * ═══════════════════════════════════════════════════════════ */
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbyIbtLJt4pakBdH3neCturFw0EY24dt2RZM0DftQqSuF1Q9AbaI8xl1Q8ZkbcAa8KYsBQ/exec';
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbz9l0Ejx4Z5dk1MhXLy6gKcWGz57wcDnqTo3AQpeU919_FAb7E0By82KTJm6_oVDNkvMw/exec';
 // برای جلوگیری از ریدایرکت چند اکانت گوگل — مستقیم به googleusercontent می‌رویم
 const GAS_GET_URL = GAS_URL + '?';
 const LOGO_SRC = 'data:image/png;base64,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';
@@ -851,7 +833,6 @@ const STAFF_POSITIONS     = ['ناظر','مهندس سایت','سرپرست کا
 let currentUser    = null;
 let uploadedImages = [];   // آرایه‌ای از base64 یا null
 let allReports     = [];   // لیست صفحه جاری داشبورد
-let allNotes       = [];   // همه نت‌ها
 let modalReportData = null;
 
 /* وضعیت داشبورد مدیر */
@@ -931,7 +912,8 @@ function doLogin() {
 }
 
 function doLogout() {
-  currentUser = null; uploadedImages = []; allReports = []; allNotes = [];
+  currentUser = null; uploadedImages = []; allReports = [];
+  _allNotes = []; _allNotesLoaded = false; _myNotes = []; _myNotesLoaded = false;
   showScreen('loginScreen');
   document.getElementById('loginUser').value = '';
   document.getElementById('loginPass').value = '';
@@ -948,6 +930,267 @@ function showScreen(id) {
 
 
 
+
+/* ════════════════════════════════════════
+ *  نت‌ها و مرکز پیام (مدیر + سرپرست)
+ * ════════════════════════════════════════ */
+
+// نگاشت نام سرپرست‌ها برای نمایش
+const SUPERVISOR_LABELS = {
+  noor:'نور', bonab:'بناب', maraghe:'مراغه', chitgar:'چیتگر',
+  hafttir:'هفت‌تیر', rezaei:'رضایی', sefid:'شهرک سفید', soleiman:'سلیمان‌آباد'
+};
+function supLabel(u){ return SUPERVISOR_LABELS[u] || u; }
+
+// هایلایت متن جستجو
+function highlight(text, q){
+  text = esc(text);
+  if(!q) return text;
+  try {
+    const safe = q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+    return text.replace(new RegExp(safe,'gi'), m => '<span class="msg-highlight">'+m+'</span>');
+  } catch(e){ return text; }
+}
+
+// تبدیل تاریخ ISO به yyyy-mm-dd برای مقایسه
+function isoDay(iso){ return new Date(iso).toISOString().slice(0,10); }
+
+/* ─── مودال ارسال نت (مدیر) ─── */
+let _noteTarget = 'all';
+
+function openNoteModal(target, label){
+  _noteTarget = target;
+  document.getElementById('noteModalTitle').textContent =
+    target === 'all' ? '📢 نت عمومی — همهٔ سرپرست‌ها' : '📩 نت برای سرپرست ' + label;
+  document.getElementById('noteModalMsg').value = '';
+  document.getElementById('noteModal').classList.add('open');
+  setTimeout(() => document.getElementById('noteModalMsg').focus(), 100);
+}
+function closeNoteModal(){ document.getElementById('noteModal').classList.remove('open'); }
+
+async function sendNote(){
+  const msg = document.getElementById('noteModalMsg').value.trim();
+  if(!msg){ toast('متن پیام را بنویسید','error'); return; }
+  showLoading(true,'در حال ارسال نت...');
+  try{
+    await fetch(GAS_URL,{
+      method:'POST', mode:'no-cors',
+      headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body: JSON.stringify({action:'saveNote', to:_noteTarget, message:msg}),
+    });
+    await new Promise(r => setTimeout(r,1000));
+    closeNoteModal();
+    toast('نت ارسال شد ✅','success');
+    if(currentUser && currentUser.role === 'manager') loadAllNotes();
+  }catch(e){ toast('خطا: '+e.message,'error'); }
+  showLoading(false);
+}
+
+/* ─── تب‌های پنل مدیر ─── */
+function switchMgrTab(tab){
+  const isReports = tab === 'reports';
+  document.getElementById('mgrReportsView').style.display = isReports ? '' : 'none';
+  document.getElementById('mgrNotesView').style.display   = isReports ? 'none' : '';
+  document.getElementById('mtab-reports').classList.toggle('active', isReports);
+  document.getElementById('mtab-notes').classList.toggle('active', !isReports);
+  if(!isReports && !_allNotesLoaded) loadAllNotes();
+}
+
+/* ─── مرکز پیام مدیر ─── */
+let _allNotes = [];
+let _allNotesLoaded = false;
+
+async function loadAllNotes(){
+  const list = document.getElementById('mgrNoteList');
+  list.innerHTML = '<div class="msg-empty"><div class="icon">⏳</div><p>در حال بارگذاری...</p></div>';
+  try{
+    const res = await apiGet({action:'getNotes', username:'all'});
+    if(!res || !res.success) throw new Error(res && res.error || 'خطا');
+    _allNotes = (res.notes||[]).slice().sort((a,b)=> new Date(b.created_at)-new Date(a.created_at));
+    _allNotesLoaded = true;
+    applyNoteFilters();
+  }catch(e){
+    list.innerHTML = '<div class="msg-empty"><div class="icon">⚠️</div><p>خطا در بارگذاری: '+esc(e.message)+'</p></div>';
+  }
+}
+
+function clearNoteFilters(){
+  document.getElementById('mNoteText').value='';
+  document.getElementById('mNoteRecipient').value='';
+  document.getElementById('mNoteFrom').value='';
+  document.getElementById('mNoteTo').value='';
+  applyNoteFilters();
+}
+
+function applyNoteFilters(){
+  const q    = document.getElementById('mNoteText').value.trim();
+  const rcp  = document.getElementById('mNoteRecipient').value;
+  const from = document.getElementById('mNoteFrom').value;
+  const to   = document.getElementById('mNoteTo').value;
+
+  let filtered = _allNotes.filter(n => {
+    if(q && (n.message||'').indexOf(q) === -1) return false;
+    if(rcp && n.to !== rcp) return false;
+    if(from && isoDay(n.created_at) < from) return false;
+    if(to   && isoDay(n.created_at) > to)   return false;
+    return true;
+  });
+  renderMgrNotes(filtered, q);
+}
+
+function renderMgrNotes(notes, q){
+  const list = document.getElementById('mgrNoteList');
+  const cnt  = document.getElementById('mNoteCount');
+  cnt.textContent = notes.length ? ('🔎 ' + toFa(notes.length) + ' پیام یافت شد') : '';
+  if(!notes.length){
+    list.innerHTML = '<div class="msg-empty"><div class="icon">📭</div><p>پیامی یافت نشد</p></div>';
+    return;
+  }
+  list.innerHTML = notes.map(n => {
+    const isAll = n.to === 'all';
+    const date  = new Date(n.created_at).toLocaleString('fa-IR');
+    const tag   = isAll
+      ? '<span class="msg-tag public">📢 عمومی — همه</span>'
+      : '<span class="msg-tag private">📩 سرپرست '+esc(supLabel(n.to))+'</span>';
+    return `<div class="msg-item ${isAll?'is-public':''}">
+      <div class="msg-item-body">
+        <div class="msg-item-tags">${tag}<span class="msg-tag date">📅 ${esc(date)}</span></div>
+        <div class="msg-item-text">${highlight(n.message||'', q)}</div>
+      </div>
+      <div class="msg-item-actions">
+        <button class="btn-danger-sm" onclick="deleteCenterNote('${esc(n.id)}')">حذف</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function deleteCenterNote(id){
+  if(!confirm('این پیام حذف شود؟')) return;
+  showLoading(true);
+  try{
+    const res = await apiGet({action:'deleteNote', id:id});
+    if(!res || !res.success) throw new Error(res && res.error || 'خطا');
+    toast('پیام حذف شد','success');
+    _allNotes = _allNotes.filter(n => n.id !== id);
+    applyNoteFilters();
+  }catch(e){ toast('خطا: '+e.message,'error'); }
+  showLoading(false);
+}
+
+/* ─── تب‌های پنل سرپرست ─── */
+function switchRepTab(tab){
+  const isForm = tab === 'form';
+  document.getElementById('repFormView').style.display = isForm ? '' : 'none';
+  document.getElementById('repNotesView').style.display = isForm ? 'none' : '';
+  document.getElementById('rtab-form').classList.toggle('active', isForm);
+  document.getElementById('rtab-notes').classList.toggle('active', !isForm);
+  if(!isForm && !_myNotesLoaded) loadMyNotes();
+}
+
+/* ─── مرکز پیام سرپرست ─── */
+let _myNotes = [];
+let _myNotesLoaded = false;
+
+async function loadMyNotes(){
+  const list = document.getElementById('repNoteList');
+  list.innerHTML = '<div class="msg-empty"><div class="icon">⏳</div><p>در حال بارگذاری...</p></div>';
+  try{
+    const res = await apiGet({action:'getNotes', username: currentUser.username});
+    if(!res || !res.success) throw new Error(res && res.error || 'خطا');
+    _myNotes = (res.notes||[]).slice().sort((a,b)=> new Date(b.created_at)-new Date(a.created_at));
+    _myNotesLoaded = true;
+    applyRepNoteFilters();
+  }catch(e){
+    list.innerHTML = '<div class="msg-empty"><div class="icon">⚠️</div><p>خطا در بارگذاری: '+esc(e.message)+'</p></div>';
+  }
+}
+
+function clearRepNoteFilters(){
+  document.getElementById('rNoteText').value='';
+  document.getElementById('rNoteType').value='';
+  document.getElementById('rNoteFrom').value='';
+  document.getElementById('rNoteTo').value='';
+  applyRepNoteFilters();
+}
+
+function applyRepNoteFilters(){
+  const q    = document.getElementById('rNoteText').value.trim();
+  const typ  = document.getElementById('rNoteType').value;
+  const from = document.getElementById('rNoteFrom').value;
+  const to   = document.getElementById('rNoteTo').value;
+
+  let filtered = _myNotes.filter(n => {
+    if(q && (n.message||'').indexOf(q) === -1) return false;
+    if(typ === 'all' && n.to !== 'all') return false;
+    if(typ === 'me'  && n.to === 'all') return false;
+    if(from && isoDay(n.created_at) < from) return false;
+    if(to   && isoDay(n.created_at) > to)   return false;
+    return true;
+  });
+  renderRepNotes(filtered, q);
+}
+
+function renderRepNotes(notes, q){
+  const list = document.getElementById('repNoteList');
+  const cnt  = document.getElementById('rNoteCount');
+  cnt.textContent = notes.length ? ('🔎 ' + toFa(notes.length) + ' پیام') : '';
+  if(!notes.length){
+    list.innerHTML = '<div class="msg-empty"><div class="icon">📭</div><p>پیامی یافت نشد</p></div>';
+    return;
+  }
+  list.innerHTML = notes.map(n => {
+    const isAll = n.to === 'all';
+    const date  = new Date(n.created_at).toLocaleString('fa-IR');
+    const tag   = isAll
+      ? '<span class="msg-tag public">📢 اطلاعیهٔ عمومی</span>'
+      : '<span class="msg-tag private">📩 پیام اختصاصی</span>';
+    return `<div class="msg-item ${isAll?'is-public':''}">
+      <div class="msg-item-body">
+        <div class="msg-item-tags">${tag}<span class="msg-tag date">📅 ${esc(date)}</span></div>
+        <div class="msg-item-text">${highlight(n.message||'', q)}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ─── بنر نت هنگام ورود سرپرست ─── */
+async function loadReporterNotes(){
+  const banner = document.getElementById('noteBanner');
+  if(!banner) return;
+  try{
+    const res = await apiGet({action:'getNotes', username: currentUser.username});
+    if(!res || !res.success || !res.notes || !res.notes.length){
+      _myNotes = res && res.notes ? res.notes : [];
+      return;
+    }
+    _myNotes = res.notes.slice().sort((a,b)=> new Date(b.created_at)-new Date(a.created_at));
+    // بِج روی تب
+    const badge = document.getElementById('repNoteBadge');
+    if(badge){ badge.textContent = toFa(_myNotes.length); badge.style.display=''; }
+    // بنر فقط ۳ تای آخر
+    banner.innerHTML = '';
+    _myNotes.slice(0,3).forEach(n => {
+      const isPublic = n.to === 'all';
+      const card = document.createElement('div');
+      card.className = 'note-card ' + (isPublic ? 'public' : 'private');
+      card.id = 'note-' + n.id;
+      const date = new Date(n.created_at).toLocaleString('fa-IR');
+      card.innerHTML = `
+        <div class="note-card-body">
+          <div class="note-card-label">${isPublic ? '📢 اطلاعیهٔ مدیریت' : '📩 پیام اختصاصی مدیریت'}</div>
+          <div class="note-card-msg">${esc(n.message)}</div>
+          <div class="note-card-date">📅 ${date}</div>
+        </div>
+        <button class="note-dismiss" onclick="document.getElementById('note-${esc(n.id)}').remove()" title="بستن">×</button>`;
+      banner.appendChild(card);
+    });
+  }catch(e){ /* بی‌صدا */ }
+}
+
+// عدد فارسی
+function toFa(n){ return String(n).replace(/[0-9]/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]); }
+
+
 function initReporter() {
   const proj = currentUser.project;
   const info = PROJECT_INFO[proj] || {};
@@ -962,9 +1205,9 @@ function initReporter() {
   document.getElementById('reportDate').value = jy + '/' + pad(jm) + '/' + pad(jd);
   updateDraftSelect();
   clearForm();
-  // نمایش تب گزارش و چک کردن نت‌های جدید
-  switchRepTab('report');
-  _checkNewNotes();
+  _myNotesLoaded = false;
+  switchRepTab('form');
+  loadReporterNotes();
 }
 
 function clearForm() {
@@ -1339,8 +1582,9 @@ async function initManager() {
     if (e.key === 'Enter') applyFilters();
   };
 
-  _fillNoteToSelect();   // پر کردن select نت‌ها
   mgrState = { page: 1, pages: 1, total: 0, q: '', project: '' };
+  _allNotesLoaded = false;
+  switchMgrTab('reports');
   await loadManagerReports();
 }
 
@@ -1684,449 +1928,12 @@ function setLogos() {
 }
 setLogos();
 
+document.getElementById('noteModal').addEventListener('click', function(e) {
+  if (e.target === this) closeNoteModal();
+});
 document.getElementById('reportModal').addEventListener('click', function(e) {
   if (e.target === this) closeModal();
 });
-
-/* ════════════════════════════════════════
- *  تب‌های پنل مدیر
- * ════════════════════════════════════════ */
-
-function switchMgrTab(tab) {
-  document.getElementById('mgrTabReports').style.display = tab === 'reports' ? 'block' : 'none';
-  document.getElementById('mgrTabNotes').style.display   = tab === 'notes'   ? 'block' : 'none';
-  document.getElementById('tabReports').classList.toggle('active', tab === 'reports');
-  document.getElementById('tabNotes').classList.toggle('active',   tab === 'notes');
-  if (tab === 'notes' && allNotes.length === 0) loadAllNotes();
-}
-
-/* ════════════════════════════════════════
- *  نت‌های مدیر — state و helpers
- * ════════════════════════════════════════ */
-
-// allNotes — تعریف اصلی در بالای فایل است (خط ~797)
-
-const CAT_LABEL = { general:'عمومی', safety:'ایمنی HSE', technical:'فنی', financial:'مالی', urgent:'فوری 🚨' };
-const CAT_CLASS = { general:'cat-general', safety:'cat-safety', technical:'cat-technical', financial:'cat-financial', urgent:'cat-urgent' };
-
-// پر کردن select مخاطب در فرم ارسال نت
-function _fillNoteToSelect() {
-  const sel = document.getElementById('noteToSelect');
-  if (!sel) return;
-  sel.innerHTML = '<option value="all">📢 همه گزارش‌دهنده‌ها (عمومی)</option>';
-  Object.entries(USERS).filter(([,u]) => u.role === 'reporter').forEach(([uname, u]) => {
-    const o = document.createElement('option');
-    o.value = uname;
-    o.textContent = '👤 ' + uname + ' — ' + (u.project || '').slice(0, 30) + (u.project && u.project.length > 30 ? '…' : '');
-    sel.appendChild(o);
-  });
-  // پر کردن فیلتر پروژه نت‌ها
-  const fp = document.getElementById('noteFilterProject');
-  if (fp) {
-    fp.innerHTML = '<option value="">همه پروژه‌ها / مخاطبان</option>';
-    fp.appendChild(new Option('📢 عمومی', 'all'));
-    Object.keys(USERS).filter(u => USERS[u].role === 'reporter').forEach(uname => {
-      fp.appendChild(new Option('👤 ' + uname, uname));
-    });
-  }
-}
-
-/* ════════════════════════════════════════
- *  بارگذاری همه نت‌ها (پنل مدیر)
- * ════════════════════════════════════════ */
-
-async function loadAllNotes() {
-  document.getElementById('notesList').innerHTML =
-    '<div class="empty-state"><div class="icon">⏳</div><p>در حال بارگذاری...</p></div>';
-  try {
-    const res = await apiGet({ action: 'getNotes', username: 'all' });
-    allNotes = (res && res.success && res.notes) ? res.notes : [];
-    renderNotesList();
-  } catch(e) {
-    document.getElementById('notesList').innerHTML =
-      '<div class="empty-state"><div class="icon">⚠️</div><p>خطا در بارگذاری: ' + esc(e.message) + '</p></div>';
-  }
-}
-
-/* ════════════════════════════════════════
- *  رندر لیست نت‌ها با فیلتر
- * ════════════════════════════════════════ */
-
-function renderNotesList(highlightQuery) {
-  const filterProject  = (document.getElementById('noteFilterProject')  || {}).value  || '';
-  const filterCategory = (document.getElementById('noteFilterCategory') || {}).value  || '';
-  const filterText     = ((document.getElementById('noteFilterText')    || {}).value  || '').trim().toLowerCase();
-
-  let notes = allNotes.slice().reverse();   // جدیدترین اول
-
-  if (filterProject)  notes = notes.filter(n => n.to === filterProject);
-  if (filterCategory) notes = notes.filter(n => (n.category || 'general') === filterCategory);
-  if (filterText)     notes = notes.filter(n => (n.message || '').toLowerCase().includes(filterText));
-
-  const badge = document.getElementById('noteCountBadge');
-  if (badge) badge.textContent = notes.length + ' نت';
-
-  const container = document.getElementById('notesList');
-  if (!notes.length) {
-    container.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>نتی یافت نشد</p></div>';
-    return;
-  }
-
-  const query = highlightQuery || filterText;
-
-  container.innerHTML = notes.map(note => {
-    const cat       = note.category || 'general';
-    const catLabel  = CAT_LABEL[cat]  || cat;
-    const catCls    = CAT_CLASS[cat]  || 'cat-general';
-    const catTagCls = 'note-tag note-tag-cat' + (cat === 'urgent' || cat === 'safety' || cat === 'financial' ? ' ' + cat : '');
-    const toLabel   = note.to === 'all' ? '📢 عمومی' : note.to === 'manager' ? '📤 به مدیریت' : ('👤 ' + note.to);
-    const fromLabel = note.from ? (' · از: ' + note.from) : '';
-    const dateStr   = note.created_at ? new Date(note.created_at).toLocaleString('fa-IR') : '';
-    const msgEscaped = highlight(esc(note.message || ''), query);
-
-    return `<div class="note-item ${catCls}" data-id="${esc(note.id)}">
-      <div class="note-item-body">
-        <div class="note-item-tags">
-          <span class="${catTagCls}">${catLabel}</span>
-          <span class="note-tag note-tag-to">${toLabel}${fromLabel}</span>
-        </div>
-        <div class="note-item-msg">${msgEscaped}</div>
-        <div class="note-item-date">🕐 ${dateStr}</div>
-      </div>
-      <button onclick="deleteNoteItem('${esc(note.id)}')" class="btn-danger-sm" style="flex-shrink:0;padding:5px 10px;">حذف</button>
-    </div>`;
-  }).join('');
-}
-
-function highlight(text, query) {
-  if (!query || query.length < 2) return text;
-  const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  return text.replace(new RegExp('(' + escaped + ')', 'gi'), '<mark class="note-highlight">$1</mark>');
-}
-
-/* ════════════════════════════════════════
- *  ارسال نت از پنل مدیر
- * ════════════════════════════════════════ */
-
-async function sendNoteFromPanel() {
-  const msg = (document.getElementById('newNoteMessage').value || '').trim();
-  if (!msg) { toast('متن نت نمی‌تواند خالی باشد', 'error'); return; }
-  const to  = document.getElementById('noteToSelect').value || 'all';
-  const cat = document.getElementById('noteCategorySelect').value || 'general';
-  showLoading(true, 'در حال ارسال نت...');
-  try {
-    await apiPost({ action: 'saveNote', to, message: msg, category: cat });
-    document.getElementById('newNoteMessage').value = '';
-    toast('نت ارسال شد ✅', 'success');
-    await loadAllNotes();
-  } catch(e) {
-    toast('خطا: ' + e.message, 'error');
-  }
-  showLoading(false);
-}
-
-/* ════════════════════════════════════════
- *  حذف نت
- * ════════════════════════════════════════ */
-
-async function deleteNoteItem(id) {
-  if (!confirm('آیا از حذف این نت اطمینان دارید؟')) return;
-  showLoading(true, 'در حال حذف...');
-  try {
-    const res = await apiGet({ action: 'deleteNote', id });
-    if (!res || !res.success) throw new Error((res && res.error) || 'حذف ناموفق');
-    allNotes = allNotes.filter(n => n.id !== id);
-    renderNotesList();
-    toast('نت حذف شد', 'success');
-  } catch(e) {
-    toast('خطا: ' + e.message, 'error');
-  }
-  showLoading(false);
-}
-
-/* ════════════════════════════════════════
- *  جستجوی هوشمند RAG با Claude API
- * ════════════════════════════════════════ */
-
-async function doRagSearch() {
-  const query = (document.getElementById('ragQuery').value || '').trim();
-  if (!query) { toast('عبارت جستجو را وارد کنید', 'error'); return; }
-
-  // اگر نت‌ها لود نشده، اول بگیر
-  if (allNotes.length === 0) {
-    showLoading(true, 'در حال دریافت نت‌ها...');
-    try { const res = await apiGet({ action: 'getNotes', username: 'all' }); allNotes = (res && res.success) ? (res.notes || []) : []; }
-    catch(e) {}
-    showLoading(false);
-  }
-
-  if (allNotes.length === 0) {
-    toast('هیچ نتی برای جستجو وجود ندارد', 'warning'); return;
-  }
-
-  document.getElementById('ragResult').style.display  = 'none';
-  document.getElementById('ragLoading').style.display = 'block';
-
-  // ساخت context از نت‌ها
-  const notesContext = allNotes.map((n, i) => {
-    const cat     = CAT_LABEL[n.category || 'general'] || 'عمومی';
-    const to      = n.to === 'all' ? 'همه' : n.to;
-    const dateStr = n.created_at ? new Date(n.created_at).toLocaleDateString('fa-IR') : '';
-    return `[نت ${i+1}] دسته: ${cat} | مخاطب: ${to} | تاریخ: ${dateStr}\n${n.message || ''}`;
-  }).join('\n\n---\n\n');
-
-  const systemPrompt = `تو یک دستیار هوشمند برای سیستم مدیریت پروژه‌های عمرانی شرکت آذریورد تبریز هستی.
-وظیفه‌ات جستجو و تحلیل نت‌های مدیریتی و پیدا کردن اطلاعات مرتبط است.
-پاسخ‌ها را به فارسی روان و مختصر بده. اگر اطلاعات مرتبط پیدا کردی، آن‌ها را خلاصه کن و شماره نت‌های مرتبط را ذکر کن.
-اگر هیچ اطلاعات مرتبطی پیدا نکردی، صادقانه بگو.`;
-
-  const userMessage = `مجموعه نت‌های مدیریتی:\n\n${notesContext}\n\n---\n\nسوال/جستجو: ${query}`;
-
-  try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        system: systemPrompt,
-        messages: [{ role: 'user', content: userMessage }]
-      })
-    });
-    const data = await response.json();
-    const answer = (data.content && data.content[0] && data.content[0].text) || 'پاسخی دریافت نشد.';
-
-    // هایلایت نت‌های مرتبط در لیست اصلی
-    const matchPattern = query.toLowerCase();
-    const matchedNotes = allNotes.filter(n => (n.message || '').toLowerCase().includes(matchPattern));
-
-    document.getElementById('ragAnswer').textContent = answer;
-
-    let sourcesHtml = '';
-    if (matchedNotes.length) {
-      sourcesHtml = '<div style="font-size:12px;font-weight:700;color:#64748b;margin-bottom:6px;">نت‌های مرتبط شناسایی شده:</div>' +
-        matchedNotes.slice(0, 5).map(n => {
-          const cat = CAT_LABEL[n.category || 'general'] || '';
-          const to  = n.to === 'all' ? 'عمومی' : n.to;
-          return `<div style="background:white;border:1px solid #d1fae5;border-radius:6px;padding:8px 12px;margin-bottom:6px;font-size:12px;">
-            <span style="font-weight:700;color:#059669;">${cat}</span> · <span style="color:#64748b;">${to}</span>
-            <div style="margin-top:4px;color:#1e293b;">${esc((n.message || '').slice(0, 120))}${n.message && n.message.length > 120 ? '…' : ''}</div>
-          </div>`;
-        }).join('');
-    }
-    document.getElementById('ragSources').innerHTML = sourcesHtml;
-    document.getElementById('ragResult').style.display  = 'block';
-
-    // هایلایت در لیست نت‌ها
-    renderNotesList(query);
-
-  } catch(e) {
-    document.getElementById('ragAnswer').textContent = 'خطا در اتصال به هوش مصنوعی: ' + e.message;
-    document.getElementById('ragSources').innerHTML = '';
-    document.getElementById('ragResult').style.display = 'block';
-  }
-
-  document.getElementById('ragLoading').style.display = 'none';
-}
-
-/* ════════════════════════════════════════
- *  تب‌های پنل گزارش‌دهنده
- * ════════════════════════════════════════ */
-
-async function _checkNewNotes() {
-  try {
-    const res = await apiGet({ action: 'getNotes', username: currentUser.username });
-    const notes = (res && res.success) ? (res.notes || []) : [];
-    if (notes.length > 0) {
-      const badge = document.getElementById('repNotesBadge');
-      if (badge) badge.style.display = 'block';
-      const banner = document.getElementById('noteBanner');
-      if (banner) {
-        banner.innerHTML = '';
-        notes.filter(n => n.category === 'urgent').slice().reverse().forEach(note => {
-          const card = document.createElement('div');
-          card.className = 'note-card private';
-          card.style.cssText = 'border-color:#dc2626;background:#fef2f2;';
-          card.innerHTML =
-            '<div class="note-card-body">' +
-              '<div class="note-card-label" style="color:#dc2626;">🚨 پیام فوری — برای همه پیام‌ها روی «📝 نت‌ها» کلیک کنید</div>' +
-              '<div class="note-card-msg">' + esc(note.message || '') + '</div>' +
-            '</div>' +
-            '<button class="note-dismiss" onclick="this.closest(\'.note-card\').remove()">✕</button>';
-          banner.appendChild(card);
-        });
-      }
-    }
-  } catch(e) {}
-}
-
-function switchRepTab(tab) {
-  document.getElementById('repTabReport').style.display = tab === 'report' ? 'block' : 'none';
-  document.getElementById('repTabNotes').style.display  = tab === 'notes'  ? 'block' : 'none';
-  const btnR = document.getElementById('repTabBtnReport');
-  const btnN = document.getElementById('repTabBtnNotes');
-  if (btnR) {
-    btnR.style.background = tab === 'report' ? 'rgba(255,255,255,0.35)' : 'rgba(255,255,255,0.15)';
-    btnR.style.fontWeight = tab === 'report' ? '800' : '700';
-  }
-  if (btnN) {
-    btnN.style.background = tab === 'notes' ? 'rgba(255,255,255,0.35)' : 'rgba(255,255,255,0.15)';
-    btnN.style.fontWeight = tab === 'notes' ? '800' : '700';
-  }
-  if (tab === 'notes') {
-    document.getElementById('repNotesBadge').style.display = 'none';
-    loadReporterNotes();
-  }
-}
-
-/* ════════════════════════════════════════
- *  نت‌های گزارش‌دهنده — بارگذاری inbox و sent
- * ════════════════════════════════════════ */
-
-async function loadReporterNotes() {
-  // بروزرسانی noteBanner (بنر بالای فرم)
-  const banner = document.getElementById('noteBanner');
-  if (banner) banner.innerHTML = '';
-
-  const inbox = document.getElementById('repInboxNotes');
-  const sent  = document.getElementById('repSentNotes');
-
-  if (inbox) inbox.innerHTML = '<div class="empty-state"><div class="icon">⏳</div><p>در حال بارگذاری...</p></div>';
-
-  try {
-    // دریافتی‌ها: نت‌هایی که مدیر برای این کاربر یا همه فرستاده
-    const res = await apiGet({ action: 'getNotes', username: currentUser.username });
-    const notes = (res && res.success) ? (res.notes || []) : [];
-
-    // تفکیک inbox (از مدیر) از sent (از خود گزارش‌دهنده)
-    const fromManager = notes.filter(n => n.to === 'all' || n.to === currentUser.username);
-    const fromSelf    = notes.filter(n => n.from === currentUser.username);
-
-    // --- inbox ---
-    if (inbox) {
-      if (!fromManager.length) {
-        inbox.innerHTML = '<div class="empty-state" style="padding:20px;"><div class="icon" style="font-size:32px;">📭</div><p>پیامی از مدیریت دریافت نشده</p></div>';
-      } else {
-        inbox.innerHTML = fromManager.slice().reverse().map(note => {
-          const isPublic = note.to === 'all';
-          const cat      = note.category || 'general';
-          const catLabel = CAT_LABEL[cat] || 'عمومی';
-          const catColor = { general:'#7c3aed', safety:'#dc2626', technical:'#1e40af', financial:'#059669', urgent:'#dc2626' }[cat] || '#7c3aed';
-          const catBg    = { general:'#ede9fe', safety:'#fecaca', technical:'#dbeafe', financial:'#d1fae5', urgent:'#fecaca' }[cat] || '#ede9fe';
-          const dateStr  = note.created_at ? new Date(note.created_at).toLocaleString('fa-IR') : '';
-          return `<div class="note-card ${isPublic ? 'public' : 'private'}" style="margin-bottom:10px;">
-            <div class="note-card-body">
-              <div class="note-card-label" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-                <span>${isPublic ? '📢 پیام عمومی' : '📌 پیام اختصاصی برای شما'}</span>
-                <span style="font-size:11px;background:${catBg};color:${catColor};padding:2px 8px;border-radius:10px;font-weight:700;">${catLabel}</span>
-              </div>
-              <div class="note-card-msg">${esc(note.message || '')}</div>
-              <div class="note-card-date">🕐 ${dateStr}</div>
-            </div>
-          </div>`;
-        }).join('');
-
-        // بنر بالای فرم هم پر کن (فقط فوری‌ها)
-        if (banner) {
-          const urgent = fromManager.filter(n => n.category === 'urgent');
-          urgent.slice().reverse().forEach(note => {
-            const card = document.createElement('div');
-            card.className = 'note-card private';
-            card.style.borderColor = '#dc2626';
-            card.style.background  = '#fef2f2';
-            card.innerHTML =
-              '<div class="note-card-body">' +
-                '<div class="note-card-label" style="color:#dc2626;">🚨 پیام فوری از مدیریت</div>' +
-                '<div class="note-card-msg">' + esc(note.message || '') + '</div>' +
-              '</div>' +
-              '<button class="note-dismiss" onclick="this.closest(\'.note-card\').remove()">✕</button>';
-            banner.appendChild(card);
-          });
-        }
-      }
-    }
-
-    // --- sent (نت‌هایی که این کاربر فرستاده، در localStorage نگه‌داری می‌کنیم) ---
-    _renderRepSentNotes();
-
-  } catch(e) {
-    if (inbox) inbox.innerHTML = '<div class="empty-state" style="padding:20px;"><div class="icon">⚠️</div><p>خطا در اتصال به سرور</p></div>';
-  }
-}
-
-/* ════════════════════════════════════════
- *  ارسال نت از گزارش‌دهنده به مدیر
- * ════════════════════════════════════════ */
-
-async function sendRepNote() {
-  const msg = (document.getElementById('repNoteMsg').value || '').trim();
-  if (!msg) { toast('متن یادداشت را وارد کنید', 'error'); return; }
-  const cat = document.getElementById('repNoteCat').value || 'general';
-
-  showLoading(true, 'در حال ارسال...');
-  try {
-    // to = 'manager' — مدیر همه نت‌ها رو با username='all' می‌گیره
-    await apiPost({ action: 'saveNote', to: 'manager', from: currentUser.username, message: msg, category: cat });
-
-    // ذخیره محلی در localStorage برای نمایش بخش "ارسال‌شده"
-    const key = 'rep_sent_' + currentUser.username;
-    const arr = JSON.parse(localStorage.getItem(key) || '[]');
-    arr.push({ id: 'L' + Date.now(), created_at: new Date().toISOString(), message: msg, category: cat });
-    localStorage.setItem(key, JSON.stringify(arr));
-
-    document.getElementById('repNoteMsg').value = '';
-    toast('یادداشت به مدیریت ارسال شد ✅', 'success');
-    _renderRepSentNotes();
-  } catch(e) {
-    toast('خطا در ارسال: ' + e.message, 'error');
-  }
-  showLoading(false);
-}
-
-function _renderRepSentNotes() {
-  const container = document.getElementById('repSentNotes');
-  if (!container) return;
-  const key = 'rep_sent_' + (currentUser && currentUser.username || '');
-  const arr = JSON.parse(localStorage.getItem(key) || '[]');
-  if (!arr.length) {
-    container.innerHTML = '<div style="font-size:13px;color:#94a3b8;padding:8px 0;">هنوز یادداشتی ارسال نکرده‌اید</div>';
-    return;
-  }
-  container.innerHTML = arr.slice().reverse().map(n => {
-    const cat      = n.category || 'general';
-    const catLabel = CAT_LABEL[cat] || 'عمومی';
-    const dateStr  = n.created_at ? new Date(n.created_at).toLocaleString('fa-IR') : '';
-    return `<div style="background:#f0fdf4;border:1.5px solid #a7f3d0;border-radius:8px;padding:10px 14px;margin-bottom:8px;">
-      <div style="display:flex;gap:8px;align-items:center;margin-bottom:4px;">
-        <span style="font-size:11px;background:#d1fae5;color:#059669;padding:2px 8px;border-radius:10px;font-weight:700;">${catLabel}</span>
-        <span style="font-size:11px;color:#94a3b8;">📤 ارسال شده · ${dateStr}</span>
-      </div>
-      <div style="font-size:13px;color:#1e293b;white-space:pre-wrap;">${esc(n.message)}</div>
-    </div>`;
-  }).join('');
-}
-
-
-/* ════════════════════════════════════════
- *  ارسال نت از دکمه «نت» روی کارت گزارش
- * ════════════════════════════════════════ */
-
-function openNoteModal(username, projectName) {
-  // به تب نت‌ها بریم و مخاطب رو انتخاب کنیم
-  switchMgrTab('notes');
-  const sel = document.getElementById('noteToSelect');
-  if (sel) {
-    // پیدا کردن option مناسب
-    Array.from(sel.options).forEach(opt => {
-      if (opt.value === username) opt.selected = true;
-    });
-  }
-  // اسکرول به فرم ارسال نت
-  const form = document.querySelector('#mgrTabNotes .section-card');
-  if (form) form.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  toast('مخاطب نت روی «' + (projectName || username) + '» تنظیم شد', 'success');
-}
-
 </script>
 </body>
 </html>
