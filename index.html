@@ -1509,6 +1509,114 @@ setLogos();
 document.getElementById('reportModal').addEventListener('click', function(e) {
   if (e.target === this) closeModal();
 });
+
+/* ════════════════════════════════════════
+ *  نت‌های مدیر — پنل گزارش‌دهنده
+ * ════════════════════════════════════════ */
+
+async function loadReporterNotes() {
+  const banner = document.getElementById('noteBanner');
+  if (!banner) return;
+  banner.innerHTML = '';
+  try {
+    const res = await apiGet({ action: 'getNotes', username: currentUser.username });
+    if (!res || !res.success) return;
+    const notes = res.notes || [];
+    notes.slice().reverse().forEach(function(note) {
+      const isPublic = note.to === 'all';
+      const card = document.createElement('div');
+      card.className = 'note-card ' + (isPublic ? 'public' : 'private');
+      const dateStr = note.created_at ? new Date(note.created_at).toLocaleString('fa-IR') : '';
+      card.innerHTML =
+        '<div class="note-card-body">' +
+          '<div class="note-card-label">' + (isPublic ? '📢 پیام عمومی مدیریت' : '📌 پیام اختصاصی برای شما') + '</div>' +
+          '<div class="note-card-msg">' + esc(note.message || '') + '</div>' +
+          '<div class="note-card-date">' + dateStr + '</div>' +
+        '</div>' +
+        '<button class="note-dismiss" title="بستن" onclick="this.closest(\'.note-card\').remove()">✕</button>';
+      banner.appendChild(card);
+    });
+  } catch (e) {
+    // اتصال به سرور نت‌ها اختیاری است — خطا را نادیده می‌گیریم
+  }
+}
+
+/* ════════════════════════════════════════
+ *  نت‌های مدیر — مودال ارسال نت از داشبورد مدیر
+ * ════════════════════════════════════════ */
+
+let _noteModalTarget = null;
+let _noteModalTargetName = null;
+
+function openNoteModal(username, projectName) {
+  _noteModalTarget = username;
+  _noteModalTargetName = projectName || username;
+  const overlay = document.getElementById('noteModalOverlay');
+  if (!overlay) { _buildNoteModal(); }
+  document.getElementById('noteModalTitle').textContent = 'ارسال نت به: ' + _noteModalTargetName;
+  document.getElementById('noteTargetLabel').textContent = _noteModalTargetName;
+  document.getElementById('noteMessage').value = '';
+  document.getElementById('noteModalOverlay').style.display = 'flex';
+}
+
+function _buildNoteModal() {
+  const overlay = document.createElement('div');
+  overlay.id = 'noteModalOverlay';
+  overlay.style.cssText = 'display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:2000;align-items:center;justify-content:center;padding:20px;';
+  overlay.innerHTML =
+    '<div style="background:white;border-radius:16px;padding:28px;max-width:480px;width:100%;box-shadow:0 16px 48px rgba(0,0,0,0.3);">' +
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">' +
+        '<div style="font-size:18px;font-weight:800;color:var(--primary-dark);" id="noteModalTitle">ارسال نت</div>' +
+        '<button onclick="closeNoteModal()" style="background:#f1f5f9;border:none;width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:16px;">✕</button>' +
+      '</div>' +
+      '<div style="margin-bottom:14px;">' +
+        '<label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:6px;">مخاطب</label>' +
+        '<div style="font-size:14px;font-weight:700;color:var(--primary);padding:8px 12px;background:#eff6ff;border-radius:8px;" id="noteTargetLabel"></div>' +
+      '</div>' +
+      '<div style="margin-bottom:14px;">' +
+        '<label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:6px;">نوع ارسال</label>' +
+        '<div style="display:flex;gap:10px;">' +
+          '<label style="display:flex;align-items:center;gap:6px;font-size:14px;cursor:pointer;">' +
+            '<input type="radio" name="noteType" value="specific" checked id="noteTypeSpecific"> اختصاصی (فقط این گزارش‌دهنده)' +
+          '</label>' +
+          '<label style="display:flex;align-items:center;gap:6px;font-size:14px;cursor:pointer;">' +
+            '<input type="radio" name="noteType" value="all"> عمومی (همه گزارش‌دهنده‌ها)' +
+          '</label>' +
+        '</div>' +
+      '</div>' +
+      '<div style="margin-bottom:18px;">' +
+        '<label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:6px;">متن پیام</label>' +
+        '<textarea id="noteMessage" class="inp" rows="4" placeholder="پیام خود را بنویسید..."></textarea>' +
+      '</div>' +
+      '<div style="display:flex;gap:10px;justify-content:flex-end;">' +
+        '<button onclick="closeNoteModal()" class="btn-secondary" style="border-radius:8px;">انصراف</button>' +
+        '<button onclick="sendNote()" class="btn-submit" style="padding:10px 24px;font-size:14px;">ارسال نت 📝</button>' +
+      '</div>' +
+    '</div>';
+  overlay.addEventListener('click', function(e){ if(e.target===this) closeNoteModal(); });
+  document.body.appendChild(overlay);
+}
+
+function closeNoteModal() {
+  const overlay = document.getElementById('noteModalOverlay');
+  if (overlay) overlay.style.display = 'none';
+}
+
+async function sendNote() {
+  const msg = (document.getElementById('noteMessage').value || '').trim();
+  if (!msg) { toast('متن پیام نمی‌تواند خالی باشد', 'error'); return; }
+  const typeEl = document.querySelector('input[name="noteType"]:checked');
+  const toValue = (typeEl && typeEl.value === 'all') ? 'all' : _noteModalTarget;
+  showLoading(true, 'در حال ارسال نت...');
+  try {
+    await apiPost({ action: 'saveNote', to: toValue, message: msg });
+    toast('نت با موفقیت ارسال شد ✅', 'success');
+    closeNoteModal();
+  } catch(e) {
+    toast('خطا در ارسال: ' + e.message, 'error');
+  }
+  showLoading(false);
+}
 </script>
 </body>
 </html>
