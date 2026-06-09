@@ -124,6 +124,12 @@ body { background: var(--bg); color: var(--text); min-height: 100vh; }
 .field-label    { font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; display: block; }
 .inp-readonly   { background: #f8fafc; color: var(--text); cursor: default; }
 
+/* Required field star */
+.req-star { color: #dc2626; font-size: 14px; margin-right: 2px; }
+.inp.inp-error { border-color: #dc2626 !important; background: #fff5f5; }
+.inp-error-msg { color: #dc2626; font-size: 12px; margin-top: 4px; display: none; }
+.inp-error-msg.show { display: block; }
+
 /* ===== TABLES ===== */
 .table-wrap { overflow-x: auto; margin: 12px 0; }
 table { width: 100%; border-collapse: collapse; font-size: 13px; }
@@ -422,9 +428,9 @@ tbody tr:nth-child(even) { background: #fafafa; }
     <div class="section-card">
       <div class="section-header">📋 اطلاعات گزارش</div>
       <div class="form-grid form-grid-3">
-        <div><label class="field-label">شماره گزارش</label><input type="text" id="reportNumber" class="inp" placeholder="RPT-2024-001"></div>
-        <div><label class="field-label">تاریخ شمسی</label><input type="text" id="reportDate" class="inp" placeholder="1403/01/01"></div>
-        <div><label class="field-label">ساعت ثبت</label><input type="time" id="reportTime" class="inp"></div>
+        <div><label class="field-label">شماره گزارش <span class="req-star">*</span></label><input type="text" id="reportNumber" class="inp" placeholder="RPT-2024-001"></div>
+        <div><label class="field-label">تاریخ شمسی <span class="req-star">*</span></label><input type="text" id="reportDate" class="inp" placeholder="1403/01/01"></div>
+        <div><label class="field-label">ساعت ثبت <span class="req-star">*</span></label><input type="time" id="reportTime" class="inp"></div>
       </div>
     </div>
 
@@ -440,7 +446,7 @@ tbody tr:nth-child(even) { background: #fafafa; }
         <div><label class="field-label">کارفرما</label><input type="text" id="employer" class="inp inp-readonly" readonly></div>
         <div><label class="field-label">سرپرست کارگاه</label><input type="text" id="supervisor" class="inp inp-readonly" readonly></div>
         <div>
-          <label class="field-label">شیفت کاری</label>
+          <label class="field-label">شیفت کاری <span class="req-star">*</span></label>
           <select id="workShift" class="inp">
             <option value="">انتخاب کنید</option>
             <option>صبح</option><option>عصر</option><option>شب</option><option>24 ساعته</option>
@@ -449,26 +455,26 @@ tbody tr:nth-child(even) { background: #fafafa; }
       </div>
       <div class="form-grid form-grid-2">
         <div>
-          <label class="field-label">وضعیت آب و هوا</label>
+          <label class="field-label">وضعیت آب و هوا <span class="req-star">*</span></label>
           <select id="weatherCondition" class="inp">
             <option value="">انتخاب کنید</option>
             <option>آفتابی</option><option>ابری</option><option>بارانی</option><option>برفی</option><option>مه آلود</option>
           </select>
         </div>
-        <div><label class="field-label">دمای هوا (°C)</label><input type="number" id="temperature" class="inp" placeholder="مثال: 18"></div>
+        <div><label class="field-label">دمای هوا (°C) <span class="req-star">*</span></label><input type="number" id="temperature" class="inp" placeholder="مثال: 18"></div>
       </div>
     </div>
 
     <!-- فعالیت‌ها -->
     <div class="section-card">
-      <div class="section-header">⚙️ فعالیت‌های انجام شده امروز</div>
+      <div class="section-header">⚙️ فعالیت‌های انجام شده امروز <span class="req-star">*</span></div>
       <button class="btn-add" style="margin-bottom:12px;" onclick="addActivity()">+ افزودن فعالیت</button>
       <div class="table-wrap">
         <table><thead><tr><th style="width:25%">نوع فعالیت</th><th style="width:45%">شرح عملیات</th><th style="width:18%">وضعیت</th><th style="width:12%">حذف</th></tr></thead>
         <tbody id="activitiesTable"></tbody></table>
       </div>
       <div style="margin-top:16px;">
-        <label class="field-label">برنامه فعالیت‌های آتی</label>
+        <label class="field-label">برنامه فعالیت‌های آتی <span class="req-star">*</span></label>
         <textarea id="futureActivities" class="inp" rows="3" placeholder="برنامه روز آینده..."></textarea>
       </div>
     </div>
@@ -521,11 +527,21 @@ tbody tr:nth-child(even) { background: #fafafa; }
 
     <!-- مصالح -->
     <div class="section-card">
-      <div class="section-header">🧱 مصالح مصرفی</div>
+      <div class="section-header">🧱 مصالح مصرفی <span class="req-star">*</span></div>
       <button class="btn-add" style="margin-bottom:12px;" onclick="addMaterial()">+ افزودن مصالح</button>
       <div class="table-wrap">
         <table><thead><tr><th>نوع مصالح</th><th>مقدار</th><th>واحد</th><th>توضیحات</th><th>حذف</th></tr></thead>
         <tbody id="materialsTable"></tbody></table>
+      </div>
+    </div>
+
+    <!-- سیستم‌های مورد نیاز -->
+    <div class="section-card">
+      <div class="section-header">🔧 سیستم‌های مورد نیاز <span class="req-star">*</span> <span class="section-badge">جمع: <span id="systemTotal">0</span> مورد</span></div>
+      <button class="btn-add" style="margin-bottom:12px;" onclick="addRequiredSystem()">+ افزودن سیستم</button>
+      <div class="table-wrap">
+        <table><thead><tr><th>نوع سیستم</th><th>شرح / مشخصات</th><th>وضعیت تأمین</th><th>اولویت</th><th>توضیحات</th><th>حذف</th></tr></thead>
+        <tbody id="requiredSystemsTable"></tbody></table>
       </div>
     </div>
 
@@ -540,12 +556,12 @@ tbody tr:nth-child(even) { background: #fafafa; }
       <div class="section-header">🦺 گزارش ایمنی (HSE)</div>
       <div class="form-grid form-grid-2" style="margin-bottom:16px;">
         <div>
-          <label class="field-label">وضعیت ایمنی</label>
+          <label class="field-label">وضعیت ایمنی <span class="req-star">*</span></label>
           <select id="safetyStatus" class="inp"><option>عالی</option><option>خوب</option><option>متوسط</option><option>نیاز به بهبود</option></select>
         </div>
-        <div><label class="field-label">حوادث</label><input type="text" id="incidents" class="inp" placeholder="گزارش حوادث (در صورت وقوع)"></div>
+        <div><label class="field-label">حوادث <span class="req-star">*</span></label><input type="text" id="incidents" class="inp" placeholder="گزارش حوادث (در صورت وقوع)"></div>
       </div>
-      <label class="field-label">تجهیزات ایمنی</label>
+      <label class="field-label">تجهیزات ایمنی <span class="req-star">*</span></label>
       <textarea id="safetyEquipment" class="inp" rows="3" placeholder="کلاه ایمنی، کفش ایمنی، دستکش..."></textarea>
     </div>
 
@@ -558,7 +574,7 @@ tbody tr:nth-child(even) { background: #fafafa; }
 
     <!-- توضیحات نهایی -->
     <div class="section-card">
-      <div class="section-header">📝 توضیحات نهایی</div>
+      <div class="section-header">📝 توضیحات نهایی <span class="req-star">*</span></div>
       <textarea id="finalComments" class="inp" rows="4" placeholder="توضیحات مدیریتی و فنی اضافی..."></textarea>
     </div>
 
@@ -1218,7 +1234,7 @@ function clearForm() {
   document.getElementById('weatherCondition').value = '';
   document.getElementById('temperature').value      = '';
   document.getElementById('safetyStatus').value     = 'عالی';
-  ['activitiesTable','executiveLaborTable','staffLaborTable','machineryTable','companyVehiclesTable','materialsTable'].forEach(id => {
+  ['activitiesTable','executiveLaborTable','staffLaborTable','machineryTable','companyVehiclesTable','materialsTable','requiredSystemsTable'].forEach(id => {
     document.getElementById(id).innerHTML = '';
   });
   uploadedImages = [];
@@ -1226,7 +1242,7 @@ function clearForm() {
   document.getElementById('projectImages').value = '';
   ['sig1Data','sig2Data','sig3Data'].forEach(id => { document.getElementById(id).value = ''; });
   ['sig1Preview','sig2Preview','sig3Preview'].forEach(id => { document.getElementById(id).style.display = 'none'; });
-  updateLaborTotals(); updateMachineryTotal(); updateVehicleTotal();
+  updateLaborTotals(); updateMachineryTotal(); updateVehicleTotal(); updateSystemTotal();
 }
 
 /* ════════════════════════════════════════
@@ -1235,8 +1251,65 @@ function clearForm() {
 
 async function submitReport() {
   const data = collectFormData();
-  if (!data.reportNumber) { toast('شماره گزارش الزامی است', 'error'); return; }
-  if (!data.workShift)    { toast('شیفت کاری را انتخاب کنید', 'error'); return; }
+
+  // ── validation اجباری ──────────────────────────────────
+  const errors = [];
+
+  // اطلاعات گزارش
+  if (!data.reportNumber.trim())      errors.push('شماره گزارش');
+  if (!data.reportDate.trim())        errors.push('تاریخ شمسی');
+  if (!data.reportTime.trim())        errors.push('ساعت ثبت');
+
+  // اطلاعات پروژه
+  if (!data.workShift)                errors.push('شیفت کاری');
+  if (!data.weatherCondition)         errors.push('وضعیت آب و هوا');
+  if (data.temperature === '' || data.temperature === null || String(data.temperature).trim() === '')
+                                      errors.push('دمای هوا');
+
+  // فعالیت‌ها
+  const actRows = document.getElementById('activitiesTable').querySelectorAll('tr');
+  if (actRows.length === 0)           errors.push('حداقل یک فعالیت انجام‌شده');
+  if (!v('futureActivities').trim())  errors.push('برنامه فعالیت‌های آتی');
+
+  // نیروی انسانی — حداقل یک ردیف
+  const laborRows = document.getElementById('executiveLaborTable').querySelectorAll('tr').length +
+                    document.getElementById('staffLaborTable').querySelectorAll('tr').length;
+  if (laborRows === 0)                errors.push('حداقل یک ردیف نیروی انسانی');
+
+  // ایمنی
+  if (!v('incidents').trim())         errors.push('گزارش حوادث');
+  if (!v('safetyEquipment').trim())   errors.push('تجهیزات ایمنی');
+
+  // مصالح — حداقل یک ردیف
+  const materialRows = document.getElementById('materialsTable').querySelectorAll('tr').length;
+  if (materialRows === 0)             errors.push('حداقل یک ردیف مصالح مصرفی');
+
+  // سیستم‌های مورد نیاز — حداقل یک ردیف
+  const systemRows = document.getElementById('requiredSystemsTable').querySelectorAll('tr').length;
+  if (systemRows === 0)               errors.push('حداقل یک ردیف سیستم‌های مورد نیاز');
+
+  // توضیحات نهایی
+  if (!v('finalComments').trim())     errors.push('توضیحات نهایی');
+
+  if (errors.length > 0) {
+    toast('فیلدهای اجباری تکمیل نشده‌اند:\n• ' + errors.join('\n• '), 'error');
+    // اسکرول به اولین فیلد خطادار
+    const fieldMap = {
+      'شماره گزارش': 'reportNumber', 'تاریخ شمسی': 'reportDate',
+      'ساعت ثبت': 'reportTime', 'شیفت کاری': 'workShift',
+      'وضعیت آب و هوا': 'weatherCondition', 'دمای هوا': 'temperature',
+      'برنامه فعالیت‌های آتی': 'futureActivities',
+      'گزارش حوادث': 'incidents', 'تجهیزات ایمنی': 'safetyEquipment',
+      'توضیحات نهایی': 'finalComments',
+    };
+    const firstKey = errors.find(e => fieldMap[e]);
+    if (firstKey) {
+      const el = document.getElementById(fieldMap[firstKey]);
+      if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); el.focus(); el.classList.add('inp-error'); setTimeout(()=>el.classList.remove('inp-error'), 3000); }
+    }
+    return;
+  }
+  // ── پایان validation ───────────────────────────────────
 
   // شناسه یکتا سمت کلاینت (برای تأیید ذخیره)
   const id = 'R' + Date.now() + '-' + Math.random().toString(36).slice(2, 7);
@@ -1299,6 +1372,7 @@ function collectFormData() {
     machinery:       getTableData('machineryTable',        ['machine-name','machine-model','machine-status','machine-hours','machine-notes']),
     companyVehicles: getTableData('companyVehiclesTable',  ['vehicle-name','vehicle-driver','vehicle-status','vehicle-notes']),
     materials:       getTableData('materialsTable',        ['material-name','material-amount','material-unit','material-notes']),
+    requiredSystems: getTableData('requiredSystemsTable', ['system-type','system-desc','system-supply-status','system-priority','system-notes']),
     images:          uploadedImages.filter(Boolean),
     sig1: document.getElementById('sig1Data').value,
     sig2: document.getElementById('sig2Data').value,
@@ -1367,9 +1441,38 @@ function addMaterial() {
   <td><button class="btn-danger-sm" onclick="deleteRow(this)">حذف</button></td>`;
 }
 
+const REQUIRED_SYSTEM_TYPES = [
+  'برق (قدرت)','برق (روشنایی)','آب‌رسانی','فاضلاب','تهویه مطبوع (HVAC)',
+  'اعلام حریق','اطفاء حریق','آسانسور','تأسیسات مکانیکی','سیستم گازرسانی',
+  'شبکه داده / IT','دوربین مداربسته (CCTV)','ژنراتور برق اضطراری',
+  'پمپاژ و مخازن','سیستم ضعیف‌الجریان','سایر'
+];
+
+function addRequiredSystem() {
+  const r = document.getElementById('requiredSystemsTable').insertRow();
+  const sysOpts = REQUIRED_SYSTEM_TYPES.map(s => `<option>${s}</option>`).join('');
+  r.innerHTML = `
+  <td><select class="inp-sm system-type"><option value="">انتخاب کنید</option>${sysOpts}</select></td>
+  <td><input type="text" class="inp-sm system-desc" placeholder="مشخصات / برند / ظرفیت"></td>
+  <td><select class="inp-sm system-supply-status">
+    <option>نیاز به تأمین</option><option>در دست تأمین</option><option>تأمین شده</option><option>نصب شده</option><option>راه‌اندازی شده</option>
+  </select></td>
+  <td><select class="inp-sm system-priority">
+    <option>بالا</option><option>متوسط</option><option>پایین</option>
+  </select></td>
+  <td><input type="text" class="inp-sm system-notes" placeholder="توضیحات"></td>
+  <td><button class="btn-danger-sm" onclick="deleteRow(this);updateSystemTotal()">حذف</button></td>`;
+  updateSystemTotal();
+}
+
+function updateSystemTotal() {
+  const el = document.getElementById('systemTotal');
+  if (el) el.textContent = document.getElementById('requiredSystemsTable').querySelectorAll('tr').length;
+}
+
 function deleteRow(btn) {
   btn.closest('tr').remove();
-  updateLaborTotals(); updateMachineryTotal(); updateVehicleTotal();
+  updateLaborTotals(); updateMachineryTotal(); updateVehicleTotal(); updateSystemTotal();
 }
 
 function getTableData(tableId, classes) {
@@ -1563,7 +1666,8 @@ function applyFormData(data) {
   loadTableData('machineryTable',       data.machinery || [],       addMachinery,      ['machine-name','machine-model','machine-status','machine-hours','machine-notes']);
   loadTableData('companyVehiclesTable', data.companyVehicles || [], addCompanyVehicle, ['vehicle-name','vehicle-driver','vehicle-status','vehicle-notes']);
   loadTableData('materialsTable',       data.materials || [],       addMaterial,       ['material-name','material-amount','material-unit','material-notes']);
-  updateLaborTotals(); updateMachineryTotal(); updateVehicleTotal();
+  loadTableData('requiredSystemsTable', data.requiredSystems || [], addRequiredSystem, ['system-type','system-desc','system-supply-status','system-priority','system-notes']);
+  updateLaborTotals(); updateMachineryTotal(); updateVehicleTotal(); updateSystemTotal();
 }
 
 /* ════════════════════════════════════════
@@ -1719,6 +1823,12 @@ async function openReportModal(id) {
   }
   if (d.problems && d.problems !== 'مشکلی گزارش نشده')
     html += `<div style="margin:10px 0;padding:10px;background:#fef2f2;border-radius:8px;font-size:13px;"><b>مشکلات:</b> ${esc(d.problems)}</div>`;
+  if (d.requiredSystems && d.requiredSystems.length) {
+    html += `<b>سیستم‌های مورد نیاز:</b><table style="width:100%;border-collapse:collapse;font-size:12px;margin:8px 0;">
+      <tr style="background:#f1f5f9;"><th style="padding:6px;border:1px solid #e2e8f0;">نوع سیستم</th><th style="padding:6px;border:1px solid #e2e8f0;">مشخصات</th><th style="padding:6px;border:1px solid #e2e8f0;">وضعیت تأمین</th><th style="padding:6px;border:1px solid #e2e8f0;">اولویت</th></tr>
+      ${d.requiredSystems.map(s => `<tr><td style="padding:6px;border:1px solid #e2e8f0;">${esc(s['system-type']||'')}</td><td style="padding:6px;border:1px solid #e2e8f0;">${esc(s['system-desc']||'')}</td><td style="padding:6px;border:1px solid #e2e8f0;">${esc(s['system-supply-status']||'')}</td><td style="padding:6px;border:1px solid #e2e8f0;">${esc(s['system-priority']||'')}</td></tr>`).join('')}
+    </table>`;
+  }
   if (d.finalComments && d.finalComments !== '—')
     html += `<div style="margin:10px 0;padding:10px;background:#fffbeb;border-radius:8px;font-size:13px;"><b>توضیحات نهایی:</b> ${esc(d.finalComments)}</div>`;
   if (d.images && d.images.length) {
@@ -1773,6 +1883,7 @@ function buildPDF(data) {
   const machineryHTML  = tbl(data.machinery||[], ['machine-name','machine-model','machine-status','machine-hours'], ['دستگاه','مدل','وضعیت','ساعت']);
   const vehiclesHTML   = tbl(data.companyVehicles||[], ['vehicle-name','vehicle-driver','vehicle-status'], ['خودرو','راننده','وضعیت']);
   const materialsHTML  = tbl(data.materials||[], ['material-name','material-amount','material-unit','material-notes'], ['نوع مصالح','مقدار','واحد','توضیحات']);
+  const systemsHTML    = tbl(data.requiredSystems||[], ['system-type','system-desc','system-supply-status','system-priority','system-notes'], ['نوع سیستم','مشخصات','وضعیت تأمین','اولویت','توضیحات']);
 
   const images = (data.images || []).filter(Boolean);
   const imagesHTML = images.map(src =>
@@ -1830,6 +1941,8 @@ function buildPDF(data) {
     </div>` : ''}
 
     ${materialsHTML ? `<div class="pdf-section"><div class="pdf-section-title">مصالح مصرفی</div>${materialsHTML}</div>` : ''}
+
+    ${systemsHTML ? `<div class="pdf-section"><div class="pdf-section-title">سیستم‌های مورد نیاز</div>${systemsHTML}</div>` : ''}
 
     <div class="two-col">
       <div class="pdf-section">
