@@ -17,6 +17,7 @@
   --success:       #059669;
   --danger:        #dc2626;
   --warning:       #d97706;
+  --technical:     #0e7490;   /* رنگ ویژه پنل فنی */
   --bg:            #f1f5f9;
   --surface:       #ffffff;
   --border:        #e2e8f0;
@@ -56,13 +57,15 @@ body { background: var(--bg); color: var(--text); min-height: 100vh; }
 .login-title h1 { font-size: 24px; font-weight: 800; color: var(--primary-dark); }
 .login-title p  { color: var(--text-muted); margin-top: 6px; font-size: 14px; }
 
-.role-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 24px; }
+.role-tabs { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 24px; }
 .role-tab {
   padding: 12px; border: 2px solid var(--border); border-radius: 10px;
   cursor: pointer; text-align: center; transition: all 0.2s; background: white;
 }
 .role-tab:hover  { border-color: var(--primary-light); background: #eff6ff; }
 .role-tab.active { border-color: var(--primary); background: #eff6ff; }
+.role-tab.technical-tab:hover  { border-color: var(--technical); background: #ecfeff; }
+.role-tab.technical-tab.active { border-color: var(--technical); background: #ecfeff; }
 .role-tab .icon  { font-size: 22px; margin-bottom: 4px; }
 .role-tab .label { font-size: 13px; font-weight: 600; color: var(--text); }
 
@@ -87,6 +90,8 @@ body { background: var(--bg); color: var(--text); min-height: 100vh; }
 .btn-success-sm:disabled { background: #9ca3af; cursor: not-allowed; }
 .btn-add { background: #eff6ff; color: var(--primary); border: 2px solid var(--primary-light); padding: 8px 18px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Vazirmatn', sans-serif; transition: all 0.2s; }
 .btn-add:hover { background: #dbeafe; }
+.btn-technical-sm { background: var(--technical); color: white; border: none; padding: 7px 14px; border-radius: 7px; font-size: 13px; cursor: pointer; font-family: 'Vazirmatn', sans-serif; transition: all 0.2s; }
+.btn-technical-sm:hover { background: #0e6384; }
 
 .login-error { background: #fef2f2; border: 1px solid #fecaca; color: #dc2626; padding: 10px 14px; border-radius: 8px; font-size: 13px; margin-bottom: 14px; display: none; text-align: center; }
 
@@ -96,6 +101,7 @@ body { background: var(--bg); color: var(--text); min-height: 100vh; }
   padding: 0 24px; display: flex; align-items: center; justify-content: space-between;
   height: 60px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 12px rgba(0,0,0,0.2);
 }
+.navbar.technical-navbar { background: linear-gradient(135deg, #0c4a6e, #0e7490); }
 .navbar-brand { display: flex; align-items: center; gap: 10px; }
 .brand-logo { width: 100%; height: 100%; object-fit: contain; display:block; }
 .navbar-logo { width: 36px; height: 36px; overflow:hidden; background: #ffffff; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; color: white; }
@@ -124,7 +130,6 @@ body { background: var(--bg); color: var(--text); min-height: 100vh; }
 .field-label    { font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; display: block; }
 .inp-readonly   { background: #f8fafc; color: var(--text); cursor: default; }
 
-/* Required field star */
 .req-star { color: #dc2626; font-size: 14px; margin-right: 2px; }
 .inp.inp-error { border-color: #dc2626 !important; background: #fff5f5; }
 .inp-error-msg { color: #dc2626; font-size: 12px; margin-top: 4px; display: none; }
@@ -189,7 +194,15 @@ tbody tr:nth-child(even) { background: #fafafa; }
 .report-card-meta    { font-size: 12px; color: var(--text-muted); display: flex; gap: 14px; flex-wrap: wrap; }
 .report-card-actions { display: flex; gap: 8px; flex-shrink: 0; }
 
-/* جداکنندهٔ روز در فهرست گزارش‌ها */
+/* نشان «نظر فنی» روی کارت گزارش */
+.tech-note-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: #ecfeff; color: #0e7490; border: 1px solid #a5f3fc;
+  border-radius: 20px; padding: 2px 10px; font-size: 11px; font-weight: 700;
+  margin-right: 6px;
+}
+
+/* جداکنندهٔ روز */
 .day-divider {
   display: flex; align-items: center; justify-content: space-between;
   margin: 16px 0 2px; padding: 11px 18px;
@@ -198,7 +211,6 @@ tbody tr:nth-child(even) { background: #fafafa; }
 }
 .report-list .day-divider:first-child { margin-top: 0; }
 .day-divider-date { font-size: 14px; font-weight: 800; color: #1e3a8a; }
-.day-divider-date small { font-weight: 600; color: #64748b; font-size: 12px; }
 .day-divider-count { font-size: 12px; font-weight: 700; color: #7c3aed; background: #ede9fe; padding: 3px 12px; border-radius: 20px; white-space: nowrap; }
 
 /* Pagination */
@@ -261,7 +273,6 @@ tbody tr:nth-child(even) { background: #fafafa; }
 .empty-state       { text-align: center; padding: 48px; color: var(--text-muted); }
 .empty-state .icon { font-size: 48px; margin-bottom: 12px; }
 
-
 /* ===== NOTE BANNER ===== */
 #noteBanner { margin-bottom: 18px; display: flex; flex-direction: column; gap: 10px; }
 .note-card {
@@ -281,27 +292,11 @@ tbody tr:nth-child(even) { background: #fafafa; }
 .note-dismiss   { background: none; border: none; font-size: 18px; cursor: pointer; color: #94a3b8; flex-shrink:0; padding:0; line-height:1; }
 .note-dismiss:hover { color: #64748b; }
 
-/* ===== CEO PANEL ===== */
-#ceoScreen { background: var(--bg); }
-.ceo-container { max-width: 760px; margin: 0 auto; padding: 24px 16px; }
-.note-form-card { background: white; border-radius: var(--radius); padding: 24px; margin-bottom: 20px; box-shadow: var(--shadow); }
-.note-list-card  { background: white; border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow); }
-.note-list-item  {
-  background: #f8fafc; border-radius: 8px; padding: 12px 14px; margin-bottom: 10px;
-  display: flex; align-items: flex-start; justify-content: space-between; gap: 10px;
-  border-right: 3px solid var(--primary);
-}
-.note-list-item.to-all { border-color: #d97706; }
-.note-list-meta  { font-size: 11px; color: #94a3b8; margin-top: 4px; }
-.note-list-msg   { font-size: 13px; color: #1e293b; white-space: pre-wrap; }
-.note-list-target { font-size: 11px; font-weight: 700; color: var(--primary); margin-bottom: 3px; }
-.note-list-item.to-all .note-list-target { color: #d97706; }
-
-
 /* ===== PANEL TABS ===== */
 .panel-tabs { display: flex; gap: 8px; margin-bottom: 20px; background: white; padding: 6px; border-radius: 12px; box-shadow: var(--shadow); }
 .panel-tab { flex: 1; padding: 12px 16px; border: none; background: transparent; border-radius: 8px; font-family: 'Vazirmatn', sans-serif; font-size: 14px; font-weight: 700; color: #64748b; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 7px; }
 .panel-tab.active { background: linear-gradient(135deg, var(--primary), var(--primary-2, #7c3aed)); color: white; }
+.panel-tab.tech-active { background: linear-gradient(135deg, #0c4a6e, #0e7490) !important; }
 .panel-tab .badge { background: #ef4444; color: white; border-radius: 10px; padding: 1px 7px; font-size: 11px; }
 .panel-tab.active .badge { background: rgba(255,255,255,0.3); }
 
@@ -318,17 +313,30 @@ tbody tr:nth-child(even) { background: #fafafa; }
 .msg-count { font-size: 13px; color: #64748b; margin-bottom: 12px; padding: 0 4px; }
 .msg-item { background: white; border-radius: 12px; padding: 16px 18px; margin-bottom: 12px; box-shadow: var(--shadow); border-right: 4px solid var(--primary); display: flex; justify-content: space-between; gap: 14px; align-items: flex-start; }
 .msg-item.is-public { border-color: #d97706; }
+.msg-item.is-technical { border-color: #0e7490; }
 .msg-item-body { flex: 1; }
 .msg-item-tags { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; flex-wrap: wrap; }
 .msg-tag { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; }
-.msg-tag.public  { background: #fef3c7; color: #b45309; }
-.msg-tag.private { background: #dbeafe; color: #1d4ed8; }
-.msg-tag.date    { background: #f1f5f9; color: #64748b; }
+.msg-tag.public    { background: #fef3c7; color: #b45309; }
+.msg-tag.private   { background: #dbeafe; color: #1d4ed8; }
+.msg-tag.technical { background: #ecfeff; color: #0e7490; }
+.msg-tag.date      { background: #f1f5f9; color: #64748b; }
 .msg-item-text { font-size: 14px; color: #1e293b; line-height: 1.7; white-space: pre-wrap; }
 .msg-item-actions { flex-shrink: 0; }
 .msg-empty { text-align: center; padding: 50px 20px; color: #94a3b8; }
 .msg-empty .icon { font-size: 44px; margin-bottom: 12px; }
 .msg-highlight { background: #fde68a; border-radius: 3px; padding: 0 2px; }
+
+/* ===== TECHNICAL PANEL ===== */
+#technicalScreen { background: var(--bg); }
+.technical-container { max-width: 1100px; margin: 0 auto; padding: 24px 16px; }
+.tech-info-bar {
+  background: linear-gradient(135deg, #ecfeff, #f0f9ff);
+  border: 1px solid #a5f3fc; border-radius: 12px;
+  padding: 14px 20px; margin-bottom: 20px;
+  display: flex; align-items: center; gap: 12px;
+  font-size: 13px; color: #0e7490; font-weight: 600;
+}
 
 /* ===== PRINT ===== */
 @media print {
@@ -338,7 +346,6 @@ tbody tr:nth-child(even) { background: #fafafa; }
   .pdf-toolbar { display: none !important; }
   #pdfContainer { max-width: 100% !important; margin: 0 !important; padding: 0 !important; box-shadow: none !important; border-radius: 0 !important; }
   .pdf-section { page-break-inside: avoid; }
-  /* عکس‌های آپلودشدهٔ پروژه در «چاپ» نمی‌آیند — امضا و مهر سر جای خود می‌مانند */
   .pdf-images-section { display: none !important; }
   @page { size: A4; margin: 12mm; }
   * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
@@ -358,6 +365,7 @@ tbody tr:nth-child(even) { background: #fafafa; }
   .report-card { flex-direction: column; align-items: flex-start; }
   .report-card-actions { width: 100%; justify-content: flex-end; }
   .day-divider { flex-direction: row; }
+  .role-tabs { grid-template-columns: 1fr 1fr; }
 }
 </style>
 </head>
@@ -377,6 +385,9 @@ tbody tr:nth-child(even) { background: #fafafa; }
       </div>
       <div class="role-tab" id="tab-manager" onclick="selectRole('manager')">
         <div class="icon">📊</div><div class="label">مدیر</div>
+      </div>
+      <div class="role-tab technical-tab" id="tab-technical" onclick="selectRole('technical')">
+        <div class="icon">🔧</div><div class="label">بخش فنی</div>
       </div>
     </div>
     <div class="login-error" id="loginError">نام کاربری یا رمز عبور اشتباه است</div>
@@ -409,18 +420,14 @@ tbody tr:nth-child(even) { background: #fafafa; }
   </nav>
 
   <div class="reporter-container">
-
-    <!-- تب‌ها -->
     <div class="panel-tabs">
       <button class="panel-tab active" id="rtab-form" onclick="switchRepTab('form')">📝 ثبت گزارش</button>
       <button class="panel-tab" id="rtab-notes" onclick="switchRepTab('notes')">💬 پیام‌های من <span class="badge" id="repNoteBadge" style="display:none;">0</span></button>
     </div>
 
-    <!-- ═══ نمای فرم گزارش ═══ -->
     <div id="repFormView">
     <div id="noteBanner"></div>
 
-    <!-- پیش‌نویس‌ها -->
     <div class="section-card">
       <div class="section-header">📁 پیش‌نویس‌ها و الگوها</div>
       <div class="draft-bar">
@@ -442,7 +449,6 @@ tbody tr:nth-child(even) { background: #fafafa; }
       </div>
     </div>
 
-    <!-- اطلاعات گزارش -->
     <div class="section-card">
       <div class="section-header">📋 اطلاعات گزارش</div>
       <div class="form-grid form-grid-3">
@@ -452,7 +458,6 @@ tbody tr:nth-child(even) { background: #fafafa; }
       </div>
     </div>
 
-    <!-- اطلاعات پروژه -->
     <div class="section-card">
       <div class="section-header">🏗️ اطلاعات پروژه</div>
       <div class="form-grid form-grid-2" style="margin-bottom:16px;">
@@ -483,7 +488,6 @@ tbody tr:nth-child(even) { background: #fafafa; }
       </div>
     </div>
 
-    <!-- فعالیت‌ها -->
     <div class="section-card">
       <div class="section-header">⚙️ فعالیت‌های انجام شده امروز <span class="req-star">*</span></div>
       <button class="btn-add" style="margin-bottom:12px;" onclick="addActivity()">+ افزودن فعالیت</button>
@@ -497,7 +501,6 @@ tbody tr:nth-child(even) { background: #fafafa; }
       </div>
     </div>
 
-    <!-- نیروی انسانی -->
     <div class="section-card">
       <div class="section-header">👷 نیروی انسانی</div>
       <div class="totals-grid">
@@ -523,7 +526,6 @@ tbody tr:nth-child(even) { background: #fafafa; }
       </div>
     </div>
 
-    <!-- ماشین‌آلات -->
     <div class="section-card">
       <div class="section-header">🚜 ماشین‌آلات <span class="section-badge">جمع: <span id="machineryTotal">0</span> دستگاه</span></div>
       <button class="btn-add" style="margin-bottom:12px;" onclick="addMachinery()">+ افزودن ماشین‌آلات</button>
@@ -533,7 +535,6 @@ tbody tr:nth-child(even) { background: #fafafa; }
       </div>
     </div>
 
-    <!-- خودروها -->
     <div class="section-card">
       <div class="section-header">🚗 خودروهای شرکتی <span class="section-badge">جمع: <span id="vehicleTotal">0</span> خودرو</span></div>
       <button class="btn-add" style="margin-bottom:12px;" onclick="addCompanyVehicle()">+ افزودن خودرو</button>
@@ -543,7 +544,6 @@ tbody tr:nth-child(even) { background: #fafafa; }
       </div>
     </div>
 
-    <!-- مصالح مصرفی -->
     <div class="section-card">
       <div class="section-header">🧱 مصالح مصرفی <span class="req-star">*</span></div>
       <button class="btn-add" style="margin-bottom:12px;" onclick="addMaterial()">+ افزودن مصالح</button>
@@ -553,7 +553,6 @@ tbody tr:nth-child(even) { background: #fafafa; }
       </div>
     </div>
 
-    <!-- مصالح مورد نیاز (کسری / کمبود) -->
     <div class="section-card">
       <div class="section-header">📦 مصالح مورد نیاز (کسری و کمبود) <span class="section-badge">جمع: <span id="neededTotal">0</span> مورد</span></div>
       <button class="btn-add" style="margin-bottom:12px;" onclick="addNeededMaterial()">+ افزودن مصالح مورد نیاز</button>
@@ -563,7 +562,6 @@ tbody tr:nth-child(even) { background: #fafafa; }
       </div>
     </div>
 
-    <!-- سیستم‌های مورد نیاز -->
     <div class="section-card">
       <div class="section-header">🔧 سیستم‌های مورد نیاز <span class="req-star">*</span> <span class="section-badge">جمع: <span id="systemTotal">0</span> مورد</span></div>
       <button class="btn-add" style="margin-bottom:12px;" onclick="addRequiredSystem()">+ افزودن سیستم</button>
@@ -573,13 +571,11 @@ tbody tr:nth-child(even) { background: #fafafa; }
       </div>
     </div>
 
-    <!-- مشکلات -->
     <div class="section-card">
       <div class="section-header">⚠️ مشکلات و تأخیرات</div>
       <textarea id="problems" class="inp" rows="4" placeholder="مشکلات اجرایی، کمبود مصالح، خرابی ماشین‌آلات..."></textarea>
     </div>
 
-    <!-- ایمنی -->
     <div class="section-card">
       <div class="section-header">🦺 گزارش ایمنی (HSE)</div>
       <div class="form-grid form-grid-2" style="margin-bottom:16px;">
@@ -593,20 +589,17 @@ tbody tr:nth-child(even) { background: #fafafa; }
       <textarea id="safetyEquipment" class="inp" rows="3" placeholder="کلاه ایمنی، کفش ایمنی، دستکش..."></textarea>
     </div>
 
-    <!-- تصاویر -->
     <div class="section-card">
       <div class="section-header">📷 تصاویر پروژه <span class="section-badge">فقط در فایل PDF — در چاپ نمی‌آید</span></div>
       <input type="file" id="projectImages" class="inp" accept="image/*" multiple onchange="handleImageUpload(event)">
       <div id="imagePreview" style="display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;"></div>
     </div>
 
-    <!-- توضیحات نهایی -->
     <div class="section-card">
       <div class="section-header">📝 توضیحات نهایی <span class="req-star">*</span></div>
       <textarea id="finalComments" class="inp" rows="4" placeholder="توضیحات مدیریتی و فنی اضافی..."></textarea>
     </div>
 
-    <!-- امضاها -->
     <div class="section-card">
       <div class="section-header">✍️ مهر و امضای دیجیتال</div>
       <div class="sig-grid">
@@ -631,7 +624,6 @@ tbody tr:nth-child(even) { background: #fafafa; }
       </div>
     </div>
 
-    <!-- دکمه‌های عمل -->
     <div class="action-bar">
       <button class="btn-pdf" onclick="downloadPDF()">📥 دانلود PDF (با عکس)</button>
       <button class="btn-print" onclick="printReport()">🖨️ چاپ (بدون عکس پروژه)</button>
@@ -640,7 +632,6 @@ tbody tr:nth-child(even) { background: #fafafa; }
     <br>
     </div><!-- /repFormView -->
 
-    <!-- ═══ نمای پیام‌های من ═══ -->
     <div id="repNotesView" style="display:none;">
       <div class="msg-search-bar">
         <div class="fld wide">
@@ -671,11 +662,72 @@ tbody tr:nth-child(even) { background: #fafafa; }
         <div class="msg-empty"><div class="icon">⏳</div><p>در حال بارگذاری...</p></div>
       </div>
     </div>
+  </div>
+</div>
 
-  </div><!-- /reporter-container -->
-</div><!-- /reporterScreen -->
+<!-- ═══════════════════════ TECHNICAL PANEL ═══════════════════════ -->
+<div id="technicalScreen" class="screen">
+  <nav class="navbar technical-navbar">
+    <div class="navbar-brand">
+      <div class="navbar-logo"><img class="brand-logo" alt="آذریورد"></div>
+      <div>
+        <div class="navbar-title">آذریورد تبریز</div>
+        <div class="navbar-subtitle">پنل بخش فنی</div>
+      </div>
+    </div>
+    <div class="navbar-actions">
+      <button class="btn-logout" onclick="doLogout()">خروج</button>
+    </div>
+  </nav>
 
+  <div class="technical-container">
+    <div class="tech-info-bar">
+      🔧 بخش فنی — دسترسی مشاهده و ثبت نظر فنی &nbsp;|&nbsp; امکان حذف گزارش وجود ندارد
+    </div>
 
+    <div class="panel-tabs">
+      <button class="panel-tab active tech-active" id="ttab-reports" onclick="switchTechTab('reports')">📋 گزارش‌ها</button>
+      <button class="panel-tab" id="ttab-notes" onclick="switchTechTab('notes')">🔧 نظرات فنی من</button>
+    </div>
+
+    <!-- نمای گزارش‌ها -->
+    <div id="techReportsView">
+      <div class="filter-bar">
+        <select id="techFilterProject" style="min-width:160px;"></select>
+        <input type="text" id="techFilterSearch" placeholder="جستجو: شماره، تاریخ، شیفت..." style="flex:1;min-width:160px;">
+        <button class="btn-secondary" onclick="applyTechFilters()">🔍 جستجو</button>
+        <button class="btn-secondary" onclick="loadTechnicalReports()">🔄 بروزرسانی</button>
+      </div>
+      <div id="techReportList" class="report-list">
+        <div class="empty-state"><div class="icon">⏳</div><p>در حال بارگذاری گزارش‌ها...</p></div>
+      </div>
+    </div>
+
+    <!-- نمای نت‌های فنی -->
+    <div id="techNotesView" style="display:none;">
+      <div class="msg-search-bar">
+        <div class="fld wide">
+          <label>جستجو در نظرات فنی</label>
+          <input type="text" id="tNoteText" placeholder="کلمه یا عبارت..." oninput="applyTechNoteFilters()">
+        </div>
+        <div class="fld">
+          <label>از تاریخ</label>
+          <input type="date" id="tNoteFrom" onchange="applyTechNoteFilters()">
+        </div>
+        <div class="fld">
+          <label>تا تاریخ</label>
+          <input type="date" id="tNoteTo" onchange="applyTechNoteFilters()">
+        </div>
+        <button class="msg-search-btn ghost" onclick="clearTechNoteFilters()">پاک کردن</button>
+        <button class="msg-search-btn primary" onclick="loadTechNotes()">🔄 بروزرسانی</button>
+      </div>
+      <div class="msg-count" id="tNoteCount"></div>
+      <div id="techNoteList">
+        <div class="msg-empty"><div class="icon">⏳</div><p>در حال بارگذاری...</p></div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- ═══════════════════════ MANAGER PANEL ═══════════════════════ -->
 <div id="managerScreen" class="screen">
@@ -693,14 +745,11 @@ tbody tr:nth-child(even) { background: #fafafa; }
   </nav>
 
   <div class="manager-container">
-
-    <!-- تب‌ها -->
     <div class="panel-tabs">
       <button class="panel-tab active" id="mtab-reports" onclick="switchMgrTab('reports')">📋 گزارش‌ها</button>
       <button class="panel-tab" id="mtab-notes" onclick="switchMgrTab('notes')">💬 پیام‌ها و نت‌ها</button>
     </div>
 
-    <!-- ═══ نمای گزارش‌ها ═══ -->
     <div id="mgrReportsView">
       <div class="stats-row">
         <div class="stat-card"><div class="stat-val" id="statTotal">—</div><div class="stat-label">کل گزارش‌ها</div></div>
@@ -721,10 +770,8 @@ tbody tr:nth-child(even) { background: #fafafa; }
       </div>
     </div>
 
-    <!-- ═══ نمای پیام‌ها و نت‌ها ═══ -->
+    <!-- نمای پیام‌ها و نت‌ها -->
     <div id="mgrNotesView" style="display:none;">
-
-      <!-- ارسال نت عمومی -->
       <div style="display:flex;justify-content:flex-end;margin-bottom:16px;">
         <button onclick="openNoteModal('all','همهٔ سرپرست‌ها')"
           style="background:linear-gradient(135deg,#d97706,#f59e0b);color:white;border:none;padding:12px 24px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Vazirmatn',sans-serif;display:flex;align-items:center;gap:7px;">
@@ -732,17 +779,17 @@ tbody tr:nth-child(even) { background: #fafafa; }
         </button>
       </div>
 
-      <!-- جستجوی پیشرفته -->
       <div class="msg-search-bar">
         <div class="fld wide">
           <label>جستجو در متن پیام</label>
           <input type="text" id="mNoteText" placeholder="کلمه یا عبارت..." oninput="applyNoteFilters()">
         </div>
         <div class="fld">
-          <label>گیرنده</label>
+          <label>گیرنده / نوع</label>
           <select id="mNoteRecipient" onchange="applyNoteFilters()">
-            <option value="">همهٔ گیرنده‌ها</option>
+            <option value="">همه</option>
             <option value="all">📢 عمومی (همه)</option>
+            <option value="__technical__">🔧 نظرات فنی</option>
             <option value="noor">سرپرست نور</option>
             <option value="bonab">سرپرست بناب</option>
             <option value="maraghe">سرپرست مراغه</option>
@@ -770,12 +817,10 @@ tbody tr:nth-child(even) { background: #fafafa; }
         <div class="msg-empty"><div class="icon">⏳</div><p>در حال بارگذاری...</p></div>
       </div>
     </div>
-
   </div>
 </div>
 
-
-<!-- ═══════════════════════ NOTE MODAL ═══════════════════════ -->
+<!-- ═══════════════════════ NOTE MODAL (مدیر) ═══════════════════════ -->
 <div class="modal-overlay" id="noteModal">
   <div class="modal-box" style="max-width:480px;">
     <div class="modal-header">
@@ -793,13 +838,34 @@ tbody tr:nth-child(even) { background: #fafafa; }
   </div>
 </div>
 
+<!-- ═══════════════════════ TECH NOTE MODAL (بخش فنی) ═══════════════════════ -->
+<div class="modal-overlay" id="techNoteModal">
+  <div class="modal-box" style="max-width:520px;">
+    <div class="modal-header">
+      <div class="modal-title" style="color:#0e7490;" id="techNoteModalTitle">🔧 ثبت نظر فنی</div>
+      <button class="modal-close" onclick="closeTechNoteModal()">✕</button>
+    </div>
+    <div style="background:#ecfeff;border:1px solid #a5f3fc;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:12px;color:#0e7490;">
+      این نظر فنی برای پروژه <strong id="techNoteProjectLabel">—</strong> ثبت می‌شود و در پنل مدیریت قابل مشاهده خواهد بود.
+    </div>
+    <div>
+      <label class="field-label">نظر فنی / توضیحات</label>
+      <textarea id="techNoteMsg" class="inp" rows="5" placeholder="نظر فنی، ملاحظات، پیشنهادات یا انتقادات فنی را بنویسید..."></textarea>
+    </div>
+    <div style="margin-top:16px;display:flex;gap:10px;justify-content:flex-end;">
+      <button class="btn-secondary" onclick="closeTechNoteModal()">انصراف</button>
+      <button class="btn-technical-sm" style="padding:10px 28px;font-size:14px;" onclick="sendTechNote()">🔧 ثبت نظر فنی</button>
+    </div>
+  </div>
+</div>
+
 <!-- ═══════════════════════ REPORT MODAL ═══════════════════════ -->
 <div class="modal-overlay" id="reportModal">
   <div class="modal-box">
     <div class="modal-header">
       <div class="modal-title" id="modalTitle">جزئیات گزارش</div>
       <div style="display:flex;gap:8px;">
-        <button class="btn-success-sm" onclick="generatePDFFromModal()">📄 PDF</button>
+        <button class="btn-success-sm" id="modalPdfBtn" onclick="generatePDFFromModal()">📄 PDF</button>
         <button class="modal-close" onclick="closeModal()">✕</button>
       </div>
     </div>
@@ -829,33 +895,24 @@ tbody tr:nth-child(even) { background: #fafafa; }
 
 <!-- ═══════════════════════ JAVASCRIPT ═══════════════════════ -->
 <script>
-/* ═══════════════════════════════════════════════════════════
- *  ⚙️  آدرس وب‌اپ Google Apps Script را اینجا وارد کنید
- *  بعد از Deploy، آدرس exec را کپی کنید و جایگزین کنید
- * ═══════════════════════════════════════════════════════════ */
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbz9l0Ejx4Z5dk1MhXLy6gKcWGz57wcDnqTo3AQpeU919_FAb7E0By82KTJm6_oVDNkvMw/exec';
-// برای جلوگیری از ریدایرکت چند اکانت گوگل — مستقیم به googleusercontent می‌رویم
 const GAS_GET_URL = GAS_URL + '?';
 
-/* لوگوی شرکت — جاسازی‌شده به‌صورت base64 (PNG فشرده، ~4KB) */
 const LOGO_SRC = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAADcBAMAAAA4toHrAAABCGlDQ1BJQ0MgUHJvZmlsZQAAeJxjYGA8wQAELAYMDLl5JUVB7k4KEZFRCuwPGBiBEAwSk4sLGHADoKpv1yBqL+viUYcLcKakFicD6Q9ArFIEtBxopAiQLZIOYWuA2EkQtg2IXV5SUAJkB4DYRSFBzkB2CpCtkY7ETkJiJxcUgdT3ANk2uTmlyQh3M/Ck5oUGA2kOIJZhKGYIYnBncAL5H6IkfxEDg8VXBgbmCQixpJkMDNtbGRgkbiHEVBYwMPC3MDBsO48QQ4RJQWJRIliIBYiZ0tIYGD4tZ2DgjWRgEL7AwMAVDQsIHG5TALvNnSEfCNMZchhSgSKeDHkMyQx6QJYRgwGDIYMZAKbWPz9HbOBQAAAAMFBMVEX///////3+//7+/v79/f37+vvn4ufFu8acjJ2EcIZ1W3hzWXZyWHVvWHJvVHFpTWwf7BtRAAAOS0lEQVR42u1dbXQU1Rl+ZncDCkl2NgQ8rQKblChoAgsJ4mkNLBLU4xehENQ/RY5HsD0CxUMrWqk9ihVEEbD84OMUbAvnyFejtHiUJCa1rdYQHL4/k2yIHokk2cmHQsjO3P7Y2c3u7Ozs3PkioPcPZObO3Oe+73vf577vvXOXAV3xzxjuBXKDGqo69q+ph87i0vUUk6ulFgvdxaHrKQMNWimtdl5TjwP2wmr+nNNSTRRshCU2wPXNpn6nxDIAX03TokWBsw0W37IKwIU2Dt/HwtA+kO0DEKq+9nvu/D4q0TFNr2+/WG3hSPQXeXX2/L8+zjpY4oAyvbCs9VtVMnEFNT1Fum2jakkME7RVe99WWOLdizQyA2cpLLEh/u+x1hE2DSy5yfdMJ5qeq7ASVueFZXJjrhJw1YvDzsYoqLqINUE7P5SrVHIKzXtXkXkj0Xlso2mwWtKrzYLFME/xJqFqes9MvxWqU6HibIoJj9aqWmAFAY+KLD//iMIfOXkTpaVWzl/4A02EEjIRlprTZZ0zKSbFxDxp8a5gg8obhGAQZhdN5DNxvNrd1kOB/uhtreDwFNJy+QGAYU0wlziHc41G5Smk9ajXklbF1YZg+Qr+YgmsSxmCIQchHOCtgJXSp6byW+ObNLbU5aeRlvXkIw3HMctobMsuWMhcdbXiRPWxozFo1Oa3UsFiPFrV8nHINmlxw17QbFwhXP8lhZd3+rS+yMDaAA0sl996meiIyr39Uom+u6zHRZaHqGFNWWs5qivpIWoH0auPpEso6g7S47eysnSg4ndSdMZNrCcfaV7/2TaLvXy7HiU6ndO0P0YO0cNKm66rm/uEOiulxd22TN8LeVzHxWzyaeWsglVos2TMJXmblZg2z2YI5EAgNSyn84TxweShGLlkUIFgtZeXCpXvusV68pEK1fLxJbtgMStp7IB4622S1mmjhK0AS2wwLC3XbApxKcWyCiOxx7i05gWqTZaW4FhmHBZ/nRI2Y2w6bhVhx8LKzb2K8iGVye7k9k8lupayVw+IuFxIAittZ+nVg3U5I5TEQXjbdkX/P3ndkjjXM3YrzwIIevIywVbyLAgzKwDAdZpHMDpjCMID5lldPqs4qRLznh8R1eKZeV1HYutlVp1aC+Dp8UO8IA2frsV9syYAQHPNWizwsB7hV/ilL0iCr2Ng13nJa3X6KGDdmFRaMaX5zCP/GBF7oevRG4+7O9hJMxoAZvqM402PPdIYfkHpmN+yCN7wd/eAMg+EnEX+DgmV+NNFNCMxnU8Kq709cjnQezg+b1Gfdgf3iWNOBQA0uAcXPhge0GmhD/buBpBfVfyjCgCPtfyRRDi1gGrHEpuUfJjoPOnKBn6EfNJ0f7rg//LX4bzJlnvTpNs1y5iy8KTJUQaALNsxVLpDeia69RJ2rG05l/aJtK4md6b8yQOHSn4i9emL6MJn25CwxjZ7b/MCABqi7o/sqTd7vPocPgUxR2XbF0Q6tOpFPyeWxFJBQvxKKvt2JVXdE7laURLRgfRARUlqPtEKS0bPoW62QomzK8LAPp6qZBpFJnBEfE9GyeeCQK7Tm/jUPUmTAwzLmGI83tiR6F4W31Ox0/2uZ8DKhL78Hr772FirjqG0cWYkgcU/x9nmVhJXdmwlT8y+tZHIyxN+32JCeh5PuEG+c/oXE+PlkivOb5FdcfE+t6Lc+8mPy2+Wz7AnHj12cnV5/q27ErqZD4i7jEurOM6depEVq0XmQwy/6ZWC+gKZEYsPLA75t7PbXj2coF4ATJayzVNkgEiPCieKY9OOiOOZo6fekjXv+OAZLlS7hiabDIg0IQsZWR8HKxiTjHaLWY3s+YffF+WbZ5iMO992fPrGndWJYhkMgCjutXGfLqfA5Y+DxRTGtNS01TfS2zSyuOuf42SDS0xf3Zi3ZEOnwiwOYIYoDsVQNkUsG/FbYViOixVRWKQDTSU1B5HNs2d7z8niP4xz//voPR1sgmkJQG/tOaWGEDpHHweFYXXVxl0MNAIgnCPtbGIr1Zi5W+lFw/+VdjHJ3EB3dMaoulxtxdSNSYzCIOaEQgACp7T2WpdkRVa5Nn0OLgIr0asIR71s5H2FCs07FDaZkfYAxQKyruIsjU6qRiWqyst4raTqyOs2Klj1VAAgZCGGvJwgrUX5o6cqKXFh8RgTpeWaI5tDEvScLIMHQba34j3+qbDxEcklEPQswtCnJMEEowllwt+wEAPK1BLMdNsaXQcTclO3eytZAEzX8MnMtgwWAPgIdFIMCBURfZGo4sgtAKlUmwcOoRrWroQedpePHhm2MRZCU4EHIE53p9SiCACRZVnRJcQZlEcNVm2toWwg3Od/E46nM+asGHfmmSagOf94Row/4UdKe7q+7c2r1zpRbj7ZXK7Z9gS45Donkx94O3yN3MEcPvZOEORnLzqWcpJxBQmIRMlk7HLn+hoJ7mnwIRJUnxxQmJdL7pmYvb7INYaEpm4vJcz+zRg9V7q0H0dPbS8MC27dFjJphnR9ewE3Rm09mKmhSmC75FNK/usvNkvdI0DvmZ3gL5R2n4lUO1lwbOQmyaKaS5kzm8NS5C+wzr2bVFwX7+ANelOnnBPTvI7oMHKxfUzpYfNibVR9qBVShWuJ5CMcGR/DZoUA2mKIJZb76nlEgn81TtTDjAm8z3Fi34AIvy0AQJqc1HHhy9LsK/r5uxB7/fotTJlNDRGqOaqrxKbun2ilqt5uE6wVTTQewlVnD6xuYbcxqrYI1oD5VMI9aJPJ063cuII2wTpIRT4uu9af6IyFmY8fipE40aqWaKYQjObUmMDBKcDpiywQaC4We8ayn8NV5rNJtACAafem/DSAcTd8lIesHA+1R/ksoDeRJAwrVdc8YVreXPdKDqk/VLhg5WtUcb04v0u7/UZ2vkUyzRXqsLp6PtyxajGPsteer3/nlRoaWO42mjUWbyAGFs+ohp4gxU9ve+GZPSyCS89uGkjnGjOHUrhGUhVrW77Fw1VhddW86vi6ygug+dJcR/xyccqWGikqFxSEYpUYTCeqwiopvr01MwiQwQ/s3UeZ5qCgN9EbH+x7pqmOwlWlnROHZgMATuTvc1nvgiVY36gujJCjgWOzd0p/DMNm6+DER0+jUtRm4cqV5OsdZaWsnP5Yk89Sdw+OUABDSLhOR5vDayEuMRDLieGSZP00VA3n+OgtwkdIl3S4O1T6Q1CJ66zEbTh4Mkm3N2PAE3oi1i3EDFjZq6co6YS/XIAB3R2yJjtyxE62XVWJgyaLFGOQU3AQ0ovqlFrpOl+A2w/JIoSuh1byYBacY9Sc8EHd0orPnSoyo+sIyw/piOdBccrvuiZkfrZqfuNIFZOfTaPx3clgJVEIzyNhieLbN9ZfEJpL72LWH05uH800+Y3M8uQbpdqVMhJpANj4O8xDUxeeDSAw6+Vbb07eUhbNxzX5yZWYJKv0HsBMjxflkukT8iaC3F/+vx3mrPWQnqSwSEuSr3159opsaehPjlkbASBnz+tmuXcdgW/CGXulEjGWmhdyeJL5LWZa0vSBfHvSuUDYnM81TzUJFanjk8CSJJPQUCsng0UqI/RJKhX3GltwppNDSYXyScMoWFu0fFAjbpFz4qaiCRHRdyhpvm2P2bCczgvyKvt/wbi+69M8k3kl4+4ZM1gAZFDmzS/NSHzpEtO38QP1MidIZo7nSN9xRGTsO48DqGMBkGIESCWRZz0YVzaFg1f66EEBlkcmQdHBEfe+KPeJbp6B9DG/CJIGtigkOzSCCe2G6dJKGANH5tax50nE6h2BEbwP/HAAcDSCycx+d2C+rCfDnqNxpKt1wcJXw+v5huhW6K7aJw+PawvzuuNjMI+0PT3wy444xVPtjcINazR9rJUQBQ+eswKn3owkHrqb8GVGw9kHgwC6L075T/fGkta/xgflhMpvpWtTYoK1kt65XNb2iIu4UpVWOnCD828MAL4m4znGmUGYEla/HV3S5reeTazVwuG2iG2RJi9IpcQFpwOT2BYOkwyggrgroMvBKuV74v41NrdRiju1fVBTERNDkg62jworUMQa3aCrtMc4aUflLTEEwXC2mOVjLybSuqVFZ/9N2lyW1G/dl6BxwmtYIjnbwFkJy6ewo/lgIC/lZHQea620hFr5sGVyJgRT7Q92UZF0hQ5OVPh9Aj7lbxZ0GiZp7ZxIUdyjV1J4hhcFHbD0LICSBRS21bNch7QKeT3iIto7I6brUCKxMHEbzZ1Qw+KcO31Ww2JC9MRswxq2ymkmKg4iwwkO2kUmcJSZcU7QPY1xjOjQ2Ajv5k0UZAq/5ZxoZHpiFSzfGL/m4V5uHyxoP9z3xr0U+duUok1FPgc12hYpPkAzK/NXG4OVo/GURdJBFbHuMigtza7xBAVH4+s1BmE1BrQ2RfOpVsiwg5gIC4rRozJ7V1mB6prdoqrpiF9PqgkKLe8YPSpTCNYh5VmLdf1S4FasXWvxWy7nerXbJ7mA3bYlBX/fqW3Q38DxJlqVdml5m0Mqe5C6TQoN9ZCPylh03kTBhszlas5EWCphFvsYTdphnXnSCjgdatN0mmMMunjWRCWakx0CwGj0vNqOvTfRM9Wa501MDGQdME9aJh4lWGcmrLAZ+lgrYzBrxW8f+Ug1yxLG9hbx6sPyj3tJdmVQumUHbFNEPvKPSMnkqRQRa2uAtwaWfL+SCJqIlW5rr4E4kaGKWFvOV9kE6zhNxLqk0yJpJYyOTIpF1m60W2Xy7Qa+N0uzaiR+MszQzplWHtd+oeBEYwcr1FkFK1yKWPTDH75h7KFtWr81bhILoHdNP5OW/y1CCFnr62fSAr8LcHWPytZSt8I+WGwWi2YrAmmDnMizcGsLpMmakH2wAGRoC6Qvr4GtsJhaTUzyMOyFpe1XIIxM9P8PTHPxC7YwYAUAAAAASUVORK5CYII=';
 const HAS_LOGO = LOGO_SRC.indexOf('data:image') === 0;
 
-/* ═══════════════ کاربران (رمزها فعلاً سمت کلاینت — توجه: ایمن نیست) ═══════════════
- * ⚠️  نکته امنیتی: این کاربران و رمزها در کد HTML قابل مشاهده هستند.
- *     برای محیط تولید، احراز هویت باید به سرور منتقل شود.
- * ═══════════════════════════════════════════════════════════════════════════════════ */
 const USERS = {
-  'noor':     { pass: '1234', role: 'reporter', project: 'پروژه عملیات تکمیل بیمارستان 160 تختخوابی جایگزین امام خمینی (ره) شهرستان نور' },
-  'bonab':    { pass: '1234', role: 'reporter', project: 'احداث مجموعه اداری بناب' },
-  'maraghe':  { pass: '1234', role: 'reporter', project: 'بیمارستان ۱۶۳ تختخوابی مراغه - قرارداد احداث ساختمان آموزشی' },
-  'chitgar':  { pass: '1234', role: 'reporter', project: 'پروژه عملیات تکمیل مجتمع قضایی خانواده چیتگر (۶ طبقه)' },
-  'hafttir':  { pass: '1234', role: 'reporter', project: 'پروژه مسکونی هفت تیر' },
-  'rezaei':   { pass: '1234', role: 'reporter', project: 'پروژه پژوهشکده شهید رضایی' },
-  'sefid':    { pass: '1234', role: 'reporter', project: 'پروژه شهرک سفید' },
-  'soleiman': { pass: '1234', role: 'reporter', project: 'پروژه سلیمان آباد' },
-  'iman':     { pass: 'iman', role: 'manager' },
-  'aminnia':  { pass: '4959', role: 'manager' },   // مدیر دوم — مهندس امین‌نیا
+  'noor':     { pass: '1234',  role: 'reporter',  project: 'پروژه عملیات تکمیل بیمارستان 160 تختخوابی جایگزین امام خمینی (ره) شهرستان نور' },
+  'bonab':    { pass: '1234',  role: 'reporter',  project: 'احداث مجموعه اداری بناب' },
+  'maraghe':  { pass: '1234',  role: 'reporter',  project: 'بیمارستان ۱۶۳ تختخوابی مراغه - قرارداد احداث ساختمان آموزشی' },
+  'chitgar':  { pass: '1234',  role: 'reporter',  project: 'پروژه عملیات تکمیل مجتمع قضایی خانواده چیتگر (۶ طبقه)' },
+  'hafttir':  { pass: '1234',  role: 'reporter',  project: 'پروژه مسکونی هفت تیر' },
+  'rezaei':   { pass: '1234',  role: 'reporter',  project: 'پروژه پژوهشکده شهید رضایی' },
+  'sefid':    { pass: '1234',  role: 'reporter',  project: 'پروژه شهرک سفید' },
+  'soleiman': { pass: '1234',  role: 'reporter',  project: 'پروژه سلیمان آباد' },
+  'iman':     { pass: 'iman',  role: 'manager' },
+  'aminnia':  { pass: '4959',  role: 'manager' },
+  'arabi':    { pass: '123',   role: 'technical' }, /* بخش فنی */
 };
 
 const PROJECT_INFO = {
@@ -877,7 +934,6 @@ const PROJECT_INFO = {
     { siteLocation: 'پروژه سلیمان آباد', employer: 'شخصی', supervisor: 'مهندس رضائیان' },
 };
 
-/* سمت‌های نیروی اجرایی — تکمیل‌شده با مشاغل رایج کارگاه‌های ساختمانی */
 const EXECUTIVE_POSITIONS = [
   'بنا','استادکار','کارگر ساده','آرماتوربند','قالب‌بند','بتن‌ریز','اپراتور پمپ بتن',
   'نماکار','داربست‌بند','سنگ‌کار','سفتکار','نازک‌کار','کف‌کار / موزاییک‌کار','سیمان‌کار',
@@ -886,7 +942,6 @@ const EXECUTIVE_POSITIONS = [
   'نقاش','شیشه‌کار','آلومینیوم‌کار / درب و پنجره','محوطه‌کار / فضای سبز','چاه‌کن / حفار',
   'راننده','اپراتور ماشین‌آلات','نگهبان کارگاه','سایر'
 ];
-/* سمت‌های نیروی ستادی — تکمیل‌شده با رده‌های مهندسی و اداری */
 const STAFF_POSITIONS = [
   'مدیر پروژه','سرپرست کارگاه','معاون کارگاه','ناظر','مهندس سایت',
   'مهندس عمران','مهندس معماری','مهندس برق','مهندس مکانیک','مهندس نقشه‌بردار',
@@ -895,192 +950,150 @@ const STAFF_POSITIONS = [
   'منشی / اداری','حراست','آبدارچی / خدمات','سایر'
 ];
 
-/* ═══════════ وضعیت برنامه ═══════════ */
 let currentUser    = null;
-let uploadedImages = [];   // آرایه‌ای از base64 یا null
-let allReports     = [];   // لیست صفحه جاری داشبورد
+let uploadedImages = [];
+let allReports     = [];
 let modalReportData = null;
-let _pdfData       = null; // دادهٔ آخرین PDF ساخته‌شده (برای نام فایل دانلود)
-
-/* وضعیت داشبورد مدیر */
+let _pdfData       = null;
 let mgrState = { page: 1, pages: 1, total: 0, q: '', project: '' };
+let techState = { page: 1, pages: 1, total: 0, q: '', project: '' };
 
-/* ════════════════════════════════════════
- *  ارتباط با Google Apps Script
- * ════════════════════════════════════════ */
-
-/**
- * GET با JSONP — برای list، get، delete
- * در ایران و روی GitHub Pages بدون مشکل CORS کار می‌کند
- */
+/* ════════ API ════════ */
 function apiGet(params) {
   return new Promise((resolve, reject) => {
     const cbName = 'cb_' + Date.now() + '_' + Math.floor(Math.random() * 1e6);
-    const qs = Object.keys(params)
-      .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
-      .join('&');
+    const qs = Object.keys(params).map(k => encodeURIComponent(k)+'='+encodeURIComponent(params[k])).join('&');
     const script = document.createElement('script');
     script.src = GAS_GET_URL + '&' + qs + '&callback=' + cbName;
-
-    const cleanup = () => {
-      delete window[cbName];
-      if (script.parentNode) script.parentNode.removeChild(script);
-    };
-
+    const cleanup = () => { delete window[cbName]; if (script.parentNode) script.parentNode.removeChild(script); };
     window[cbName] = (data) => { cleanup(); resolve(data); };
     script.onerror = () => { cleanup(); reject(new Error('خطا در اتصال به سرور')); };
-
-    // timeout پس از ۲۰ ثانیه
-    setTimeout(() => {
-      if (window[cbName]) { cleanup(); reject(new Error('پاسخ سرور دریافت نشد (timeout)')); }
-    }, 20000);
-
+    setTimeout(() => { if (window[cbName]) { cleanup(); reject(new Error('timeout')); } }, 20000);
     document.head.appendChild(script);
   });
 }
-
-/**
- * POST no-cors — برای ذخیره گزارش (payload حجیم)
- * چون no-cors پاسخ را نمی‌خوانیم، بعداً با apiGet تأیید می‌کنیم
- */
 function apiPost(payload) {
-  return fetch(GAS_URL, {
-    method: 'POST',
-    mode: 'no-cors',
-    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-    body: JSON.stringify(payload),
-  });
+  return fetch(GAS_URL, { method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain;charset=utf-8'}, body:JSON.stringify(payload) });
 }
 
-/* ════════════════════════════════════════
- *  ورود / خروج
- * ════════════════════════════════════════ */
-
+/* ════════ LOGIN ════════ */
 let selectedRole = 'reporter';
-
 function selectRole(r) {
   selectedRole = r;
-  document.getElementById('tab-reporter').classList.toggle('active', r === 'reporter');
-  document.getElementById('tab-manager').classList.toggle('active', r === 'manager');
+  document.getElementById('tab-reporter').classList.toggle('active', r==='reporter');
+  document.getElementById('tab-manager').classList.toggle('active', r==='manager');
+  document.getElementById('tab-technical').classList.toggle('active', r==='technical');
 }
-
 function doLogin() {
-  const u   = document.getElementById('loginUser').value.trim().toLowerCase();
-  const p   = document.getElementById('loginPass').value;
+  const u = document.getElementById('loginUser').value.trim().toLowerCase();
+  const p = document.getElementById('loginPass').value;
   const err = document.getElementById('loginError');
   err.style.display = 'none';
   const user = USERS[u];
-  if (!user || user.pass !== p || user.role !== selectedRole) {
-    err.style.display = 'block'; return;
-  }
+  if (!user || user.pass !== p || user.role !== selectedRole) { err.style.display='block'; return; }
   currentUser = { username: u, ...user };
-  if (user.role === 'reporter') { initReporter(); showScreen('reporterScreen'); }
-  else { initManager(); showScreen('managerScreen'); }
+  if (user.role === 'reporter')  { initReporter(); showScreen('reporterScreen'); }
+  else if (user.role === 'manager')   { initManager(); showScreen('managerScreen'); }
+  else if (user.role === 'technical') { initTechnical(); showScreen('technicalScreen'); }
 }
-
 function doLogout() {
   currentUser = null; uploadedImages = []; allReports = [];
-  _allNotes = []; _allNotesLoaded = false; _myNotes = []; _myNotesLoaded = false;
+  _allNotes=[]; _allNotesLoaded=false; _myNotes=[]; _myNotesLoaded=false;
+  _techNotes=[]; _techNotesLoaded=false;
   showScreen('loginScreen');
-  document.getElementById('loginUser').value = '';
-  document.getElementById('loginPass').value = '';
+  document.getElementById('loginUser').value='';
+  document.getElementById('loginPass').value='';
 }
-
 function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
 }
 
-/* ════════════════════════════════════════
- *  راه‌اندازی پنل گزارش‌دهنده
- * ════════════════════════════════════════ */
-
-
-
-
-/* ════════════════════════════════════════
- *  نت‌ها و مرکز پیام (مدیر + سرپرست)
- * ════════════════════════════════════════ */
-
-// نگاشت نام سرپرست‌ها برای نمایش
+/* ════════ LABELS ════════ */
 const SUPERVISOR_LABELS = {
   noor:'نور', bonab:'بناب', maraghe:'مراغه', chitgar:'چیتگر',
   hafttir:'هفت‌تیر', rezaei:'رضایی', sefid:'شهرک سفید', soleiman:'سلیمان‌آباد'
 };
-function supLabel(u){ return SUPERVISOR_LABELS[u] || u; }
-
-// هایلایت متن جستجو
+function supLabel(u){ return SUPERVISOR_LABELS[u]||u; }
 function highlight(text, q){
-  text = esc(text);
-  if(!q) return text;
-  try {
-    const safe = q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
-    return text.replace(new RegExp(safe,'gi'), m => '<span class="msg-highlight">'+m+'</span>');
-  } catch(e){ return text; }
+  text=esc(text); if(!q) return text;
+  try { const s=q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'); return text.replace(new RegExp(s,'gi'),m=>'<span class="msg-highlight">'+m+'</span>'); } catch(e){ return text; }
 }
-
-// تبدیل تاریخ ISO به yyyy-mm-dd برای مقایسه
 function isoDay(iso){ return new Date(iso).toISOString().slice(0,10); }
+function toFa(n){ return String(n).replace(/[0-9]/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d]); }
 
-/* ─── مودال ارسال نت (مدیر) ─── */
-let _noteTarget = 'all';
-
-function openNoteModal(target, label){
-  _noteTarget = target;
-  document.getElementById('noteModalTitle').textContent =
-    target === 'all' ? '📢 نت عمومی — همهٔ سرپرست‌ها' : '📩 نت برای سرپرست ' + label;
-  document.getElementById('noteModalMsg').value = '';
+/* ════════ MANAGER NOTES ════════ */
+let _noteTarget='all';
+function openNoteModal(target,label){
+  _noteTarget=target;
+  document.getElementById('noteModalTitle').textContent = target==='all'?'📢 نت عمومی — همهٔ سرپرست‌ها':'📩 نت برای سرپرست '+label;
+  document.getElementById('noteModalMsg').value='';
   document.getElementById('noteModal').classList.add('open');
-  setTimeout(() => document.getElementById('noteModalMsg').focus(), 100);
+  setTimeout(()=>document.getElementById('noteModalMsg').focus(),100);
 }
 function closeNoteModal(){ document.getElementById('noteModal').classList.remove('open'); }
-
 async function sendNote(){
-  const msg = document.getElementById('noteModalMsg').value.trim();
-  if(!msg){ toast('متن پیام را بنویسید','error'); return; }
+  const msg=document.getElementById('noteModalMsg').value.trim();
+  if(!msg){toast('متن پیام را بنویسید','error');return;}
   showLoading(true,'در حال ارسال نت...');
   try{
-    await fetch(GAS_URL,{
-      method:'POST', mode:'no-cors',
-      headers:{'Content-Type':'text/plain;charset=utf-8'},
-      body: JSON.stringify({action:'saveNote', to:_noteTarget, message:msg}),
-    });
-    await new Promise(r => setTimeout(r,1000));
-    closeNoteModal();
-    toast('نت ارسال شد ✅','success');
-    if(currentUser && currentUser.role === 'manager') loadAllNotes();
-  }catch(e){ toast('خطا: '+e.message,'error'); }
+    await fetch(GAS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body:JSON.stringify({action:'saveNote',to:_noteTarget,message:msg,from:'manager'})});
+    await new Promise(r=>setTimeout(r,1000));
+    closeNoteModal(); toast('نت ارسال شد ✅','success');
+    if(currentUser&&currentUser.role==='manager') loadAllNotes();
+  }catch(e){toast('خطا: '+e.message,'error');}
   showLoading(false);
 }
 
-/* ─── تب‌های پنل مدیر ─── */
-function switchMgrTab(tab){
-  const isReports = tab === 'reports';
-  document.getElementById('mgrReportsView').style.display = isReports ? '' : 'none';
-  document.getElementById('mgrNotesView').style.display   = isReports ? 'none' : '';
-  document.getElementById('mtab-reports').classList.toggle('active', isReports);
-  document.getElementById('mtab-notes').classList.toggle('active', !isReports);
-  if(!isReports && !_allNotesLoaded) loadAllNotes();
+/* ════════ TECH NOTE MODAL ════════ */
+let _techNoteTarget='';
+let _techNoteProjectName='';
+function openTechNoteModal(projectUsername, projectName){
+  _techNoteTarget=projectUsername;
+  _techNoteProjectName=projectName;
+  document.getElementById('techNoteProjectLabel').textContent=projectName||projectUsername;
+  document.getElementById('techNoteMsg').value='';
+  document.getElementById('techNoteModal').classList.add('open');
+  setTimeout(()=>document.getElementById('techNoteMsg').focus(),100);
 }
-
-/* ─── مرکز پیام مدیر ─── */
-let _allNotes = [];
-let _allNotesLoaded = false;
-
-async function loadAllNotes(){
-  const list = document.getElementById('mgrNoteList');
-  list.innerHTML = '<div class="msg-empty"><div class="icon">⏳</div><p>در حال بارگذاری...</p></div>';
+function closeTechNoteModal(){ document.getElementById('techNoteModal').classList.remove('open'); }
+async function sendTechNote(){
+  const msg=document.getElementById('techNoteMsg').value.trim();
+  if(!msg){toast('متن نظر فنی را بنویسید','error');return;}
+  showLoading(true,'در حال ثبت نظر فنی...');
   try{
-    const res = await apiGet({action:'getNotes', username:'all'});
-    if(!res || !res.success) throw new Error(res && res.error || 'خطا');
-    _allNotes = (res.notes||[]).slice().sort((a,b)=> new Date(b.created_at)-new Date(a.created_at));
-    _allNotesLoaded = true;
-    applyNoteFilters();
-  }catch(e){
-    list.innerHTML = '<div class="msg-empty"><div class="icon">⚠️</div><p>خطا در بارگذاری: '+esc(e.message)+'</p></div>';
-  }
+    await fetch(GAS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body:JSON.stringify({action:'saveNote',to:_techNoteTarget,message:msg,from:'arabi',category:'technical'})});
+    await new Promise(r=>setTimeout(r,1000));
+    closeTechNoteModal(); toast('نظر فنی ثبت شد ✅','success');
+    _techNotesLoaded=false;
+    if(document.getElementById('techNotesView').style.display!=='none') loadTechNotes();
+  }catch(e){toast('خطا: '+e.message,'error');}
+  showLoading(false);
 }
 
+/* ════════ MANAGER TABS ════════ */
+function switchMgrTab(tab){
+  const isR=tab==='reports';
+  document.getElementById('mgrReportsView').style.display=isR?'':'none';
+  document.getElementById('mgrNotesView').style.display=isR?'none':'';
+  document.getElementById('mtab-reports').classList.toggle('active',isR);
+  document.getElementById('mtab-notes').classList.toggle('active',!isR);
+  if(!isR&&!_allNotesLoaded) loadAllNotes();
+}
+
+let _allNotes=[]; let _allNotesLoaded=false;
+async function loadAllNotes(){
+  const list=document.getElementById('mgrNoteList');
+  list.innerHTML='<div class="msg-empty"><div class="icon">⏳</div><p>در حال بارگذاری...</p></div>';
+  try{
+    const res=await apiGet({action:'getNotes',username:'all'});
+    if(!res||!res.success) throw new Error(res&&res.error||'خطا');
+    _allNotes=(res.notes||[]).slice().sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
+    _allNotesLoaded=true; applyNoteFilters();
+  }catch(e){ list.innerHTML='<div class="msg-empty"><div class="icon">⚠️</div><p>خطا: '+esc(e.message)+'</p></div>'; }
+}
 function clearNoteFilters(){
   document.getElementById('mNoteText').value='';
   document.getElementById('mNoteRecipient').value='';
@@ -1088,41 +1101,43 @@ function clearNoteFilters(){
   document.getElementById('mNoteTo').value='';
   applyNoteFilters();
 }
-
 function applyNoteFilters(){
-  const q    = document.getElementById('mNoteText').value.trim();
-  const rcp  = document.getElementById('mNoteRecipient').value;
-  const from = document.getElementById('mNoteFrom').value;
-  const to   = document.getElementById('mNoteTo').value;
-
-  let filtered = _allNotes.filter(n => {
-    if(q && (n.message||'').indexOf(q) === -1) return false;
-    if(rcp && n.to !== rcp) return false;
-    if(from && isoDay(n.created_at) < from) return false;
-    if(to   && isoDay(n.created_at) > to)   return false;
+  const q=document.getElementById('mNoteText').value.trim();
+  const rcp=document.getElementById('mNoteRecipient').value;
+  const from=document.getElementById('mNoteFrom').value;
+  const to=document.getElementById('mNoteTo').value;
+  let filtered=_allNotes.filter(n=>{
+    if(q&&(n.message||'').indexOf(q)===-1) return false;
+    // فیلتر ویژه برای نظرات فنی
+    if(rcp==='__technical__') return (n.category||'')==='technical' || (n.from||'')==='arabi';
+    if(rcp&&n.to!==rcp) return false;
+    if(from&&isoDay(n.created_at)<from) return false;
+    if(to&&isoDay(n.created_at)>to) return false;
     return true;
   });
-  renderMgrNotes(filtered, q);
+  renderMgrNotes(filtered,q);
 }
-
-function renderMgrNotes(notes, q){
-  const list = document.getElementById('mgrNoteList');
-  const cnt  = document.getElementById('mNoteCount');
-  cnt.textContent = notes.length ? ('🔎 ' + toFa(notes.length) + ' پیام یافت شد') : '';
-  if(!notes.length){
-    list.innerHTML = '<div class="msg-empty"><div class="icon">📭</div><p>پیامی یافت نشد</p></div>';
-    return;
-  }
-  list.innerHTML = notes.map(n => {
-    const isAll = n.to === 'all';
-    const date  = new Date(n.created_at).toLocaleString('fa-IR');
-    const tag   = isAll
-      ? '<span class="msg-tag public">📢 عمومی — همه</span>'
-      : '<span class="msg-tag private">📩 سرپرست '+esc(supLabel(n.to))+'</span>';
-    return `<div class="msg-item ${isAll?'is-public':''}">
+function renderMgrNotes(notes,q){
+  const list=document.getElementById('mgrNoteList');
+  const cnt=document.getElementById('mNoteCount');
+  cnt.textContent=notes.length?('🔎 '+toFa(notes.length)+' پیام یافت شد'):'';
+  if(!notes.length){ list.innerHTML='<div class="msg-empty"><div class="icon">📭</div><p>پیامی یافت نشد</p></div>'; return; }
+  list.innerHTML=notes.map(n=>{
+    const isAll=n.to==='all';
+    const isTech=(n.category||'')==='technical'||(n.from||'')==='arabi';
+    const date=new Date(n.created_at).toLocaleString('fa-IR');
+    let tag='';
+    if(isTech){
+      tag='<span class="msg-tag technical">🔧 نظر فنی — پروژه '+esc(supLabel(n.to)||n.to)+'</span>';
+    } else if(isAll){
+      tag='<span class="msg-tag public">📢 عمومی — همه</span>';
+    } else {
+      tag='<span class="msg-tag private">📩 سرپرست '+esc(supLabel(n.to))+'</span>';
+    }
+    return `<div class="msg-item ${isTech?'is-technical':(isAll?'is-public':'')}">
       <div class="msg-item-body">
         <div class="msg-item-tags">${tag}<span class="msg-tag date">📅 ${esc(date)}</span></div>
-        <div class="msg-item-text">${highlight(n.message||'', q)}</div>
+        <div class="msg-item-text">${highlight(n.message||'',q)}</div>
       </div>
       <div class="msg-item-actions">
         <button class="btn-danger-sm" onclick="deleteCenterNote('${esc(n.id)}')">حذف</button>
@@ -1130,48 +1145,38 @@ function renderMgrNotes(notes, q){
     </div>`;
   }).join('');
 }
-
 async function deleteCenterNote(id){
   if(!confirm('این پیام حذف شود؟')) return;
   showLoading(true);
   try{
-    const res = await apiGet({action:'deleteNote', id:id});
-    if(!res || !res.success) throw new Error(res && res.error || 'خطا');
+    const res=await apiGet({action:'deleteNote',id:id});
+    if(!res||!res.success) throw new Error(res&&res.error||'خطا');
     toast('پیام حذف شد','success');
-    _allNotes = _allNotes.filter(n => n.id !== id);
-    applyNoteFilters();
-  }catch(e){ toast('خطا: '+e.message,'error'); }
+    _allNotes=_allNotes.filter(n=>n.id!==id); applyNoteFilters();
+  }catch(e){toast('خطا: '+e.message,'error');}
   showLoading(false);
 }
 
-/* ─── تب‌های پنل سرپرست ─── */
+/* ════════ REPORTER TABS ════════ */
 function switchRepTab(tab){
-  const isForm = tab === 'form';
-  document.getElementById('repFormView').style.display = isForm ? '' : 'none';
-  document.getElementById('repNotesView').style.display = isForm ? 'none' : '';
-  document.getElementById('rtab-form').classList.toggle('active', isForm);
-  document.getElementById('rtab-notes').classList.toggle('active', !isForm);
-  if(!isForm && !_myNotesLoaded) loadMyNotes();
+  const isF=tab==='form';
+  document.getElementById('repFormView').style.display=isF?'':'none';
+  document.getElementById('repNotesView').style.display=isF?'none':'';
+  document.getElementById('rtab-form').classList.toggle('active',isF);
+  document.getElementById('rtab-notes').classList.toggle('active',!isF);
+  if(!isF&&!_myNotesLoaded) loadMyNotes();
 }
-
-/* ─── مرکز پیام سرپرست ─── */
-let _myNotes = [];
-let _myNotesLoaded = false;
-
+let _myNotes=[]; let _myNotesLoaded=false;
 async function loadMyNotes(){
-  const list = document.getElementById('repNoteList');
-  list.innerHTML = '<div class="msg-empty"><div class="icon">⏳</div><p>در حال بارگذاری...</p></div>';
+  const list=document.getElementById('repNoteList');
+  list.innerHTML='<div class="msg-empty"><div class="icon">⏳</div><p>در حال بارگذاری...</p></div>';
   try{
-    const res = await apiGet({action:'getNotes', username: currentUser.username});
-    if(!res || !res.success) throw new Error(res && res.error || 'خطا');
-    _myNotes = (res.notes||[]).slice().sort((a,b)=> new Date(b.created_at)-new Date(a.created_at));
-    _myNotesLoaded = true;
-    applyRepNoteFilters();
-  }catch(e){
-    list.innerHTML = '<div class="msg-empty"><div class="icon">⚠️</div><p>خطا در بارگذاری: '+esc(e.message)+'</p></div>';
-  }
+    const res=await apiGet({action:'getNotes',username:currentUser.username});
+    if(!res||!res.success) throw new Error(res&&res.error||'خطا');
+    _myNotes=(res.notes||[]).slice().sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
+    _myNotesLoaded=true; applyRepNoteFilters();
+  }catch(e){ list.innerHTML='<div class="msg-empty"><div class="icon">⚠️</div><p>خطا: '+esc(e.message)+'</p></div>'; }
 }
-
 function clearRepNoteFilters(){
   document.getElementById('rNoteText').value='';
   document.getElementById('rNoteType').value='';
@@ -1179,279 +1184,496 @@ function clearRepNoteFilters(){
   document.getElementById('rNoteTo').value='';
   applyRepNoteFilters();
 }
-
 function applyRepNoteFilters(){
-  const q    = document.getElementById('rNoteText').value.trim();
-  const typ  = document.getElementById('rNoteType').value;
-  const from = document.getElementById('rNoteFrom').value;
-  const to   = document.getElementById('rNoteTo').value;
-
-  let filtered = _myNotes.filter(n => {
-    if(q && (n.message||'').indexOf(q) === -1) return false;
-    if(typ === 'all' && n.to !== 'all') return false;
-    if(typ === 'me'  && n.to === 'all') return false;
-    if(from && isoDay(n.created_at) < from) return false;
-    if(to   && isoDay(n.created_at) > to)   return false;
+  const q=document.getElementById('rNoteText').value.trim();
+  const typ=document.getElementById('rNoteType').value;
+  const from=document.getElementById('rNoteFrom').value;
+  const to=document.getElementById('rNoteTo').value;
+  let filtered=_myNotes.filter(n=>{
+    if(q&&(n.message||'').indexOf(q)===-1) return false;
+    if(typ==='all'&&n.to!=='all') return false;
+    if(typ==='me'&&n.to==='all') return false;
+    if(from&&isoDay(n.created_at)<from) return false;
+    if(to&&isoDay(n.created_at)>to) return false;
     return true;
   });
-  renderRepNotes(filtered, q);
+  renderRepNotes(filtered,q);
 }
-
-function renderRepNotes(notes, q){
-  const list = document.getElementById('repNoteList');
-  const cnt  = document.getElementById('rNoteCount');
-  cnt.textContent = notes.length ? ('🔎 ' + toFa(notes.length) + ' پیام') : '';
-  if(!notes.length){
-    list.innerHTML = '<div class="msg-empty"><div class="icon">📭</div><p>پیامی یافت نشد</p></div>';
-    return;
-  }
-  list.innerHTML = notes.map(n => {
-    const isAll = n.to === 'all';
-    const date  = new Date(n.created_at).toLocaleString('fa-IR');
-    const tag   = isAll
-      ? '<span class="msg-tag public">📢 اطلاعیهٔ عمومی</span>'
-      : '<span class="msg-tag private">📩 پیام اختصاصی</span>';
+function renderRepNotes(notes,q){
+  const list=document.getElementById('repNoteList');
+  const cnt=document.getElementById('rNoteCount');
+  cnt.textContent=notes.length?('🔎 '+toFa(notes.length)+' پیام'):'';
+  if(!notes.length){ list.innerHTML='<div class="msg-empty"><div class="icon">📭</div><p>پیامی یافت نشد</p></div>'; return; }
+  list.innerHTML=notes.map(n=>{
+    const isAll=n.to==='all';
+    const date=new Date(n.created_at).toLocaleString('fa-IR');
+    const tag=isAll?'<span class="msg-tag public">📢 اطلاعیهٔ عمومی</span>':'<span class="msg-tag private">📩 پیام اختصاصی</span>';
     return `<div class="msg-item ${isAll?'is-public':''}">
       <div class="msg-item-body">
         <div class="msg-item-tags">${tag}<span class="msg-tag date">📅 ${esc(date)}</span></div>
-        <div class="msg-item-text">${highlight(n.message||'', q)}</div>
+        <div class="msg-item-text">${highlight(n.message||'',q)}</div>
       </div>
     </div>`;
   }).join('');
 }
 
-/* ─── بنر نت هنگام ورود سرپرست ─── */
+/* ════════ REPORTER NOTES BANNER ════════ */
 async function loadReporterNotes(){
-  const banner = document.getElementById('noteBanner');
-  if(!banner) return;
+  const banner=document.getElementById('noteBanner'); if(!banner) return;
   try{
-    const res = await apiGet({action:'getNotes', username: currentUser.username});
-    if(!res || !res.success || !res.notes || !res.notes.length){
-      _myNotes = res && res.notes ? res.notes : [];
-      return;
-    }
-    _myNotes = res.notes.slice().sort((a,b)=> new Date(b.created_at)-new Date(a.created_at));
-    // بِج روی تب
-    const badge = document.getElementById('repNoteBadge');
-    if(badge){ badge.textContent = toFa(_myNotes.length); badge.style.display=''; }
-    // بنر فقط ۳ تای آخر
-    banner.innerHTML = '';
-    _myNotes.slice(0,3).forEach(n => {
-      const isPublic = n.to === 'all';
-      const card = document.createElement('div');
-      card.className = 'note-card ' + (isPublic ? 'public' : 'private');
-      card.id = 'note-' + n.id;
-      const date = new Date(n.created_at).toLocaleString('fa-IR');
-      card.innerHTML = `
-        <div class="note-card-body">
-          <div class="note-card-label">${isPublic ? '📢 اطلاعیهٔ مدیریت' : '📩 پیام اختصاصی مدیریت'}</div>
-          <div class="note-card-msg">${esc(n.message)}</div>
-          <div class="note-card-date">📅 ${date}</div>
-        </div>
-        <button class="note-dismiss" onclick="document.getElementById('note-${esc(n.id)}').remove()" title="بستن">×</button>`;
+    const res=await apiGet({action:'getNotes',username:currentUser.username});
+    if(!res||!res.success||!res.notes||!res.notes.length){ _myNotes=res&&res.notes?res.notes:[]; return; }
+    _myNotes=res.notes.slice().sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
+    const badge=document.getElementById('repNoteBadge');
+    if(badge){badge.textContent=toFa(_myNotes.length);badge.style.display='';}
+    banner.innerHTML='';
+    _myNotes.slice(0,3).forEach(n=>{
+      const isPublic=n.to==='all';
+      const card=document.createElement('div');
+      card.className='note-card '+(isPublic?'public':'private');
+      card.id='note-'+n.id;
+      const date=new Date(n.created_at).toLocaleString('fa-IR');
+      card.innerHTML=`<div class="note-card-body">
+        <div class="note-card-label">${isPublic?'📢 اطلاعیهٔ مدیریت':'📩 پیام اختصاصی مدیریت'}</div>
+        <div class="note-card-msg">${esc(n.message)}</div>
+        <div class="note-card-date">📅 ${date}</div>
+      </div>
+      <button class="note-dismiss" onclick="document.getElementById('note-${esc(n.id)}').remove()" title="بستن">×</button>`;
       banner.appendChild(card);
     });
-  }catch(e){ /* بی‌صدا */ }
+  }catch(e){}
 }
 
-// عدد فارسی
-function toFa(n){ return String(n).replace(/[0-9]/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]); }
-
-
-function initReporter() {
-  const proj = currentUser.project;
-  const info = PROJECT_INFO[proj] || {};
-  document.getElementById('navProjectName').textContent = proj;
-  document.getElementById('projectNameDisplay').value = proj;
-  document.getElementById('siteLocation').value = info.siteLocation || '';
-  document.getElementById('employer').value     = info.employer || '';
-  document.getElementById('supervisor').value   = info.supervisor || '';
-  const now = new Date();
-  document.getElementById('reportTime').value = pad(now.getHours()) + ':' + pad(now.getMinutes());
-  const [jy, jm, jd] = toJalali(now.getFullYear(), now.getMonth() + 1, now.getDate());
-  document.getElementById('reportDate').value = jy + '/' + pad(jm) + '/' + pad(jd);
-  updateDraftSelect();
-  clearForm();
-  _myNotesLoaded = false;
-  switchRepTab('form');
-  loadReporterNotes();
+/* ════════ REPORTER INIT ════════ */
+function initReporter(){
+  const proj=currentUser.project; const info=PROJECT_INFO[proj]||{};
+  document.getElementById('navProjectName').textContent=proj;
+  document.getElementById('projectNameDisplay').value=proj;
+  document.getElementById('siteLocation').value=info.siteLocation||'';
+  document.getElementById('employer').value=info.employer||'';
+  document.getElementById('supervisor').value=info.supervisor||'';
+  const now=new Date();
+  document.getElementById('reportTime').value=pad(now.getHours())+':'+pad(now.getMinutes());
+  const [jy,jm,jd]=toJalali(now.getFullYear(),now.getMonth()+1,now.getDate());
+  document.getElementById('reportDate').value=jy+'/'+pad(jm)+'/'+pad(jd);
+  updateDraftSelect(); clearForm(); _myNotesLoaded=false; switchRepTab('form'); loadReporterNotes();
+}
+function clearForm(){
+  ['reportNumber','futureActivities','problems','incidents','safetyEquipment','finalComments'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('workShift').value='';
+  document.getElementById('weatherCondition').value='';
+  document.getElementById('temperature').value='';
+  document.getElementById('safetyStatus').value='عالی';
+  ['activitiesTable','executiveLaborTable','staffLaborTable','machineryTable','companyVehiclesTable','materialsTable','neededMaterialsTable','requiredSystemsTable'].forEach(id=>{document.getElementById(id).innerHTML='';});
+  uploadedImages=[]; document.getElementById('imagePreview').innerHTML=''; document.getElementById('projectImages').value='';
+  ['sig1Data','sig2Data','sig3Data'].forEach(id=>{document.getElementById(id).value='';});
+  ['sig1Preview','sig2Preview','sig3Preview'].forEach(id=>{document.getElementById(id).style.display='none';});
+  updateLaborTotals();updateMachineryTotal();updateVehicleTotal();updateSystemTotal();updateNeededTotal();
 }
 
-function clearForm() {
-  ['reportNumber','futureActivities','problems','incidents','safetyEquipment','finalComments'].forEach(id => {
-    const el = document.getElementById(id); if (el) el.value = '';
+/* ════════ TECHNICAL PANEL ════════ */
+function initTechnical(){
+  const sel=document.getElementById('techFilterProject');
+  sel.innerHTML='<option value="">همه پروژه‌ها</option>';
+  Object.values(USERS).filter(u=>u.role==='reporter').forEach(u=>{
+    const o=document.createElement('option');o.value=u.project;o.textContent=u.project;sel.appendChild(o);
   });
-  document.getElementById('workShift').value        = '';
-  document.getElementById('weatherCondition').value = '';
-  document.getElementById('temperature').value      = '';
-  document.getElementById('safetyStatus').value     = 'عالی';
-  ['activitiesTable','executiveLaborTable','staffLaborTable','machineryTable','companyVehiclesTable','materialsTable','neededMaterialsTable','requiredSystemsTable'].forEach(id => {
-    document.getElementById(id).innerHTML = '';
-  });
-  uploadedImages = [];
-  document.getElementById('imagePreview').innerHTML = '';
-  document.getElementById('projectImages').value = '';
-  ['sig1Data','sig2Data','sig3Data'].forEach(id => { document.getElementById(id).value = ''; });
-  ['sig1Preview','sig2Preview','sig3Preview'].forEach(id => { document.getElementById(id).style.display = 'none'; });
-  updateLaborTotals(); updateMachineryTotal(); updateVehicleTotal(); updateSystemTotal(); updateNeededTotal();
+  document.getElementById('techFilterSearch').onkeydown=(e)=>{if(e.key==='Enter')applyTechFilters();};
+  techState={page:1,pages:1,total:0,q:'',project:''};
+  _techNotesLoaded=false;
+  switchTechTab('reports');
+  loadTechnicalReports();
 }
 
-/* ════════════════════════════════════════
- *  ثبت گزارش با تأیید واقعی
- * ════════════════════════════════════════ */
+function switchTechTab(tab){
+  const isR=tab==='reports';
+  document.getElementById('techReportsView').style.display=isR?'':'none';
+  document.getElementById('techNotesView').style.display=isR?'none':'';
+  document.getElementById('ttab-reports').classList.toggle('active',isR);
+  document.getElementById('ttab-reports').classList.toggle('tech-active',isR);
+  document.getElementById('ttab-notes').classList.toggle('active',!isR);
+  document.getElementById('ttab-notes').classList.toggle('tech-active',!isR);
+  if(!isR&&!_techNotesLoaded) loadTechNotes();
+}
 
-async function submitReport() {
-  const data = collectFormData();
+function applyTechFilters(){
+  techState.project=document.getElementById('techFilterProject').value;
+  techState.q=document.getElementById('techFilterSearch').value.trim();
+  techState.page=1; loadTechnicalReports();
+}
 
-  // ── validation اجباری ──────────────────────────────────
-  const errors = [];
-
-  // اطلاعات گزارش
-  if (!data.reportNumber.trim())      errors.push('شماره گزارش');
-  if (!data.reportDate.trim())        errors.push('تاریخ شمسی');
-  if (!data.reportTime.trim())        errors.push('ساعت ثبت');
-
-  // اطلاعات پروژه
-  if (!data.workShift)                errors.push('شیفت کاری');
-  if (!data.weatherCondition)         errors.push('وضعیت آب و هوا');
-  if (data.temperature === '' || data.temperature === null || String(data.temperature).trim() === '')
-                                      errors.push('دمای هوا');
-
-  // فعالیت‌ها
-  const actRows = document.getElementById('activitiesTable').querySelectorAll('tr');
-  if (actRows.length === 0)           errors.push('حداقل یک فعالیت انجام‌شده');
-  if (!v('futureActivities').trim())  errors.push('برنامه فعالیت‌های آتی');
-
-  // نیروی انسانی — حداقل یک ردیف
-  const laborRows = document.getElementById('executiveLaborTable').querySelectorAll('tr').length +
-                    document.getElementById('staffLaborTable').querySelectorAll('tr').length;
-  if (laborRows === 0)                errors.push('حداقل یک ردیف نیروی انسانی');
-
-  // ایمنی
-  if (!v('incidents').trim())         errors.push('گزارش حوادث');
-  if (!v('safetyEquipment').trim())   errors.push('تجهیزات ایمنی');
-
-  // مصالح — حداقل یک ردیف
-  const materialRows = document.getElementById('materialsTable').querySelectorAll('tr').length;
-  if (materialRows === 0)             errors.push('حداقل یک ردیف مصالح مصرفی');
-
-  // سیستم‌های مورد نیاز — حداقل یک ردیف
-  const systemRows = document.getElementById('requiredSystemsTable').querySelectorAll('tr').length;
-  if (systemRows === 0)               errors.push('حداقل یک ردیف سیستم‌های مورد نیاز');
-
-  // توضیحات نهایی
-  if (!v('finalComments').trim())     errors.push('توضیحات نهایی');
-
-  if (errors.length > 0) {
-    toast('فیلدهای اجباری تکمیل نشده‌اند:\n• ' + errors.join('\n• '), 'error');
-    // اسکرول به اولین فیلد خطادار
-    const fieldMap = {
-      'شماره گزارش': 'reportNumber', 'تاریخ شمسی': 'reportDate',
-      'ساعت ثبت': 'reportTime', 'شیفت کاری': 'workShift',
-      'وضعیت آب و هوا': 'weatherCondition', 'دمای هوا': 'temperature',
-      'برنامه فعالیت‌های آتی': 'futureActivities',
-      'گزارش حوادث': 'incidents', 'تجهیزات ایمنی': 'safetyEquipment',
-      'توضیحات نهایی': 'finalComments',
-    };
-    const firstKey = errors.find(e => fieldMap[e]);
-    if (firstKey) {
-      const el = document.getElementById(fieldMap[firstKey]);
-      if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); el.focus(); el.classList.add('inp-error'); setTimeout(()=>el.classList.remove('inp-error'), 3000); }
-    }
-    return;
-  }
-  // ── پایان validation ───────────────────────────────────
-
-  // شناسه یکتا سمت کلاینت (برای تأیید ذخیره)
-  const id = 'R' + Date.now() + '-' + Math.random().toString(36).slice(2, 7);
-
-  showLoading(true, 'در حال ارسال گزارش...');
-  try {
-    // ارسال با POST no-cors
-    await apiPost({ action: 'save', id, project_username: currentUser.username, report_data: data });
-
-    // تأیید واقعی: چند بار بررسی کن که گزارش واقعاً در سرور ثبت شده
-    let ok = false;
-    for (let i = 0; i < 3 && !ok; i++) {
-      await new Promise(r => setTimeout(r, 1500));
-      try { const res = await apiGet({ action: 'get', id }); ok = !!(res && res.success); } catch (e) {}
-    }
-    if (ok) {
-      toast('گزارش ثبت و تأیید شد ✅', 'success');
-      clearForm();
-    } else {
-      toast('ارسال شد ولی تأیید نشد — در داشبورد مدیر بررسی کنید', 'error');
-    }
-  } catch (e) {
-    toast('خطا در ارسال: ' + e.message, 'error');
-  }
+async function loadTechnicalReports(){
+  showLoading(true,'در حال بارگذاری گزارش‌ها...');
+  try{
+    const res=await apiGet({action:'list',page:techState.page,project:techState.project,q:techState.q});
+    if(!res||!res.success) throw new Error((res&&res.error)||'خطا');
+    const reports=res.data||[];
+    techState.pages=res.pages||1; techState.total=res.total||0;
+    // برای هر گزارش بررسی می‌کنیم نظر فنی داره یا نه
+    // نت‌ها رو از کش می‌خونیم (اگر بار شده)
+    renderTechReports(reports);
+  }catch(e){toast('خطا: '+e.message,'error');}
   showLoading(false);
 }
 
-/* ════════════════════════════════════════
- *  collectFormData
- * ════════════════════════════════════════ */
-
-function collectFormData() {
-  return {
-    reportNumber:     v('reportNumber'),
-    reportDate:       v('reportDate'),
-    reportTime:       v('reportTime'),
-    projectName:      currentUser.project,
-    siteLocation:     v('siteLocation'),
-    employer:         v('employer'),
-    supervisor:       v('supervisor'),
-    contractor:       'شرکت آذریورد تبریز',
-    workShift:        v('workShift'),
-    weatherCondition: v('weatherCondition'),
-    temperature:      v('temperature'),
-    futureActivities: v('futureActivities') || 'ثبت نشده',
-    problems:         v('problems')         || 'مشکلی گزارش نشده',
-    safetyStatus:     v('safetyStatus'),
-    incidents:        v('incidents')        || 'حادثه‌ای گزارش نشده',
-    safetyEquipment:  v('safetyEquipment')  || 'ثبت نشده',
-    finalComments:    v('finalComments')    || '—',
-    activities:       getTableData('activitiesTable',       ['activity-type','activity-desc','activity-status']),
-    executiveLabor:   getTableData('executiveLaborTable',   ['labor-fullname','labor-position','labor-hours','labor-attendance','labor-notes']),
-    staffLabor:       getTableData('staffLaborTable',       ['labor-fullname','labor-position','labor-hours','labor-attendance','labor-notes']),
-    laborTotals: {
-      executive: document.getElementById('executiveLaborTable').querySelectorAll('tr').length,
-      staff:     document.getElementById('staffLaborTable').querySelectorAll('tr').length,
-      total:     document.getElementById('executiveLaborTable').querySelectorAll('tr').length +
-                 document.getElementById('staffLaborTable').querySelectorAll('tr').length,
-    },
-    machinery:       getTableData('machineryTable',        ['machine-name','machine-model','machine-status','machine-hours','machine-notes']),
-    companyVehicles: getTableData('companyVehiclesTable',  ['vehicle-name','vehicle-driver','vehicle-status','vehicle-notes']),
-    materials:       getTableData('materialsTable',        ['material-name','material-amount','material-unit','material-notes']),
-    neededMaterials: getTableData('neededMaterialsTable',  ['needed-name','needed-amount','needed-unit','needed-stock','needed-shortage','needed-priority','needed-notes']),
-    requiredSystems: getTableData('requiredSystemsTable', ['system-type','system-desc','system-supply-status','system-priority','system-notes']),
-    images:          uploadedImages.filter(Boolean),
-    sig1: document.getElementById('sig1Data').value,
-    sig2: document.getElementById('sig2Data').value,
-    sig3: document.getElementById('sig3Data').value,
-  };
+function renderTechReports(reports){
+  const container=document.getElementById('techReportList');
+  if(!reports.length){ container.innerHTML='<div class="empty-state"><div class="icon">📭</div><p>هیچ گزارشی یافت نشد</p></div>'; return; }
+  container.innerHTML='';
+  let lastDayKey=null;
+  reports.forEach(r=>{
+    const key=new Date(r.created_at).toLocaleDateString('fa-IR');
+    if(key!==lastDayKey){
+      lastDayKey=key;
+      const count=reports.filter(x=>new Date(x.created_at).toLocaleDateString('fa-IR')===key).length;
+      const weekday=new Date(r.created_at).toLocaleDateString('fa-IR',{weekday:'long'});
+      const div=document.createElement('div');
+      div.className='day-divider';
+      div.innerHTML=`<span class="day-divider-date">📅 ${esc(weekday)} ${esc(key)}</span>
+                     <span class="day-divider-count">${toFa(count)} گزارش</span>`;
+      container.appendChild(div);
+    }
+    const createdAt=new Date(r.created_at).toLocaleString('fa-IR');
+    const card=document.createElement('div');
+    card.className='report-card';
+    card.style.borderRightColor='#0e7490';
+    card.innerHTML=`
+      <div class="report-card-info">
+        <div class="report-card-title">${esc(r.projectName||'—')} — گزارش شماره ${esc(r.reportNumber||'—')}</div>
+        <div class="report-card-meta">
+          <span>📅 ${esc(r.reportDate||'—')}</span>
+          <span>⏰ ${esc(r.workShift||'—')}</span>
+          <span>👷 ${r.laborTotal||0} نفر</span>
+          <span>🕐 ${createdAt}</span>
+        </div>
+      </div>
+      <div class="report-card-actions">
+        <button class="btn-success-sm" onclick="openReportModal('${esc(r.id)}',true)">مشاهده</button>
+        <button class="btn-technical-sm" onclick="openTechNoteModal('${esc(r.project_username)}','${esc(r.projectName||r.project_username)}')">🔧 ثبت نظر فنی</button>
+      </div>`;
+    container.appendChild(card);
+  });
+  // صفحه‌بندی
+  if(techState.pages>1){
+    const nav=document.createElement('div');
+    nav.className='pagination';
+    nav.innerHTML=`<button class="btn-success-sm" ${techState.page<=1?'disabled':''} onclick="changeTechPage(-1)">◀ صفحه قبل</button>
+      <span>صفحه ${techState.page} از ${techState.pages}</span>
+      <button class="btn-success-sm" ${techState.page>=techState.pages?'disabled':''} onclick="changeTechPage(1)">صفحه بعد ▶</button>`;
+    container.appendChild(nav);
+  }
+}
+function changeTechPage(delta){
+  const next=techState.page+delta;
+  if(next<1||next>techState.pages) return;
+  techState.page=next; loadTechnicalReports();
 }
 
-function v(id) { return (document.getElementById(id) || {}).value || ''; }
+/* ─ نت‌های فنی خود arabi ─ */
+let _techNotes=[]; let _techNotesLoaded=false;
+async function loadTechNotes(){
+  const list=document.getElementById('techNoteList');
+  list.innerHTML='<div class="msg-empty"><div class="icon">⏳</div><p>در حال بارگذاری...</p></div>';
+  try{
+    const res=await apiGet({action:'getNotes',username:'all'});
+    if(!res||!res.success) throw new Error(res&&res.error||'خطا');
+    // فقط نت‌هایی که from=arabi یا category=technical
+    _techNotes=(res.notes||[]).filter(n=>(n.from||'')==='arabi'||(n.category||'')==='technical')
+      .slice().sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
+    _techNotesLoaded=true; applyTechNoteFilters();
+  }catch(e){ list.innerHTML='<div class="msg-empty"><div class="icon">⚠️</div><p>خطا: '+esc(e.message)+'</p></div>'; }
+}
+function clearTechNoteFilters(){
+  document.getElementById('tNoteText').value='';
+  document.getElementById('tNoteFrom').value='';
+  document.getElementById('tNoteTo').value='';
+  applyTechNoteFilters();
+}
+function applyTechNoteFilters(){
+  const q=document.getElementById('tNoteText').value.trim();
+  const from=document.getElementById('tNoteFrom').value;
+  const to=document.getElementById('tNoteTo').value;
+  let filtered=_techNotes.filter(n=>{
+    if(q&&(n.message||'').indexOf(q)===-1) return false;
+    if(from&&isoDay(n.created_at)<from) return false;
+    if(to&&isoDay(n.created_at)>to) return false;
+    return true;
+  });
+  const list=document.getElementById('techNoteList');
+  const cnt=document.getElementById('tNoteCount');
+  cnt.textContent=filtered.length?('🔎 '+toFa(filtered.length)+' نظر فنی'):'';
+  if(!filtered.length){ list.innerHTML='<div class="msg-empty"><div class="icon">📭</div><p>نظر فنی یافت نشد</p></div>'; return; }
+  list.innerHTML=filtered.map(n=>{
+    const date=new Date(n.created_at).toLocaleString('fa-IR');
+    return `<div class="msg-item is-technical">
+      <div class="msg-item-body">
+        <div class="msg-item-tags">
+          <span class="msg-tag technical">🔧 نظر فنی — پروژه ${esc(supLabel(n.to)||n.to)}</span>
+          <span class="msg-tag date">📅 ${esc(date)}</span>
+        </div>
+        <div class="msg-item-text">${highlight(n.message||'',q)}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
 
-/* ════════════════════════════════════════
- *  توابع جدول
- * ════════════════════════════════════════ */
+/* ════════ MANAGER INIT ════════ */
+async function initManager(){
+  const sel=document.getElementById('filterProject');
+  sel.innerHTML='<option value="">همه پروژه‌ها</option>';
+  Object.values(USERS).filter(u=>u.role==='reporter').forEach(u=>{
+    const o=document.createElement('option');o.value=u.project;o.textContent=u.project;sel.appendChild(o);
+  });
+  document.getElementById('filterSearch').onkeydown=(e)=>{if(e.key==='Enter')applyFilters();};
+  mgrState={page:1,pages:1,total:0,q:'',project:''};
+  _allNotesLoaded=false; switchMgrTab('reports'); await loadManagerReports();
+}
+function applyFilters(){
+  mgrState.project=document.getElementById('filterProject').value;
+  mgrState.q=document.getElementById('filterSearch').value.trim();
+  mgrState.page=1; loadManagerReports();
+}
+async function loadManagerReports(){
+  showLoading(true,'در حال بارگذاری گزارش‌ها...');
+  try{
+    const res=await apiGet({action:'list',page:mgrState.page,project:mgrState.project,q:mgrState.q});
+    if(!res||!res.success) throw new Error((res&&res.error)||'خطا');
+    allReports=res.data||[]; mgrState.pages=res.pages||1; mgrState.total=res.total||0;
+    updateStats(); renderReports();
+  }catch(e){toast('خطا: '+e.message,'error');}
+  showLoading(false);
+}
+function updateStats(){
+  const today=new Date().toISOString().slice(0,10);
+  const weekAgo=new Date(Date.now()-7*864e5).toISOString().slice(0,10);
+  const dayOf=r=>new Date(r.created_at).toISOString().slice(0,10);
+  document.getElementById('statTotal').textContent=mgrState.total;
+  document.getElementById('statToday').textContent=allReports.filter(r=>dayOf(r)===today).length;
+  document.getElementById('statProjects').textContent=new Set(allReports.map(r=>r.project_username)).size;
+  document.getElementById('statWeek').textContent=allReports.filter(r=>dayOf(r)>=weekAgo).length;
+}
+function dayKeyOf(r){ return new Date(r.created_at).toLocaleDateString('fa-IR'); }
 
-function addActivity() {
-  const r = document.getElementById('activitiesTable').insertRow();
-  r.innerHTML = `<td><select class="inp-sm activity-type"><option value="">انتخاب کنید</option><option>خاکبرداری</option><option>بتن‌ریزی</option><option>قالب‌بندی</option><option>آرماتوربندی</option><option>آسفالت</option><option>حفاری</option><option>تأسیسات</option><option>برق‌کشی</option><option>جوشکاری</option><option>سایر</option></select></td>
+function renderReports(){
+  const container=document.getElementById('reportList');
+  if(!allReports.length){ container.innerHTML='<div class="empty-state"><div class="icon">📭</div><p>هیچ گزارشی یافت نشد</p></div>'; return; }
+  container.innerHTML='';
+  let lastDayKey=null;
+  allReports.forEach(r=>{
+    const key=dayKeyOf(r);
+    if(key!==lastDayKey){
+      lastDayKey=key;
+      const count=allReports.filter(x=>dayKeyOf(x)===key).length;
+      const weekday=new Date(r.created_at).toLocaleDateString('fa-IR',{weekday:'long'});
+      const div=document.createElement('div');
+      div.className='day-divider';
+      div.innerHTML=`<span class="day-divider-date">📅 ${esc(weekday)} ${esc(key)}</span>
+                     <span class="day-divider-count">${toFa(count)} گزارش</span>`;
+      container.appendChild(div);
+    }
+    const createdAt=new Date(r.created_at).toLocaleString('fa-IR');
+    // بررسی نظر فنی از کش نت‌ها (اگر بارگذاری شده باشه)
+    const hasTechNote=_allNotesLoaded&&_allNotes.some(n=>
+      n.to===r.project_username && ((n.category||'')==='technical'||(n.from||'')==='arabi')
+    );
+    const techBadge=hasTechNote?'<span class="tech-note-badge">🔧 نظر فنی</span>':'';
+    const card=document.createElement('div');
+    card.className='report-card';
+    card.innerHTML=`
+      <div class="report-card-info">
+        <div class="report-card-title">${esc(r.projectName||'—')} — گزارش شماره ${esc(r.reportNumber||'—')}${techBadge}</div>
+        <div class="report-card-meta">
+          <span>📅 ${esc(r.reportDate||'—')}</span>
+          <span>⏰ ${esc(r.workShift||'—')}</span>
+          <span>👷 ${r.laborTotal||0} نفر</span>
+          <span>🕐 ${createdAt}</span>
+        </div>
+      </div>
+      <div class="report-card-actions">
+        <button class="btn-success-sm" onclick="openReportModal('${esc(r.id)}')">مشاهده</button>
+        <button style="background:#d97706;color:white;border:none;padding:7px 12px;border-radius:7px;font-size:13px;cursor:pointer;font-family:'Vazirmatn',sans-serif;"
+          onclick="openNoteModal('${esc(r.project_username)}','${esc(r.projectName||r.project_username)}')">📝 نت</button>
+        <button class="btn-danger-sm" onclick="deleteReport('${esc(r.id)}')">حذف</button>
+      </div>`;
+    container.appendChild(card);
+  });
+  if(mgrState.pages>1){
+    const nav=document.createElement('div'); nav.className='pagination';
+    nav.innerHTML=`<button class="btn-success-sm" ${mgrState.page<=1?'disabled':''} onclick="changePage(-1)">◀ صفحه قبل</button>
+      <span>صفحه ${mgrState.page} از ${mgrState.pages} (کل: ${mgrState.total} گزارش)</span>
+      <button class="btn-success-sm" ${mgrState.page>=mgrState.pages?'disabled':''} onclick="changePage(1)">صفحه بعد ▶</button>`;
+    container.appendChild(nav);
+  }
+}
+function changePage(delta){
+  const next=mgrState.page+delta;
+  if(next<1||next>mgrState.pages) return;
+  mgrState.page=next; loadManagerReports();
+}
+
+/* ════════ REPORT MODAL ════════ */
+async function openReportModal(id, isTechView){
+  showLoading(true,'در حال بارگذاری گزارش...');
+  let d;
+  try{
+    const res=await apiGet({action:'get',id});
+    if(!res||!res.success) throw new Error((res&&res.error)||'گزارش یافت نشد');
+    d=(res.report&&res.report.report_data)||{};
+  }catch(e){ showLoading(false);toast('خطا: '+e.message,'error');return; }
+  showLoading(false);
+  modalReportData=d;
+  // دکمه PDF فقط برای مدیر و بخش فنی
+  const pdfBtn=document.getElementById('modalPdfBtn');
+  if(pdfBtn) pdfBtn.style.display=(isTechView)?'none':'';  // بخش فنی PDF نمی‌گیره (اختیاری — می‌شه فعال کرد)
+  document.getElementById('modalTitle').textContent=`گزارش ${d.reportNumber||''} — ${d.projectName||''}`;
+  let html=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;font-size:13px;">
+    <div><b>پروژه:</b> ${esc(d.projectName||'—')}</div>
+    <div><b>کارگاه:</b> ${esc(d.siteLocation||'—')}</div>
+    <div><b>تاریخ:</b> ${esc(d.reportDate||'—')}</div>
+    <div><b>شیفت:</b> ${esc(d.workShift||'—')}</div>
+    <div><b>آب‌وهوا:</b> ${esc(d.weatherCondition||'—')} / ${esc(d.temperature||'—')}°C</div>
+    <div><b>ایمنی:</b> ${esc(d.safetyStatus||'—')}</div>
+  </div>`;
+  if(d.activities&&d.activities.length){
+    html+=`<b>فعالیت‌ها:</b><table style="width:100%;border-collapse:collapse;font-size:12px;margin:8px 0;">
+      <tr style="background:#f1f5f9;"><th style="padding:6px;border:1px solid #e2e8f0;">نوع</th><th style="padding:6px;border:1px solid #e2e8f0;">شرح</th><th style="padding:6px;border:1px solid #e2e8f0;">وضعیت</th></tr>
+      ${d.activities.map(a=>`<tr><td style="padding:6px;border:1px solid #e2e8f0;">${esc(a['activity-type']||'')}</td><td style="padding:6px;border:1px solid #e2e8f0;">${esc(a['activity-desc']||'')}</td><td style="padding:6px;border:1px solid #e2e8f0;">${esc(a['activity-status']||'')}</td></tr>`).join('')}
+    </table>`;
+  }
+  const allLabor=[...(d.executiveLabor||[]),...(d.staffLabor||[])];
+  if(allLabor.length){
+    html+=`<b>نیروی انسانی (${(d.laborTotals&&d.laborTotals.total)||0} نفر):</b>
+    <table style="width:100%;border-collapse:collapse;font-size:12px;margin:8px 0;">
+      <tr style="background:#f1f5f9;"><th style="padding:6px;border:1px solid #e2e8f0;">نام</th><th style="padding:6px;border:1px solid #e2e8f0;">سمت</th><th style="padding:6px;border:1px solid #e2e8f0;">ساعت</th><th style="padding:6px;border:1px solid #e2e8f0;">حضور</th></tr>
+      ${allLabor.map(l=>`<tr><td style="padding:6px;border:1px solid #e2e8f0;">${esc(l['labor-fullname']||'')}</td><td style="padding:6px;border:1px solid #e2e8f0;">${esc(l['labor-position']||'')}</td><td style="padding:6px;border:1px solid #e2e8f0;">${esc(l['labor-hours']||'')}</td><td style="padding:6px;border:1px solid #e2e8f0;">${esc(l['labor-attendance']||'')}</td></tr>`).join('')}
+    </table>`;
+  }
+  if(d.problems&&d.problems!=='مشکلی گزارش نشده')
+    html+=`<div style="margin:10px 0;padding:10px;background:#fef2f2;border-radius:8px;font-size:13px;"><b>مشکلات:</b> ${esc(d.problems)}</div>`;
+  if(d.neededMaterials&&d.neededMaterials.length){
+    html+=`<b>مصالح مورد نیاز (کسری):</b><table style="width:100%;border-collapse:collapse;font-size:12px;margin:8px 0;">
+      <tr style="background:#f1f5f9;"><th style="padding:6px;border:1px solid #e2e8f0;">نوع مصالح</th><th style="padding:6px;border:1px solid #e2e8f0;">مقدار</th><th style="padding:6px;border:1px solid #e2e8f0;">واحد</th><th style="padding:6px;border:1px solid #e2e8f0;">موجودی</th><th style="padding:6px;border:1px solid #e2e8f0;">کسری</th><th style="padding:6px;border:1px solid #e2e8f0;">اولویت</th></tr>
+      ${d.neededMaterials.map(m=>`<tr><td style="padding:6px;border:1px solid #e2e8f0;">${esc(m['needed-name']||'')}</td><td style="padding:6px;border:1px solid #e2e8f0;">${esc(m['needed-amount']||'')}</td><td style="padding:6px;border:1px solid #e2e8f0;">${esc(m['needed-unit']||'')}</td><td style="padding:6px;border:1px solid #e2e8f0;">${esc(m['needed-stock']||'')}</td><td style="padding:6px;border:1px solid #e2e8f0;">${esc(m['needed-shortage']||'')}</td><td style="padding:6px;border:1px solid #e2e8f0;">${esc(m['needed-priority']||'')}</td></tr>`).join('')}
+    </table>`;
+  }
+  if(d.requiredSystems&&d.requiredSystems.length){
+    html+=`<b>سیستم‌های مورد نیاز:</b><table style="width:100%;border-collapse:collapse;font-size:12px;margin:8px 0;">
+      <tr style="background:#f1f5f9;"><th style="padding:6px;border:1px solid #e2e8f0;">نوع سیستم</th><th style="padding:6px;border:1px solid #e2e8f0;">مشخصات</th><th style="padding:6px;border:1px solid #e2e8f0;">وضعیت تأمین</th><th style="padding:6px;border:1px solid #e2e8f0;">اولویت</th></tr>
+      ${d.requiredSystems.map(s=>`<tr><td style="padding:6px;border:1px solid #e2e8f0;">${esc(s['system-type']||'')}</td><td style="padding:6px;border:1px solid #e2e8f0;">${esc(s['system-desc']||'')}</td><td style="padding:6px;border:1px solid #e2e8f0;">${esc(s['system-supply-status']||'')}</td><td style="padding:6px;border:1px solid #e2e8f0;">${esc(s['system-priority']||'')}</td></tr>`).join('')}
+    </table>`;
+  }
+  if(d.finalComments&&d.finalComments!=='—')
+    html+=`<div style="margin:10px 0;padding:10px;background:#fffbeb;border-radius:8px;font-size:13px;"><b>توضیحات نهایی:</b> ${esc(d.finalComments)}</div>`;
+  if(d.images&&d.images.length){
+    html+=`<b>تصاویر:</b><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin-top:8px;">
+      ${d.images.map(src=>`<img src="${esc(src)}" referrerpolicy="no-referrer" onerror="imgRetry(this)" style="width:100%;height:120px;object-fit:cover;border-radius:6px;border:1px solid #e2e8f0;">`).join('')}
+    </div>`;
+  }
+  document.getElementById('modalContent').innerHTML=html;
+  document.getElementById('reportModal').classList.add('open');
+}
+
+/* ════════ DELETE REPORT ════════ */
+async function deleteReport(id){
+  if(!confirm('آیا از حذف کامل این گزارش اطمینان دارید؟\nاین عمل قابل بازگشت نیست.')) return;
+  showLoading(true,'در حال حذف...');
+  try{
+    const res=await apiGet({action:'delete',id});
+    if(!res||!res.success) throw new Error((res&&res.error)||'حذف ناموفق');
+    toast('گزارش حذف شد','success');
+    if(allReports.length===1&&mgrState.page>1) mgrState.page--;
+    await loadManagerReports();
+  }catch(e){toast('خطا: '+e.message,'error');}
+  showLoading(false);
+}
+function closeModal(){ document.getElementById('reportModal').classList.remove('open'); }
+function generatePDFFromModal(){ closeModal(); buildPDF(modalReportData); }
+
+/* ════════ SUBMIT REPORT ════════ */
+async function submitReport(){
+  const data=collectFormData();
+  const errors=[];
+  if(!data.reportNumber.trim()) errors.push('شماره گزارش');
+  if(!data.reportDate.trim()) errors.push('تاریخ شمسی');
+  if(!data.reportTime.trim()) errors.push('ساعت ثبت');
+  if(!data.workShift) errors.push('شیفت کاری');
+  if(!data.weatherCondition) errors.push('وضعیت آب و هوا');
+  if(data.temperature===''||data.temperature===null||String(data.temperature).trim()==='') errors.push('دمای هوا');
+  const actRows=document.getElementById('activitiesTable').querySelectorAll('tr');
+  if(actRows.length===0) errors.push('حداقل یک فعالیت انجام‌شده');
+  if(!v('futureActivities').trim()) errors.push('برنامه فعالیت‌های آتی');
+  const laborRows=document.getElementById('executiveLaborTable').querySelectorAll('tr').length+
+    document.getElementById('staffLaborTable').querySelectorAll('tr').length;
+  if(laborRows===0) errors.push('حداقل یک ردیف نیروی انسانی');
+  if(!v('incidents').trim()) errors.push('گزارش حوادث');
+  if(!v('safetyEquipment').trim()) errors.push('تجهیزات ایمنی');
+  if(document.getElementById('materialsTable').querySelectorAll('tr').length===0) errors.push('حداقل یک ردیف مصالح مصرفی');
+  if(document.getElementById('requiredSystemsTable').querySelectorAll('tr').length===0) errors.push('حداقل یک ردیف سیستم‌های مورد نیاز');
+  if(!v('finalComments').trim()) errors.push('توضیحات نهایی');
+  if(errors.length>0){
+    toast('فیلدهای اجباری تکمیل نشده‌اند:\n• '+errors.join('\n• '),'error');
+    const fieldMap={'شماره گزارش':'reportNumber','تاریخ شمسی':'reportDate','ساعت ثبت':'reportTime','شیفت کاری':'workShift','وضعیت آب و هوا':'weatherCondition','دمای هوا':'temperature','برنامه فعالیت‌های آتی':'futureActivities','گزارش حوادث':'incidents','تجهیزات ایمنی':'safetyEquipment','توضیحات نهایی':'finalComments'};
+    const firstKey=errors.find(e=>fieldMap[e]);
+    if(firstKey){const el=document.getElementById(fieldMap[firstKey]);if(el){el.scrollIntoView({behavior:'smooth',block:'center'});el.focus();el.classList.add('inp-error');setTimeout(()=>el.classList.remove('inp-error'),3000);}}
+    return;
+  }
+  const id='R'+Date.now()+'-'+Math.random().toString(36).slice(2,7);
+  showLoading(true,'در حال ارسال گزارش...');
+  try{
+    await apiPost({action:'save',id,project_username:currentUser.username,report_data:data});
+    let ok=false;
+    for(let i=0;i<3&&!ok;i++){
+      await new Promise(r=>setTimeout(r,1500));
+      try{const res=await apiGet({action:'get',id});ok=!!(res&&res.success);}catch(e){}
+    }
+    if(ok){toast('گزارش ثبت و تأیید شد ✅','success');clearForm();}
+    else toast('ارسال شد ولی تأیید نشد — در داشبورد مدیر بررسی کنید','error');
+  }catch(e){toast('خطا در ارسال: '+e.message,'error');}
+  showLoading(false);
+}
+function collectFormData(){
+  return {
+    reportNumber:v('reportNumber'),reportDate:v('reportDate'),reportTime:v('reportTime'),
+    projectName:currentUser.project,siteLocation:v('siteLocation'),employer:v('employer'),
+    supervisor:v('supervisor'),contractor:'شرکت آذریورد تبریز',workShift:v('workShift'),
+    weatherCondition:v('weatherCondition'),temperature:v('temperature'),
+    futureActivities:v('futureActivities')||'ثبت نشده',problems:v('problems')||'مشکلی گزارش نشده',
+    safetyStatus:v('safetyStatus'),incidents:v('incidents')||'حادثه‌ای گزارش نشده',
+    safetyEquipment:v('safetyEquipment')||'ثبت نشده',finalComments:v('finalComments')||'—',
+    activities:getTableData('activitiesTable',['activity-type','activity-desc','activity-status']),
+    executiveLabor:getTableData('executiveLaborTable',['labor-fullname','labor-position','labor-hours','labor-attendance','labor-notes']),
+    staffLabor:getTableData('staffLaborTable',['labor-fullname','labor-position','labor-hours','labor-attendance','labor-notes']),
+    laborTotals:{
+      executive:document.getElementById('executiveLaborTable').querySelectorAll('tr').length,
+      staff:document.getElementById('staffLaborTable').querySelectorAll('tr').length,
+      total:document.getElementById('executiveLaborTable').querySelectorAll('tr').length+document.getElementById('staffLaborTable').querySelectorAll('tr').length,
+    },
+    machinery:getTableData('machineryTable',['machine-name','machine-model','machine-status','machine-hours','machine-notes']),
+    companyVehicles:getTableData('companyVehiclesTable',['vehicle-name','vehicle-driver','vehicle-status','vehicle-notes']),
+    materials:getTableData('materialsTable',['material-name','material-amount','material-unit','material-notes']),
+    neededMaterials:getTableData('neededMaterialsTable',['needed-name','needed-amount','needed-unit','needed-stock','needed-shortage','needed-priority','needed-notes']),
+    requiredSystems:getTableData('requiredSystemsTable',['system-type','system-desc','system-supply-status','system-priority','system-notes']),
+    images:uploadedImages.filter(Boolean),
+    sig1:document.getElementById('sig1Data').value,
+    sig2:document.getElementById('sig2Data').value,
+    sig3:document.getElementById('sig3Data').value,
+  };
+}
+function v(id){return (document.getElementById(id)||{}).value||'';}
+
+/* ════════ TABLE FUNCTIONS ════════ */
+function addActivity(){
+  const r=document.getElementById('activitiesTable').insertRow();
+  r.innerHTML=`<td><select class="inp-sm activity-type"><option value="">انتخاب کنید</option><option>خاکبرداری</option><option>بتن‌ریزی</option><option>قالب‌بندی</option><option>آرماتوربندی</option><option>آسفالت</option><option>حفاری</option><option>تأسیسات</option><option>برق‌کشی</option><option>جوشکاری</option><option>سایر</option></select></td>
   <td><input type="text" class="inp-sm activity-desc" placeholder="شرح عملیات"></td>
   <td><select class="inp-sm activity-status"><option>انجام شده</option><option>در حال انجام</option><option>متوقف</option></select></td>
   <td><button class="btn-danger-sm" onclick="deleteRow(this)">حذف</button></td>`;
 }
-
-function addLaborRow(tableId) {
-  const isExec = tableId === 'executiveLaborTable';
-  const opts = (isExec ? EXECUTIVE_POSITIONS : STAFF_POSITIONS)
-    .map(p => `<option>${p}</option>`).join('');
-  const r = document.getElementById(tableId).insertRow();
-  r.innerHTML = `<td><input type="text" class="inp-sm labor-fullname" placeholder="نام و نام خانوادگی"></td>
+function addLaborRow(tableId){
+  const isExec=tableId==='executiveLaborTable';
+  const opts=(isExec?EXECUTIVE_POSITIONS:STAFF_POSITIONS).map(p=>`<option>${p}</option>`).join('');
+  const r=document.getElementById(tableId).insertRow();
+  r.innerHTML=`<td><input type="text" class="inp-sm labor-fullname" placeholder="نام و نام خانوادگی"></td>
   <td><select class="inp-sm labor-position"><option value="">انتخاب سمت</option>${opts}</select></td>
   <td><input type="number" class="inp-sm labor-hours" value="8" style="width:60px;"></td>
   <td><select class="inp-sm labor-attendance"><option>حاضر</option><option>غایب</option><option>تأخیر</option><option>مرخصی</option></select></td>
@@ -1459,13 +1681,11 @@ function addLaborRow(tableId) {
   <td><button class="btn-danger-sm" onclick="deleteRow(this)">حذف</button></td>`;
   updateLaborTotals();
 }
-
-function addExecutiveLabor() { addLaborRow('executiveLaborTable'); }
-function addStaffLabor()     { addLaborRow('staffLaborTable'); }
-
-function addMachinery() {
-  const r = document.getElementById('machineryTable').insertRow();
-  r.innerHTML = `<td><input type="text" class="inp-sm machine-name" placeholder="نام دستگاه"></td>
+function addExecutiveLabor(){addLaborRow('executiveLaborTable');}
+function addStaffLabor(){addLaborRow('staffLaborTable');}
+function addMachinery(){
+  const r=document.getElementById('machineryTable').insertRow();
+  r.innerHTML=`<td><input type="text" class="inp-sm machine-name" placeholder="نام دستگاه"></td>
   <td><input type="text" class="inp-sm machine-model" placeholder="مدل"></td>
   <td><select class="inp-sm machine-status"><option>فعال</option><option>خاموش</option><option>در تعمیر</option><option>خراب</option></select></td>
   <td><input type="number" class="inp-sm machine-hours" placeholder="ساعت" style="width:70px;"></td>
@@ -1473,30 +1693,26 @@ function addMachinery() {
   <td><button class="btn-danger-sm" onclick="deleteRow(this)">حذف</button></td>`;
   updateMachineryTotal();
 }
-
-function addCompanyVehicle() {
-  const r = document.getElementById('companyVehiclesTable').insertRow();
-  r.innerHTML = `<td><input type="text" class="inp-sm vehicle-name" placeholder="وانت، سواری..."></td>
+function addCompanyVehicle(){
+  const r=document.getElementById('companyVehiclesTable').insertRow();
+  r.innerHTML=`<td><input type="text" class="inp-sm vehicle-name" placeholder="وانت، سواری..."></td>
   <td><input type="text" class="inp-sm vehicle-driver" placeholder="نام راننده"></td>
   <td><select class="inp-sm vehicle-status"><option>فعال</option><option>غیرفعال</option><option>در تعمیر</option></select></td>
   <td><input type="text" class="inp-sm vehicle-notes" placeholder="توضیحات"></td>
   <td><button class="btn-danger-sm" onclick="deleteRow(this)">حذف</button></td>`;
   updateVehicleTotal();
 }
-
-function addMaterial() {
-  const r = document.getElementById('materialsTable').insertRow();
-  r.innerHTML = `<td><input type="text" class="inp-sm material-name" placeholder="نوع مصالح"></td>
+function addMaterial(){
+  const r=document.getElementById('materialsTable').insertRow();
+  r.innerHTML=`<td><input type="text" class="inp-sm material-name" placeholder="نوع مصالح"></td>
   <td><input type="number" class="inp-sm material-amount" placeholder="مقدار" style="width:80px;"></td>
   <td><select class="inp-sm material-unit"><option>کیلوگرم</option><option>تن</option><option>متر مکعب</option><option>متر</option><option>عدد</option><option>لیتر</option></select></td>
   <td><input type="text" class="inp-sm material-notes" placeholder="توضیحات"></td>
   <td><button class="btn-danger-sm" onclick="deleteRow(this)">حذف</button></td>`;
 }
-
-/* مصالح مورد نیاز (کسری / کمبود) — همسو با مصالح مصرفی + فیلدهای کمبود */
-function addNeededMaterial() {
-  const r = document.getElementById('neededMaterialsTable').insertRow();
-  r.innerHTML = `<td><input type="text" class="inp-sm needed-name" placeholder="نوع مصالح"></td>
+function addNeededMaterial(){
+  const r=document.getElementById('neededMaterialsTable').insertRow();
+  r.innerHTML=`<td><input type="text" class="inp-sm needed-name" placeholder="نوع مصالح"></td>
   <td><input type="number" class="inp-sm needed-amount" placeholder="مقدار" style="width:80px;"></td>
   <td><select class="inp-sm needed-unit"><option>کیلوگرم</option><option>تن</option><option>متر مکعب</option><option>متر مربع</option><option>متر</option><option>عدد</option><option>لیتر</option><option>شاخه</option><option>پاکت</option><option>سرویس</option></select></td>
   <td><input type="number" class="inp-sm needed-stock" placeholder="موجودی" style="width:80px;"></td>
@@ -1506,560 +1722,194 @@ function addNeededMaterial() {
   <td><button class="btn-danger-sm" onclick="deleteRow(this)">حذف</button></td>`;
   updateNeededTotal();
 }
-
-function updateNeededTotal() {
-  const el = document.getElementById('neededTotal');
-  if (el) el.textContent = document.getElementById('neededMaterialsTable').querySelectorAll('tr').length;
-}
-
-const REQUIRED_SYSTEM_TYPES = [
-  'برق (قدرت)','برق (روشنایی)','آب‌رسانی','فاضلاب','تهویه مطبوع (HVAC)',
-  'اعلام حریق','اطفاء حریق','آسانسور','تأسیسات مکانیکی','سیستم گازرسانی',
-  'شبکه داده / IT','دوربین مداربسته (CCTV)','ژنراتور برق اضطراری',
-  'پمپاژ و مخازن','سیستم ضعیف‌الجریان','سایر'
-];
-
-function addRequiredSystem() {
-  const r = document.getElementById('requiredSystemsTable').insertRow();
-  const sysOpts = REQUIRED_SYSTEM_TYPES.map(s => `<option>${s}</option>`).join('');
-  r.innerHTML = `
-  <td><select class="inp-sm system-type"><option value="">انتخاب کنید</option>${sysOpts}</select></td>
+function updateNeededTotal(){const el=document.getElementById('neededTotal');if(el)el.textContent=document.getElementById('neededMaterialsTable').querySelectorAll('tr').length;}
+const REQUIRED_SYSTEM_TYPES=['برق (قدرت)','برق (روشنایی)','آب‌رسانی','فاضلاب','تهویه مطبوع (HVAC)','اعلام حریق','اطفاء حریق','آسانسور','تأسیسات مکانیکی','سیستم گازرسانی','شبکه داده / IT','دوربین مداربسته (CCTV)','ژنراتور برق اضطراری','پمپاژ و مخازن','سیستم ضعیف‌الجریان','سایر'];
+function addRequiredSystem(){
+  const r=document.getElementById('requiredSystemsTable').insertRow();
+  const sysOpts=REQUIRED_SYSTEM_TYPES.map(s=>`<option>${s}</option>`).join('');
+  r.innerHTML=`<td><select class="inp-sm system-type"><option value="">انتخاب کنید</option>${sysOpts}</select></td>
   <td><input type="text" class="inp-sm system-desc" placeholder="مشخصات / برند / ظرفیت"></td>
-  <td><select class="inp-sm system-supply-status">
-    <option>نیاز به تأمین</option><option>در دست تأمین</option><option>تأمین شده</option><option>نصب شده</option><option>راه‌اندازی شده</option>
-  </select></td>
-  <td><select class="inp-sm system-priority">
-    <option>بالا</option><option>متوسط</option><option>پایین</option>
-  </select></td>
+  <td><select class="inp-sm system-supply-status"><option>نیاز به تأمین</option><option>در دست تأمین</option><option>تأمین شده</option><option>نصب شده</option><option>راه‌اندازی شده</option></select></td>
+  <td><select class="inp-sm system-priority"><option>بالا</option><option>متوسط</option><option>پایین</option></select></td>
   <td><input type="text" class="inp-sm system-notes" placeholder="توضیحات"></td>
   <td><button class="btn-danger-sm" onclick="deleteRow(this);updateSystemTotal()">حذف</button></td>`;
   updateSystemTotal();
 }
-
-function updateSystemTotal() {
-  const el = document.getElementById('systemTotal');
-  if (el) el.textContent = document.getElementById('requiredSystemsTable').querySelectorAll('tr').length;
-}
-
-function deleteRow(btn) {
-  btn.closest('tr').remove();
-  updateLaborTotals(); updateMachineryTotal(); updateVehicleTotal(); updateSystemTotal(); updateNeededTotal();
-}
-
-function getTableData(tableId, classes) {
-  const rows = []; 
-  document.getElementById(tableId).querySelectorAll('tr').forEach(row => {
-    const rowData = {};
-    classes.forEach(cls => {
-      const el = row.querySelector('.' + cls);
-      if (el) rowData[cls] = el.value;
-    });
-    if (Object.values(rowData).some(val => val && String(val).trim())) rows.push(rowData);
+function updateSystemTotal(){const el=document.getElementById('systemTotal');if(el)el.textContent=document.getElementById('requiredSystemsTable').querySelectorAll('tr').length;}
+function deleteRow(btn){btn.closest('tr').remove();updateLaborTotals();updateMachineryTotal();updateVehicleTotal();updateSystemTotal();updateNeededTotal();}
+function getTableData(tableId,classes){
+  const rows=[];
+  document.getElementById(tableId).querySelectorAll('tr').forEach(row=>{
+    const rowData={};
+    classes.forEach(cls=>{const el=row.querySelector('.'+cls);if(el)rowData[cls]=el.value;});
+    if(Object.values(rowData).some(val=>val&&String(val).trim())) rows.push(rowData);
   });
   return rows;
 }
-
-function loadTableData(tableId, data, addFn, classes) {
-  document.getElementById(tableId).innerHTML = '';
-  (data || []).forEach(rowData => {
+function loadTableData(tableId,data,addFn,classes){
+  document.getElementById(tableId).innerHTML='';
+  (data||[]).forEach(rowData=>{
     addFn();
-    const tbody = document.getElementById(tableId);
-    const lastRow = tbody.rows[tbody.rows.length - 1];
-    classes.forEach(cls => {
-      const el = lastRow.querySelector('.' + cls);
-      if (el && rowData[cls] !== undefined) el.value = rowData[cls];
-    });
+    const tbody=document.getElementById(tableId);
+    const lastRow=tbody.rows[tbody.rows.length-1];
+    classes.forEach(cls=>{const el=lastRow.querySelector('.'+cls);if(el&&rowData[cls]!==undefined)el.value=rowData[cls];});
   });
 }
-
-function updateLaborTotals() {
-  const exec  = document.getElementById('executiveLaborTable').querySelectorAll('tr').length;
-  const staff = document.getElementById('staffLaborTable').querySelectorAll('tr').length;
-  document.getElementById('executiveTotal').textContent  = exec;
-  document.getElementById('staffTotal').textContent      = staff;
-  document.getElementById('laborGrandTotal').textContent = exec + staff;
+function updateLaborTotals(){
+  const exec=document.getElementById('executiveLaborTable').querySelectorAll('tr').length;
+  const staff=document.getElementById('staffLaborTable').querySelectorAll('tr').length;
+  document.getElementById('executiveTotal').textContent=exec;
+  document.getElementById('staffTotal').textContent=staff;
+  document.getElementById('laborGrandTotal').textContent=exec+staff;
 }
-function updateMachineryTotal() {
-  document.getElementById('machineryTotal').textContent = document.getElementById('machineryTable').querySelectorAll('tr').length;
-}
-function updateVehicleTotal() {
-  document.getElementById('vehicleTotal').textContent = document.getElementById('companyVehiclesTable').querySelectorAll('tr').length;
-}
+function updateMachineryTotal(){document.getElementById('machineryTotal').textContent=document.getElementById('machineryTable').querySelectorAll('tr').length;}
+function updateVehicleTotal(){document.getElementById('vehicleTotal').textContent=document.getElementById('companyVehiclesTable').querySelectorAll('tr').length;}
 
-/* ════════════════════════════════════════
- *  آپلود تصویر و امضا
- * ════════════════════════════════════════ */
-
-/* فشرده‌سازی عکس در مرورگر قبل از آپلود — از چند مگابایت به ~۲۰۰ کیلوبایت.
-   این تنها عاملی است که سرعت ثبت/نمایش و حجم ذخیره‌سازی را برای سال‌ها قابل‌تحمل می‌کند. */
-/* اگر thumbnail درایو دیر آمد یا اول‌بار خطا داد، یک‌بار با تأخیر دوباره تلاش کن */
-function imgRetry(el) {
-  if (el.dataset.r) return;            // فقط یک‌بار
-  el.dataset.r = '1';
-  const url = el.src;
-  el.src = '';
-  setTimeout(function(){ el.src = url; }, 1200);
+/* ════════ IMAGE / SIGNATURE ════════ */
+function imgRetry(el){if(el.dataset.r)return;el.dataset.r='1';const url=el.src;el.src='';setTimeout(function(){el.src=url;},1200);}
+function drawScaled_(img,dim,quality){
+  let w=img.width,h=img.height;
+  if(w>dim||h>dim){if(w>=h){h=Math.round(h*dim/w);w=dim;}else{w=Math.round(w*dim/h);h=dim;}}
+  const canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
+  const ctx=canvas.getContext('2d');ctx.fillStyle='#ffffff';ctx.fillRect(0,0,w,h);ctx.drawImage(img,0,0,w,h);
+  return canvas.toDataURL('image/jpeg',quality);
 }
-
-function drawScaled_(img, dim, quality) {
-  let w = img.width, h = img.height;
-  if (w > dim || h > dim) {
-    if (w >= h) { h = Math.round(h * dim / w); w = dim; }
-    else        { w = Math.round(w * dim / h); h = dim; }
-  }
-  const canvas = document.createElement('canvas');
-  canvas.width = w; canvas.height = h;
-  const ctx = canvas.getContext('2d');
-  ctx.fillStyle = '#ffffff';                 // پس‌زمینهٔ سفید برای PNG شفاف (امضا)
-  ctx.fillRect(0, 0, w, h);
-  ctx.drawImage(img, 0, 0, w, h);
-  return canvas.toDataURL('image/jpeg', quality);
-}
-
-/* فشرده‌سازی تضمینی: ابعاد/کیفیت را کم می‌کند تا حجم base64 زیر سقف امن سلولِ شیت
-   بماند. این کاری می‌کند که ذخیره هیچ‌وقت به‌خاطر بزرگی عکس خطا ندهد. */
-function compressToLimit(dataUrl, startDim, maxChars) {
-  return new Promise(resolve => {
-    const img = new Image();
-    img.onload = () => {
-      let dim = startDim;
-      const dims = [startDim, Math.round(startDim*0.8), Math.round(startDim*0.65), Math.round(startDim*0.5)];
-      const qs   = [0.7, 0.6, 0.5, 0.42];
-      let best = '';
-      for (let di = 0; di < dims.length; di++) {
-        for (let qi = 0; qi < qs.length; qi++) {
-          const out = drawScaled_(img, dims[di], qs[qi]);
-          best = out;
-          if (out.length <= maxChars) { resolve(out); return; }
-        }
-      }
-      resolve(best); // اگر باز هم بزرگ بود، کوچک‌ترین نسخه (نباید پیش بیاید)
+function compressToLimit(dataUrl,startDim,maxChars){
+  return new Promise(resolve=>{
+    const img=new Image();
+    img.onload=()=>{
+      const dims=[startDim,Math.round(startDim*0.8),Math.round(startDim*0.65),Math.round(startDim*0.5)];
+      const qs=[0.7,0.6,0.5,0.42];
+      let best='';
+      for(let di=0;di<dims.length;di++){for(let qi=0;qi<qs.length;qi++){const out=drawScaled_(img,dims[di],qs[qi]);best=out;if(out.length<=maxChars){resolve(out);return;}}}
+      resolve(best);
     };
-    img.onerror = () => resolve(dataUrl);
-    img.src = dataUrl;
+    img.onerror=()=>resolve(dataUrl);img.src=dataUrl;
   });
 }
-
-function handleImageUpload(event) {
-  const preview = document.getElementById('imagePreview');
-  Array.from(event.target.files).forEach(file => {
-    const reader = new FileReader();
-    reader.onload = async e => {
-      const compressed = await compressToLimit(e.target.result, 1100, 46000);
-      const idx = uploadedImages.length;
-      uploadedImages.push(compressed);
-      const wrap = document.createElement('div');
-      wrap.style.cssText = 'position:relative;display:inline-block;';
-      wrap.dataset.idx   = idx;
-      const img = document.createElement('img');
-      img.src = compressed;
-      img.style.cssText = 'width:130px;height:130px;object-fit:cover;border-radius:8px;border:2px solid #e2e8f0;display:block;';
-      const del = document.createElement('button');
-      del.type = 'button'; del.innerHTML = '✕';
-      del.style.cssText = 'position:absolute;top:4px;left:4px;background:#dc2626;color:white;border:none;border-radius:50%;width:22px;height:22px;font-size:12px;cursor:pointer;line-height:1;';
-      del.onclick = () => {
-        uploadedImages[parseInt(wrap.dataset.idx)] = null;
-        wrap.remove();
-        document.getElementById('projectImages').value = '';
-      };
-      wrap.appendChild(img); wrap.appendChild(del);
-      preview.appendChild(wrap);
+function handleImageUpload(event){
+  const preview=document.getElementById('imagePreview');
+  Array.from(event.target.files).forEach(file=>{
+    const reader=new FileReader();
+    reader.onload=async e=>{
+      const compressed=await compressToLimit(e.target.result,1100,46000);
+      const idx=uploadedImages.length;uploadedImages.push(compressed);
+      const wrap=document.createElement('div');wrap.style.cssText='position:relative;display:inline-block;';wrap.dataset.idx=idx;
+      const img=document.createElement('img');img.src=compressed;img.style.cssText='width:130px;height:130px;object-fit:cover;border-radius:8px;border:2px solid #e2e8f0;display:block;';
+      const del=document.createElement('button');del.type='button';del.innerHTML='✕';del.style.cssText='position:absolute;top:4px;left:4px;background:#dc2626;color:white;border:none;border-radius:50%;width:22px;height:22px;font-size:12px;cursor:pointer;line-height:1;';
+      del.onclick=()=>{uploadedImages[parseInt(wrap.dataset.idx)]=null;wrap.remove();document.getElementById('projectImages').value='';};
+      wrap.appendChild(img);wrap.appendChild(del);preview.appendChild(wrap);
     };
     reader.readAsDataURL(file);
   });
 }
-
-function handleSigUpload(event, imgId, previewId, dataId) {
-  const file = event.target.files[0]; if (!file) return;
-  const reader = new FileReader();
-  reader.onload = async e => {
-    const compressed = await compressToLimit(e.target.result, 700, 30000);
-    document.getElementById(imgId).src               = compressed;
-    document.getElementById(previewId).style.display = 'block';
-    document.getElementById(dataId).value            = compressed;
+function handleSigUpload(event,imgId,previewId,dataId){
+  const file=event.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=async e=>{
+    const compressed=await compressToLimit(e.target.result,700,30000);
+    document.getElementById(imgId).src=compressed;
+    document.getElementById(previewId).style.display='block';
+    document.getElementById(dataId).value=compressed;
   };
   reader.readAsDataURL(file);
 }
 
-/* ════════════════════════════════════════
- *  پیش‌نویس‌ها (localStorage)
- * ════════════════════════════════════════ */
-
-function draftKey() { return 'azaryord_drafts_' + (currentUser && currentUser.username || ''); }
-function getDrafts() { try { return JSON.parse(localStorage.getItem(draftKey()) || '{}'); } catch { return {}; } }
-function saveDrafts(d) { localStorage.setItem(draftKey(), JSON.stringify(d)); }
-
-function updateDraftSelect() {
-  const sel = document.getElementById('draftSelect');
-  sel.innerHTML = '<option value="">انتخاب پیش‌نویس...</option>';
-  Object.keys(getDrafts()).forEach(name => {
-    const o = document.createElement('option'); o.value = name; o.textContent = name; sel.appendChild(o);
-  });
+/* ════════ DRAFTS ════════ */
+function draftKey(){return 'azaryord_drafts_'+(currentUser&&currentUser.username||'');}
+function getDrafts(){try{return JSON.parse(localStorage.getItem(draftKey())||'{}');}catch{return {};}}
+function saveDrafts(d){localStorage.setItem(draftKey(),JSON.stringify(d));}
+function updateDraftSelect(){
+  const sel=document.getElementById('draftSelect');
+  sel.innerHTML='<option value="">انتخاب پیش‌نویس...</option>';
+  Object.keys(getDrafts()).forEach(name=>{const o=document.createElement('option');o.value=name;o.textContent=name;sel.appendChild(o);});
+}
+function saveAsDraft(){
+  const name=document.getElementById('draftName').value.trim();
+  if(!name){toast('نام پیش‌نویس را وارد کنید','error');return;}
+  const d=getDrafts();d[name]=collectFormData();saveDrafts(d);updateDraftSelect();
+  document.getElementById('draftName').value='';toast('پیش‌نویس ذخیره شد ✅','success');
+}
+function loadSelectedDraft(){
+  const name=document.getElementById('draftSelect').value;
+  if(!name){toast('یک پیش‌نویس انتخاب کنید','error');return;}
+  const data=getDrafts()[name];if(!data)return;applyFormData(data);toast('پیش‌نویس بارگذاری شد ✅','success');
+}
+function deleteSelectedDraft(){
+  const name=document.getElementById('draftSelect').value;if(!name)return;
+  if(!confirm('آیا از حذف پیش‌نویس "'+name+'" اطمینان دارید؟')) return;
+  const d=getDrafts();delete d[name];saveDrafts(d);updateDraftSelect();toast('پیش‌نویس حذف شد');
+}
+function applyFormData(data){
+  const f=(id,val)=>{const el=document.getElementById(id);if(el)el.value=val||'';};
+  f('reportNumber',data.reportNumber);f('reportDate',data.reportDate);f('reportTime',data.reportTime);
+  f('workShift',data.workShift);f('weatherCondition',data.weatherCondition);f('temperature',data.temperature);
+  f('futureActivities',data.futureActivities);f('problems',data.problems);
+  f('safetyStatus',data.safetyStatus);f('incidents',data.incidents);
+  f('safetyEquipment',data.safetyEquipment);f('finalComments',data.finalComments);
+  loadTableData('activitiesTable',data.activities||[],addActivity,['activity-type','activity-desc','activity-status']);
+  loadTableData('executiveLaborTable',data.executiveLabor||[],addExecutiveLabor,['labor-fullname','labor-position','labor-hours','labor-attendance','labor-notes']);
+  loadTableData('staffLaborTable',data.staffLabor||[],addStaffLabor,['labor-fullname','labor-position','labor-hours','labor-attendance','labor-notes']);
+  loadTableData('machineryTable',data.machinery||[],addMachinery,['machine-name','machine-model','machine-status','machine-hours','machine-notes']);
+  loadTableData('companyVehiclesTable',data.companyVehicles||[],addCompanyVehicle,['vehicle-name','vehicle-driver','vehicle-status','vehicle-notes']);
+  loadTableData('materialsTable',data.materials||[],addMaterial,['material-name','material-amount','material-unit','material-notes']);
+  loadTableData('neededMaterialsTable',data.neededMaterials||[],addNeededMaterial,['needed-name','needed-amount','needed-unit','needed-stock','needed-shortage','needed-priority','needed-notes']);
+  loadTableData('requiredSystemsTable',data.requiredSystems||[],addRequiredSystem,['system-type','system-desc','system-supply-status','system-priority','system-notes']);
+  updateLaborTotals();updateMachineryTotal();updateVehicleTotal();updateSystemTotal();updateNeededTotal();
 }
 
-function saveAsDraft() {
-  const name = document.getElementById('draftName').value.trim();
-  if (!name) { toast('نام پیش‌نویس را وارد کنید', 'error'); return; }
-  const d = getDrafts();
-  d[name] = collectFormData();
-  saveDrafts(d); updateDraftSelect();
-  document.getElementById('draftName').value = '';
-  toast('پیش‌نویس ذخیره شد ✅', 'success');
-}
-
-function loadSelectedDraft() {
-  const name = document.getElementById('draftSelect').value;
-  if (!name) { toast('یک پیش‌نویس انتخاب کنید', 'error'); return; }
-  const data = getDrafts()[name];
-  if (!data) return;
-  applyFormData(data);
-  toast('پیش‌نویس بارگذاری شد ✅', 'success');
-}
-
-function deleteSelectedDraft() {
-  const name = document.getElementById('draftSelect').value;
-  if (!name) return;
-  if (!confirm('آیا از حذف پیش‌نویس "' + name + '" اطمینان دارید؟')) return;
-  const d = getDrafts(); delete d[name]; saveDrafts(d);
-  updateDraftSelect(); toast('پیش‌نویس حذف شد');
-}
-
-function applyFormData(data) {
-  const f = (id, val) => { const el = document.getElementById(id); if (el) el.value = val || ''; };
-  f('reportNumber', data.reportNumber); f('reportDate', data.reportDate); f('reportTime', data.reportTime);
-  f('workShift', data.workShift); f('weatherCondition', data.weatherCondition); f('temperature', data.temperature);
-  f('futureActivities', data.futureActivities); f('problems', data.problems);
-  f('safetyStatus', data.safetyStatus); f('incidents', data.incidents);
-  f('safetyEquipment', data.safetyEquipment); f('finalComments', data.finalComments);
-  loadTableData('activitiesTable',      data.activities || [],      addActivity,       ['activity-type','activity-desc','activity-status']);
-  loadTableData('executiveLaborTable',  data.executiveLabor || [],  addExecutiveLabor, ['labor-fullname','labor-position','labor-hours','labor-attendance','labor-notes']);
-  loadTableData('staffLaborTable',      data.staffLabor || [],      addStaffLabor,     ['labor-fullname','labor-position','labor-hours','labor-attendance','labor-notes']);
-  loadTableData('machineryTable',       data.machinery || [],       addMachinery,      ['machine-name','machine-model','machine-status','machine-hours','machine-notes']);
-  loadTableData('companyVehiclesTable', data.companyVehicles || [], addCompanyVehicle, ['vehicle-name','vehicle-driver','vehicle-status','vehicle-notes']);
-  loadTableData('materialsTable',       data.materials || [],       addMaterial,       ['material-name','material-amount','material-unit','material-notes']);
-  loadTableData('neededMaterialsTable', data.neededMaterials || [], addNeededMaterial, ['needed-name','needed-amount','needed-unit','needed-stock','needed-shortage','needed-priority','needed-notes']);
-  loadTableData('requiredSystemsTable', data.requiredSystems || [], addRequiredSystem, ['system-type','system-desc','system-supply-status','system-priority','system-notes']);
-  updateLaborTotals(); updateMachineryTotal(); updateVehicleTotal(); updateSystemTotal(); updateNeededTotal();
-}
-
-/* ════════════════════════════════════════
- *  داشبورد مدیر
- * ════════════════════════════════════════ */
-
-async function initManager() {
-  const sel = document.getElementById('filterProject');
-  sel.innerHTML = '<option value="">همه پروژه‌ها</option>';
-  Object.values(USERS).filter(u => u.role === 'reporter').forEach(u => {
-    const o = document.createElement('option'); o.value = u.project; o.textContent = u.project; sel.appendChild(o);
-  });
-
-  // فیلتر با Enter در فیلد جستجو
-  document.getElementById('filterSearch').onkeydown = (e) => {
-    if (e.key === 'Enter') applyFilters();
-  };
-
-  mgrState = { page: 1, pages: 1, total: 0, q: '', project: '' };
-  _allNotesLoaded = false;
-  switchMgrTab('reports');
-  await loadManagerReports();
-}
-
-function applyFilters() {
-  mgrState.project = document.getElementById('filterProject').value;
-  mgrState.q       = document.getElementById('filterSearch').value.trim();
-  mgrState.page    = 1;
-  loadManagerReports();
-}
-
-async function loadManagerReports() {
-  showLoading(true, 'در حال بارگذاری گزارش‌ها...');
-  try {
-    const res = await apiGet({
-      action:  'list',
-      page:    mgrState.page,
-      project: mgrState.project,
-      q:       mgrState.q,
-    });
-    if (!res || !res.success) throw new Error((res && res.error) || 'خطا در بارگذاری');
-    allReports     = res.data || [];
-    mgrState.pages = res.pages || 1;
-    mgrState.total = res.total || 0;
-    updateStats();
-    renderReports();
-  } catch (e) {
-    toast('خطا در بارگذاری: ' + e.message, 'error');
-  }
-  showLoading(false);
-}
-
-function updateStats() {
-  const today   = new Date().toISOString().slice(0, 10);
-  const weekAgo = new Date(Date.now() - 7 * 864e5).toISOString().slice(0, 10);
-  const dayOf   = r => new Date(r.created_at).toISOString().slice(0, 10);
-  document.getElementById('statTotal').textContent    = mgrState.total;
-  document.getElementById('statToday').textContent    = allReports.filter(r => dayOf(r) === today).length;
-  document.getElementById('statProjects').textContent = new Set(allReports.map(r => r.project_username)).size;
-  document.getElementById('statWeek').textContent     = allReports.filter(r => dayOf(r) >= weekAgo).length;
-}
-
-/* کلید روز برای گروه‌بندی — تاریخ شمسیِ روزِ ثبت گزارش */
-function dayKeyOf(r) {
-  return new Date(r.created_at).toLocaleDateString('fa-IR');
-}
-
-function renderReports() {
-  const container = document.getElementById('reportList');
-  if (!allReports.length) {
-    container.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>هیچ گزارشی یافت نشد</p></div>';
-    return;
-  }
-  container.innerHTML = '';
-
-  // ── گروه‌بندی به تفکیک روز ──
-  // لیست از سرور جدیدترین→قدیمی‌ترین است؛ هر بار که روز عوض شد یک جداکننده می‌گذاریم
-  let lastDayKey = null;
-  allReports.forEach(r => {
-    const key = dayKeyOf(r);
-    if (key !== lastDayKey) {
-      lastDayKey = key;
-      const count   = allReports.filter(x => dayKeyOf(x) === key).length;
-      const weekday = new Date(r.created_at).toLocaleDateString('fa-IR', { weekday: 'long' });
-      const div = document.createElement('div');
-      div.className = 'day-divider';
-      div.innerHTML = `<span class="day-divider-date">📅 ${esc(weekday)} ${esc(key)}</span>
-                       <span class="day-divider-count">${toFa(count)} گزارش</span>`;
-      container.appendChild(div);
-    }
-
-    const createdAt = new Date(r.created_at).toLocaleString('fa-IR');
-    const card = document.createElement('div');
-    card.className = 'report-card';
-    card.innerHTML = `
-      <div class="report-card-info">
-        <div class="report-card-title">${esc(r.projectName || '—')} — گزارش شماره ${esc(r.reportNumber || '—')}</div>
-        <div class="report-card-meta">
-          <span>📅 ${esc(r.reportDate || '—')}</span>
-          <span>⏰ ${esc(r.workShift || '—')}</span>
-          <span>👷 ${r.laborTotal || 0} نفر</span>
-          <span>🕐 ${createdAt}</span>
-        </div>
-      </div>
-      <div class="report-card-actions">
-        <button class="btn-success-sm" onclick="openReportModal('${esc(r.id)}')">مشاهده</button>
-        <button style="background:#d97706;color:white;border:none;padding:7px 12px;border-radius:7px;font-size:13px;cursor:pointer;font-family:'Vazirmatn',sans-serif;"
-          onclick="openNoteModal('${esc(r.project_username)}','${esc(r.projectName||r.project_username)}')">📝 نت</button>
-        <button class="btn-danger-sm"  onclick="deleteReport('${esc(r.id)}')">حذف</button>
-      </div>`;
-    container.appendChild(card);
-  });
-
-  // نوار صفحه‌بندی
-  if (mgrState.pages > 1) {
-    const nav = document.createElement('div');
-    nav.className = 'pagination';
-    nav.innerHTML = `
-      <button class="btn-success-sm" ${mgrState.page <= 1 ? 'disabled' : ''} onclick="changePage(-1)">◀ صفحه قبل</button>
-      <span>صفحه ${mgrState.page} از ${mgrState.pages} (کل: ${mgrState.total} گزارش)</span>
-      <button class="btn-success-sm" ${mgrState.page >= mgrState.pages ? 'disabled' : ''} onclick="changePage(1)">صفحه بعد ▶</button>`;
-    container.appendChild(nav);
-  }
-}
-
-function changePage(delta) {
-  const next = mgrState.page + delta;
-  if (next < 1 || next > mgrState.pages) return;
-  mgrState.page = next;
-  loadManagerReports();
-}
-
-/* ════════════════════════════════════════
- *  مشاهده گزارش کامل (واکشی از سرور)
- * ════════════════════════════════════════ */
-
-async function openReportModal(id) {
-  showLoading(true, 'در حال بارگذاری گزارش...');
-  let d;
-  try {
-    const res = await apiGet({ action: 'get', id });
-    if (!res || !res.success) throw new Error((res && res.error) || 'گزارش یافت نشد');
-    d = (res.report && res.report.report_data) || {};
-  } catch (e) {
-    showLoading(false); toast('خطا: ' + e.message, 'error'); return;
-  }
-  showLoading(false);
-
-  modalReportData = d;
-  document.getElementById('modalTitle').textContent = `گزارش ${d.reportNumber || ''} — ${d.projectName || ''}`;
-
-  let html = `<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;font-size:13px;">
-    <div><b>پروژه:</b> ${esc(d.projectName || '—')}</div>
-    <div><b>کارگاه:</b> ${esc(d.siteLocation || '—')}</div>
-    <div><b>تاریخ:</b> ${esc(d.reportDate || '—')}</div>
-    <div><b>شیفت:</b> ${esc(d.workShift || '—')}</div>
-    <div><b>آب‌وهوا:</b> ${esc(d.weatherCondition || '—')} / ${esc(d.temperature || '—')}°C</div>
-    <div><b>ایمنی:</b> ${esc(d.safetyStatus || '—')}</div>
-  </div>`;
-
-  if (d.activities && d.activities.length) {
-    html += `<b>فعالیت‌ها:</b><table style="width:100%;border-collapse:collapse;font-size:12px;margin:8px 0;">
-      <tr style="background:#f1f5f9;"><th style="padding:6px;border:1px solid #e2e8f0;">نوع</th><th style="padding:6px;border:1px solid #e2e8f0;">شرح</th><th style="padding:6px;border:1px solid #e2e8f0;">وضعیت</th></tr>
-      ${d.activities.map(a => `<tr><td style="padding:6px;border:1px solid #e2e8f0;">${esc(a['activity-type']||'')}</td><td style="padding:6px;border:1px solid #e2e8f0;">${esc(a['activity-desc']||'')}</td><td style="padding:6px;border:1px solid #e2e8f0;">${esc(a['activity-status']||'')}</td></tr>`).join('')}
-    </table>`;
-  }
-  const allLabor = [...(d.executiveLabor || []), ...(d.staffLabor || [])];
-  if (allLabor.length) {
-    html += `<b>نیروی انسانی (${(d.laborTotals && d.laborTotals.total) || 0} نفر):</b>
-    <table style="width:100%;border-collapse:collapse;font-size:12px;margin:8px 0;">
-      <tr style="background:#f1f5f9;"><th style="padding:6px;border:1px solid #e2e8f0;">نام</th><th style="padding:6px;border:1px solid #e2e8f0;">سمت</th><th style="padding:6px;border:1px solid #e2e8f0;">ساعت</th><th style="padding:6px;border:1px solid #e2e8f0;">حضور</th></tr>
-      ${allLabor.map(l => `<tr><td style="padding:6px;border:1px solid #e2e8f0;">${esc(l['labor-fullname']||'')}</td><td style="padding:6px;border:1px solid #e2e8f0;">${esc(l['labor-position']||'')}</td><td style="padding:6px;border:1px solid #e2e8f0;">${esc(l['labor-hours']||'')}</td><td style="padding:6px;border:1px solid #e2e8f0;">${esc(l['labor-attendance']||'')}</td></tr>`).join('')}
-    </table>`;
-  }
-  if (d.problems && d.problems !== 'مشکلی گزارش نشده')
-    html += `<div style="margin:10px 0;padding:10px;background:#fef2f2;border-radius:8px;font-size:13px;"><b>مشکلات:</b> ${esc(d.problems)}</div>`;
-  if (d.neededMaterials && d.neededMaterials.length) {
-    html += `<b>مصالح مورد نیاز (کسری):</b><table style="width:100%;border-collapse:collapse;font-size:12px;margin:8px 0;">
-      <tr style="background:#f1f5f9;"><th style="padding:6px;border:1px solid #e2e8f0;">نوع مصالح</th><th style="padding:6px;border:1px solid #e2e8f0;">مقدار نیاز</th><th style="padding:6px;border:1px solid #e2e8f0;">واحد</th><th style="padding:6px;border:1px solid #e2e8f0;">موجودی</th><th style="padding:6px;border:1px solid #e2e8f0;">کسری</th><th style="padding:6px;border:1px solid #e2e8f0;">اولویت</th></tr>
-      ${d.neededMaterials.map(m => `<tr><td style="padding:6px;border:1px solid #e2e8f0;">${esc(m['needed-name']||'')}</td><td style="padding:6px;border:1px solid #e2e8f0;">${esc(m['needed-amount']||'')}</td><td style="padding:6px;border:1px solid #e2e8f0;">${esc(m['needed-unit']||'')}</td><td style="padding:6px;border:1px solid #e2e8f0;">${esc(m['needed-stock']||'')}</td><td style="padding:6px;border:1px solid #e2e8f0;">${esc(m['needed-shortage']||'')}</td><td style="padding:6px;border:1px solid #e2e8f0;">${esc(m['needed-priority']||'')}</td></tr>`).join('')}
-    </table>`;
-  }
-  if (d.requiredSystems && d.requiredSystems.length) {
-    html += `<b>سیستم‌های مورد نیاز:</b><table style="width:100%;border-collapse:collapse;font-size:12px;margin:8px 0;">
-      <tr style="background:#f1f5f9;"><th style="padding:6px;border:1px solid #e2e8f0;">نوع سیستم</th><th style="padding:6px;border:1px solid #e2e8f0;">مشخصات</th><th style="padding:6px;border:1px solid #e2e8f0;">وضعیت تأمین</th><th style="padding:6px;border:1px solid #e2e8f0;">اولویت</th></tr>
-      ${d.requiredSystems.map(s => `<tr><td style="padding:6px;border:1px solid #e2e8f0;">${esc(s['system-type']||'')}</td><td style="padding:6px;border:1px solid #e2e8f0;">${esc(s['system-desc']||'')}</td><td style="padding:6px;border:1px solid #e2e8f0;">${esc(s['system-supply-status']||'')}</td><td style="padding:6px;border:1px solid #e2e8f0;">${esc(s['system-priority']||'')}</td></tr>`).join('')}
-    </table>`;
-  }
-  if (d.finalComments && d.finalComments !== '—')
-    html += `<div style="margin:10px 0;padding:10px;background:#fffbeb;border-radius:8px;font-size:13px;"><b>توضیحات نهایی:</b> ${esc(d.finalComments)}</div>`;
-  if (d.images && d.images.length) {
-    html += `<b>تصاویر:</b><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin-top:8px;">
-      ${d.images.map(src => `<img src="${esc(src)}" referrerpolicy="no-referrer" onerror="imgRetry(this)" style="width:100%;height:120px;object-fit:cover;border-radius:6px;border:1px solid #e2e8f0;">`).join('')}
-    </div>`;
-  }
-
-  document.getElementById('modalContent').innerHTML = html;
-  document.getElementById('reportModal').classList.add('open');
-}
-
-/* ════════════════════════════════════════
- *  حذف گزارش
- * ════════════════════════════════════════ */
-
-async function deleteReport(id) {
-  if (!confirm('آیا از حذف کامل این گزارش اطمینان دارید؟\nاین عمل قابل بازگشت نیست.')) return;
-  showLoading(true, 'در حال حذف...');
-  try {
-    const res = await apiGet({ action: 'delete', id });
-    if (!res || !res.success) throw new Error((res && res.error) || 'حذف ناموفق');
-    toast('گزارش حذف شد', 'success');
-    // اگر صفحه جاری پس از حذف خالی شد، یک صفحه برگرد
-    if (allReports.length === 1 && mgrState.page > 1) mgrState.page--;
-    await loadManagerReports();
-  } catch (e) {
-    toast('خطا در حذف: ' + e.message, 'error');
-  }
-  showLoading(false);
-}
-
-function closeModal() { document.getElementById('reportModal').classList.remove('open'); }
-function generatePDFFromModal() { closeModal(); buildPDF(modalReportData); }
-
-/* ════════════════════════════════════════
- *  PDF و چاپ
- *  - «دانلود PDF»: فایل PDF با عکس‌های پروژه، خودکار دانلود می‌شود
- *  - «چاپ»: عکس‌های آپلودشدهٔ پروژه چاپ نمی‌شوند (قانون CSS در @media print)
- *  - امضا و مهر در هر دو حالت هستند
- * ════════════════════════════════════════ */
-
-function generatePDF() { buildPDF(collectFormData()); }   // پیش‌نمایش (سازگاری با قبل)
-
-/* چاپ — پیش‌نمایش باز می‌شود؛ عکس‌های پروژه به‌صورت خودکار در چاپ حذف می‌شوند */
-function printReport() {
-  buildPDF(collectFormData());
-  setTimeout(function(){ window.print(); }, 450);
-}
-
-/* دانلود مستقیم PDF با عکس‌ها */
-async function downloadPDF() {
-  buildPDF(collectFormData());
-  await downloadPdfFile();
-}
-
-/* بارگذاری تنبل کتابخانهٔ html2pdf فقط هنگام اولین نیاز (از jsDelivr — در ایران در دسترس است) */
-function ensureHtml2pdf() {
-  return new Promise(function(resolve, reject){
-    if (window.html2pdf) { resolve(); return; }
-    const s = document.createElement('script');
-    s.src = 'https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js';
-    s.onload  = function(){ resolve(); };
-    s.onerror = function(){ reject(new Error('کتابخانهٔ PDF بارگذاری نشد — اتصال اینترنت را بررسی کنید')); };
+/* ════════ PDF ════════ */
+function generatePDF(){buildPDF(collectFormData());}
+function printReport(){buildPDF(collectFormData());setTimeout(function(){window.print();},450);}
+async function downloadPDF(){buildPDF(collectFormData());await downloadPdfFile();}
+function ensureHtml2pdf(){
+  return new Promise(function(resolve,reject){
+    if(window.html2pdf){resolve();return;}
+    const s=document.createElement('script');
+    s.src='https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js';
+    s.onload=function(){resolve();};s.onerror=function(){reject(new Error('کتابخانهٔ PDF بارگذاری نشد'));};
     document.head.appendChild(s);
   });
 }
-
-async function downloadPdfFile() {
-  showLoading(true, 'در حال ساخت فایل PDF... (چند ثانیه طول می‌کشد)');
-  try {
+async function downloadPdfFile(){
+  showLoading(true,'در حال ساخت فایل PDF...');
+  try{
     await ensureHtml2pdf();
-    const el   = document.getElementById('pdfContainer');
-    const num  = (_pdfData && _pdfData.reportNumber) || 'report';
-    const date = String((_pdfData && _pdfData.reportDate) || '').replace(/\//g, '-');
-    const filename = 'گزارش-' + num + (date ? '-' + date : '') + '.pdf';
-    await html2pdf().set({
-      margin:      [8, 8, 10, 8],
-      filename:    filename,
-      image:       { type: 'jpeg', quality: 0.92 },
-      html2canvas: { scale: 2, useCORS: true, allowTaint: true, scrollY: 0 },
-      jsPDF:       { unit: 'mm', format: 'a4', orientation: 'portrait' },
-      pagebreak:   { mode: ['css', 'legacy'], avoid: ['.pdf-section', 'tr', '.pdf-signature-box'] }
+    const el=document.getElementById('pdfContainer');
+    const num=(_pdfData&&_pdfData.reportNumber)||'report';
+    const date=String((_pdfData&&_pdfData.reportDate)||'').replace(/\//g,'-');
+    const filename='گزارش-'+num+(date?'-'+date:'')+'.pdf';
+    await html2pdf().set({margin:[8,8,10,8],filename:filename,image:{type:'jpeg',quality:0.92},
+      html2canvas:{scale:2,useCORS:true,allowTaint:true,scrollY:0},
+      jsPDF:{unit:'mm',format:'a4',orientation:'portrait'},
+      pagebreak:{mode:['css','legacy'],avoid:['.pdf-section','tr','.pdf-signature-box']}
     }).from(el).save();
-    toast('فایل PDF دانلود شد ✅', 'success');
-  } catch (e) {
-    toast('خطا در ساخت PDF: ' + e.message, 'error');
-  }
+    toast('فایل PDF دانلود شد ✅','success');
+  }catch(e){toast('خطا در ساخت PDF: '+e.message,'error');}
   showLoading(false);
 }
-
-function buildPDF(data) {
-  if (!data) return;
-  _pdfData = data;   // برای نام فایل دانلود
-  const tbl = (rows, cols, hdrs) => rows.length
-    ? `<table class="pdf-table"><thead><tr>${hdrs.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>
-       ${rows.map(r=>`<tr>${cols.map(c=>`<td>${esc(r[c]||'')}</td>`).join('')}</tr>`).join('')}
-       </tbody></table>` : '';
-
-  const activitiesHTML = tbl(data.activities||[], ['activity-type','activity-desc','activity-status'], ['نوع فعالیت','شرح عملیات','وضعیت']);
-  const execLaborHTML  = tbl(data.executiveLabor||[], ['labor-fullname','labor-position','labor-hours','labor-attendance','labor-notes'], ['نام','سمت','ساعت','حضور','توضیحات']);
-  const staffLaborHTML = tbl(data.staffLabor||[], ['labor-fullname','labor-position','labor-hours','labor-attendance','labor-notes'], ['نام','سمت','ساعت','حضور','توضیحات']);
-  const machineryHTML  = tbl(data.machinery||[], ['machine-name','machine-model','machine-status','machine-hours'], ['دستگاه','مدل','وضعیت','ساعت']);
-  const vehiclesHTML   = tbl(data.companyVehicles||[], ['vehicle-name','vehicle-driver','vehicle-status'], ['خودرو','راننده','وضعیت']);
-  const materialsHTML  = tbl(data.materials||[], ['material-name','material-amount','material-unit','material-notes'], ['نوع مصالح','مقدار','واحد','توضیحات']);
-  const neededHTML     = tbl(data.neededMaterials||[], ['needed-name','needed-amount','needed-unit','needed-stock','needed-shortage','needed-priority','needed-notes'], ['نوع مصالح','مقدار نیاز','واحد','موجودی','کسری','اولویت','توضیحات']);
-  const systemsHTML    = tbl(data.requiredSystems||[], ['system-type','system-desc','system-supply-status','system-priority','system-notes'], ['نوع سیستم','مشخصات','وضعیت تأمین','اولویت','توضیحات']);
-
-  const images = (data.images || []).filter(Boolean);
-  const imagesHTML = images.map(src =>
-    `<img src="${esc(src)}" referrerpolicy="no-referrer" onerror="imgRetry(this)" style="width:100%;height:auto;border-radius:8px;border:2px solid #e5e7eb;">`
-  ).join('');
-
-  const sig1 = data.sig1 || '', sig2 = data.sig2 || '', sig3 = data.sig3 || '';
-  const logoHTML = HAS_LOGO ? `<img src="${LOGO_SRC}" style="width:100%;height:100%;object-fit:contain">` : '';
-
-  document.getElementById('pdfContainer').innerHTML = `
+function buildPDF(data){
+  if(!data)return;_pdfData=data;
+  const tbl=(rows,cols,hdrs)=>rows.length?`<table class="pdf-table"><thead><tr>${hdrs.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${cols.map(c=>`<td>${esc(r[c]||'')}</td>`).join('')}</tr>`).join('')}</tbody></table>`:'';
+  const activitiesHTML=tbl(data.activities||[],['activity-type','activity-desc','activity-status'],['نوع فعالیت','شرح عملیات','وضعیت']);
+  const execLaborHTML=tbl(data.executiveLabor||[],['labor-fullname','labor-position','labor-hours','labor-attendance','labor-notes'],['نام','سمت','ساعت','حضور','توضیحات']);
+  const staffLaborHTML=tbl(data.staffLabor||[],['labor-fullname','labor-position','labor-hours','labor-attendance','labor-notes'],['نام','سمت','ساعت','حضور','توضیحات']);
+  const machineryHTML=tbl(data.machinery||[],['machine-name','machine-model','machine-status','machine-hours'],['دستگاه','مدل','وضعیت','ساعت']);
+  const vehiclesHTML=tbl(data.companyVehicles||[],['vehicle-name','vehicle-driver','vehicle-status'],['خودرو','راننده','وضعیت']);
+  const materialsHTML=tbl(data.materials||[],['material-name','material-amount','material-unit','material-notes'],['نوع مصالح','مقدار','واحد','توضیحات']);
+  const neededHTML=tbl(data.neededMaterials||[],['needed-name','needed-amount','needed-unit','needed-stock','needed-shortage','needed-priority','needed-notes'],['نوع مصالح','مقدار نیاز','واحد','موجودی','کسری','اولویت','توضیحات']);
+  const systemsHTML=tbl(data.requiredSystems||[],['system-type','system-desc','system-supply-status','system-priority','system-notes'],['نوع سیستم','مشخصات','وضعیت تأمین','اولویت','توضیحات']);
+  const images=(data.images||[]).filter(Boolean);
+  const imagesHTML=images.map(src=>`<img src="${esc(src)}" referrerpolicy="no-referrer" onerror="imgRetry(this)" style="width:100%;height:auto;border-radius:8px;border:2px solid #e5e7eb;">`).join('');
+  const sig1=data.sig1||'',sig2=data.sig2||'',sig3=data.sig3||'';
+  const logoHTML=HAS_LOGO?`<img src="${LOGO_SRC}" style="width:100%;height:100%;object-fit:contain">`:'';
+  document.getElementById('pdfContainer').innerHTML=`
     <div class="pdf-header">
       <div class="pdf-logo">${logoHTML}</div>
-      <div class="pdf-company-info">
-        <div class="pdf-company-name">شرکت آذریورد تبریز</div>
-        <div class="pdf-report-title">گزارش روزانه پروژه عمرانی</div>
-      </div>
-      <div class="pdf-meta">
-        <div>گزارش شماره: <strong>${esc(data.reportNumber||'—')}</strong></div>
-        <div>تاریخ: <strong>${esc(data.reportDate||'—')}</strong></div>
-        <div>ساعت: <strong>${esc(data.reportTime||'—')}</strong></div>
-      </div>
+      <div class="pdf-company-info"><div class="pdf-company-name">شرکت آذریورد تبریز</div><div class="pdf-report-title">گزارش روزانه پروژه عمرانی</div></div>
+      <div class="pdf-meta"><div>گزارش شماره: <strong>${esc(data.reportNumber||'—')}</strong></div><div>تاریخ: <strong>${esc(data.reportDate||'—')}</strong></div><div>ساعت: <strong>${esc(data.reportTime||'—')}</strong></div></div>
     </div>
-
-    <div class="pdf-section">
-      <div class="pdf-section-title">اطلاعات پروژه</div>
+    <div class="pdf-section"><div class="pdf-section-title">اطلاعات پروژه</div>
       <div class="pdf-info-grid">
         <div class="pdf-info-item"><span class="pdf-info-label">نام پروژه:</span><span class="pdf-info-value">${esc(data.projectName||'—')}</span></div>
         <div class="pdf-info-item"><span class="pdf-info-label">نام کارگاه:</span><span class="pdf-info-value">${esc(data.siteLocation||'—')}</span></div>
@@ -2069,142 +1919,73 @@ function buildPDF(data) {
         <div class="pdf-info-item"><span class="pdf-info-label">شیفت / آب‌وهوا / دما:</span><span class="pdf-info-value">${esc(data.workShift||'—')} | ${esc(data.weatherCondition||'—')} | ${esc(data.temperature||'—')}°C</span></div>
       </div>
     </div>
-
-    ${activitiesHTML ? `<div class="pdf-section"><div class="pdf-section-title">فعالیت‌های انجام شده</div>${activitiesHTML}</div>` : ''}
-
+    ${activitiesHTML?`<div class="pdf-section"><div class="pdf-section-title">فعالیت‌های انجام شده</div>${activitiesHTML}</div>`:''}
     <div class="two-col">
-      ${(data.futureActivities && data.futureActivities !== 'ثبت نشده') ? `<div class="pdf-section"><div class="pdf-section-title">فعالیت‌های آتی</div><div class="compact-text">${esc(data.futureActivities)}</div></div>` : ''}
-      ${(data.problems && data.problems !== 'مشکلی گزارش نشده') ? `<div class="pdf-section"><div class="pdf-section-title">مشکلات و تأخیرات</div><div class="compact-text" style="border-right:3px solid #dc2626;">${esc(data.problems)}</div></div>` : ''}
+      ${(data.futureActivities&&data.futureActivities!=='ثبت نشده')?`<div class="pdf-section"><div class="pdf-section-title">فعالیت‌های آتی</div><div class="compact-text">${esc(data.futureActivities)}</div></div>`:''}
+      ${(data.problems&&data.problems!=='مشکلی گزارش نشده')?`<div class="pdf-section"><div class="pdf-section-title">مشکلات و تأخیرات</div><div class="compact-text" style="border-right:3px solid #dc2626;">${esc(data.problems)}</div></div>`:''}
     </div>
-
-    ${(execLaborHTML || staffLaborHTML) ? `
-    <div class="pdf-section">
-      <div class="pdf-section-title">نیروی انسانی — اجرایی: ${(data.laborTotals&&data.laborTotals.executive)||0} | ستادی: ${(data.laborTotals&&data.laborTotals.staff)||0} | کل: ${(data.laborTotals&&data.laborTotals.total)||0}</div>
-      <div class="two-col">
-        ${execLaborHTML  ? `<div><strong style="font-size:12px;display:block;margin-bottom:4px;">نیروی اجرایی</strong>${execLaborHTML}</div>`  : ''}
-        ${staffLaborHTML ? `<div><strong style="font-size:12px;display:block;margin-bottom:4px;">نیروی ستادی</strong>${staffLaborHTML}</div>` : ''}
-      </div>
-    </div>` : ''}
-
-    ${(machineryHTML || vehiclesHTML) ? `
+    ${(execLaborHTML||staffLaborHTML)?`<div class="pdf-section"><div class="pdf-section-title">نیروی انسانی — اجرایی: ${(data.laborTotals&&data.laborTotals.executive)||0} | ستادی: ${(data.laborTotals&&data.laborTotals.staff)||0} | کل: ${(data.laborTotals&&data.laborTotals.total)||0}</div><div class="two-col">${execLaborHTML?`<div><strong style="font-size:12px;display:block;margin-bottom:4px;">نیروی اجرایی</strong>${execLaborHTML}</div>`:''}${staffLaborHTML?`<div><strong style="font-size:12px;display:block;margin-bottom:4px;">نیروی ستادی</strong>${staffLaborHTML}</div>`:''}</div></div>`:''}
+    ${(machineryHTML||vehiclesHTML)?`<div class="two-col">${machineryHTML?`<div class="pdf-section"><div class="pdf-section-title">ماشین‌آلات</div>${machineryHTML}</div>`:''}${vehiclesHTML?`<div class="pdf-section"><div class="pdf-section-title">خودروهای شرکتی</div>${vehiclesHTML}</div>`:''}</div>`:''}
+    ${materialsHTML?`<div class="pdf-section"><div class="pdf-section-title">مصالح مصرفی</div>${materialsHTML}</div>`:''}
+    ${neededHTML?`<div class="pdf-section"><div class="pdf-section-title">مصالح مورد نیاز (کسری و کمبود)</div>${neededHTML}</div>`:''}
+    ${systemsHTML?`<div class="pdf-section"><div class="pdf-section-title">سیستم‌های مورد نیاز</div>${systemsHTML}</div>`:''}
     <div class="two-col">
-      ${machineryHTML ? `<div class="pdf-section"><div class="pdf-section-title">ماشین‌آلات</div>${machineryHTML}</div>` : ''}
-      ${vehiclesHTML  ? `<div class="pdf-section"><div class="pdf-section-title">خودروهای شرکتی</div>${vehiclesHTML}</div>` : ''}
-    </div>` : ''}
-
-    ${materialsHTML ? `<div class="pdf-section"><div class="pdf-section-title">مصالح مصرفی</div>${materialsHTML}</div>` : ''}
-
-    ${neededHTML ? `<div class="pdf-section"><div class="pdf-section-title">مصالح مورد نیاز (کسری و کمبود)</div>${neededHTML}</div>` : ''}
-
-    ${systemsHTML ? `<div class="pdf-section"><div class="pdf-section-title">سیستم‌های مورد نیاز</div>${systemsHTML}</div>` : ''}
-
-    <div class="two-col">
-      <div class="pdf-section">
-        <div class="pdf-section-title">گزارش ایمنی (HSE)</div>
+      <div class="pdf-section"><div class="pdf-section-title">گزارش ایمنی (HSE)</div>
         <div class="pdf-info-grid" style="grid-template-columns:1fr 1fr;">
           <div class="pdf-info-item"><span class="pdf-info-label">وضعیت:</span><span class="pdf-info-value">${esc(data.safetyStatus||'—')}</span></div>
           <div class="pdf-info-item"><span class="pdf-info-label">حوادث:</span><span class="pdf-info-value">${esc(data.incidents||'—')}</span></div>
         </div>
         <div class="compact-text" style="margin-top:6px;border-right:3px solid #059669;"><strong>تجهیزات:</strong> ${esc(data.safetyEquipment||'—')}</div>
       </div>
-      <div class="pdf-section">
-        <div class="pdf-section-title">توضیحات نهایی</div>
-        <div class="compact-text" style="border-right:3px solid #d97706;">${esc(data.finalComments||'—')}</div>
-      </div>
+      <div class="pdf-section"><div class="pdf-section-title">توضیحات نهایی</div><div class="compact-text" style="border-right:3px solid #d97706;">${esc(data.finalComments||'—')}</div></div>
     </div>
-
-    ${images.length ? `<div class="pdf-section pdf-images-section"><div class="pdf-section-title">تصاویر پروژه</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">${imagesHTML}</div></div>` : ''}
-
+    ${images.length?`<div class="pdf-section pdf-images-section"><div class="pdf-section-title">تصاویر پروژه</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">${imagesHTML}</div></div>`:''}
     <div class="pdf-footer">
       <div class="pdf-signatures">
-        <div class="pdf-signature-box">
-          <span class="pdf-signature-label">امضای سرپرست کارگاه</span>
-          ${sig1 ? `<img src="${sig1}" referrerpolicy="no-referrer" onerror="imgRetry(this)" style="max-height:60px;max-width:100%;margin-top:10px;">` : ''}
+        <div class="pdf-signature-box"><span class="pdf-signature-label">امضای سرپرست کارگاه</span>${sig1?`<img src="${sig1}" referrerpolicy="no-referrer" onerror="imgRetry(this)" style="max-height:60px;max-width:100%;margin-top:10px;">`:''}
         </div>
-        <div class="pdf-signature-box">
-          <span class="pdf-signature-label">امضای مهندس ناظر</span>
-          ${sig2 ? `<img src="${sig2}" referrerpolicy="no-referrer" onerror="imgRetry(this)" style="max-height:60px;max-width:100%;margin-top:10px;">` : ''}
+        <div class="pdf-signature-box"><span class="pdf-signature-label">امضای مهندس ناظر</span>${sig2?`<img src="${sig2}" referrerpolicy="no-referrer" onerror="imgRetry(this)" style="max-height:60px;max-width:100%;margin-top:10px;">`:''}
         </div>
-        <div class="pdf-signature-box">
-          <span class="pdf-signature-label">مهر شرکت / پیمانکار</span>
-          ${sig3 ? `<img src="${sig3}" referrerpolicy="no-referrer" onerror="imgRetry(this)" style="max-height:60px;max-width:100%;margin-top:10px;">` : ''}
+        <div class="pdf-signature-box"><span class="pdf-signature-label">مهر شرکت / پیمانکار</span>${sig3?`<img src="${sig3}" referrerpolicy="no-referrer" onerror="imgRetry(this)" style="max-height:60px;max-width:100%;margin-top:10px;">`:''}
         </div>
       </div>
       <div style="text-align:center;margin-top:14px;color:#9ca3af;font-size:10px;border-top:1px solid #e5e7eb;padding-top:8px;">
         این گزارش توسط سیستم گزارش‌دهی شرکت آذریورد تبریز تولید شده است
       </div>
     </div>`;
+  document.getElementById('pdfView').style.display='block';
+  window.scrollTo(0,0);
+}
+function closePdfView(){document.getElementById('pdfView').style.display='none';}
 
-  document.getElementById('pdfView').style.display = 'block';
-  window.scrollTo(0, 0);
+/* ════════ JALALI ════════ */
+function toJalali(gy,gm,gd){
+  const g_d_m=[0,31,59,90,120,151,181,212,243,273,304,334];
+  let jy=(gy<=1600)?0:979;gy-=(gy<=1600)?621:1600;
+  const gy2=(gm>2)?(gy+1):gy;
+  let days=(365*gy)+Math.floor((gy2+3)/4)-Math.floor((gy2+99)/100)+Math.floor((gy2+399)/400)-80+gd+g_d_m[gm-1];
+  jy+=33*Math.floor(days/12053);days%=12053;jy+=4*Math.floor(days/1461);days%=1461;
+  if(days>365){jy+=Math.floor((days-1)/365);days=(days-1)%365;}
+  const jm=(days<186)?1+Math.floor(days/31):7+Math.floor((days-186)/30);
+  const jd=1+((days<186)?(days%31):((days-186)%30));
+  return[jy,jm,jd];
 }
 
-function closePdfView() { document.getElementById('pdfView').style.display = 'none'; }
+/* ════════ UTILS ════════ */
+function pad(n){return String(n).padStart(2,'0');}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function showLoading(show,text){document.getElementById('loadingOverlay').classList.toggle('show',show);if(text)document.getElementById('loadingText').textContent=text;}
+function toast(msg,type){const t=document.getElementById('toast');t.textContent=msg;t.className=type?'show '+type:'show';setTimeout(()=>{t.className='';},3500);}
 
-/* ════════════════════════════════════════
- *  تبدیل تاریخ میلادی به شمسی
- * ════════════════════════════════════════ */
-
-function toJalali(gy, gm, gd) {
-  const g_d_m = [0,31,59,90,120,151,181,212,243,273,304,334];
-  let jy = (gy <= 1600) ? 0 : 979;
-  gy -= (gy <= 1600) ? 621 : 1600;
-  const gy2 = (gm > 2) ? (gy + 1) : gy;
-  let days = (365 * gy) + Math.floor((gy2+3)/4) - Math.floor((gy2+99)/100) + Math.floor((gy2+399)/400) - 80 + gd + g_d_m[gm - 1];
-  jy += 33 * Math.floor(days / 12053); days %= 12053;
-  jy += 4  * Math.floor(days / 1461);  days %= 1461;
-  if (days > 365) { jy += Math.floor((days - 1) / 365); days = (days - 1) % 365; }
-  const jm = (days < 186) ? 1 + Math.floor(days / 31) : 7 + Math.floor((days - 186) / 30);
-  const jd = 1 + ((days < 186) ? (days % 31) : ((days - 186) % 30));
-  return [jy, jm, jd];
-}
-
-/* ════════════════════════════════════════
- *  ابزارهای کمکی
- * ════════════════════════════════════════ */
-
-function pad(n) { return String(n).padStart(2, '0'); }
-function wait(ms) { return new Promise(r => setTimeout(r, ms)); }
-
-/** جلوگیری از XSS در خروجی HTML */
-function esc(s) {
-  return String(s)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
-}
-
-function showLoading(show, text) {
-  document.getElementById('loadingOverlay').classList.toggle('show', show);
-  if (text) document.getElementById('loadingText').textContent = text;
-}
-
-function toast(msg, type) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = type ? 'show ' + type : 'show';
-  setTimeout(() => { t.className = ''; }, 3500);
-}
-
-/* بستن مودال با کلیک روی overlay */
-
-/* قرار دادن لوگوی جاسازی‌شده در همه نشان‌ها (اگر LOGO_SRC هنوز جایگزین نشده، چیزی نمایش نمی‌دهیم) */
-function setLogos() {
-  if (!HAS_LOGO) {
-    document.querySelectorAll('img.brand-logo').forEach(function(img){ img.style.display = 'none'; });
-    return;
-  }
-  document.querySelectorAll('img.brand-logo').forEach(function(img){ img.src = LOGO_SRC; });
+function setLogos(){
+  if(!HAS_LOGO){document.querySelectorAll('img.brand-logo').forEach(function(img){img.style.display='none';});return;}
+  document.querySelectorAll('img.brand-logo').forEach(function(img){img.src=LOGO_SRC;});
 }
 setLogos();
 
-document.getElementById('noteModal').addEventListener('click', function(e) {
-  if (e.target === this) closeNoteModal();
-});
-document.getElementById('reportModal').addEventListener('click', function(e) {
-  if (e.target === this) closeModal();
-});
+document.getElementById('noteModal').addEventListener('click',function(e){if(e.target===this)closeNoteModal();});
+document.getElementById('techNoteModal').addEventListener('click',function(e){if(e.target===this)closeTechNoteModal();});
+document.getElementById('reportModal').addEventListener('click',function(e){if(e.target===this)closeModal();});
 </script>
 </body>
 </html>
