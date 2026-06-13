@@ -351,8 +351,45 @@ tbody tr:nth-child(even) { background: #fafafa; }
   * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }
 
+/* ===== ADVANCED FILTER BAR ===== */
+.adv-filter { background: white; border-radius: var(--radius); padding: 16px 18px; margin-bottom: 20px; box-shadow: var(--shadow); display: grid; grid-template-columns: 1.6fr 2fr 1fr 1fr 1fr auto auto; gap: 10px; align-items: end; }
+.adv-filter .fld { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.adv-filter label { font-size: 11px; color: #94a3b8; font-weight: 600; }
+.adv-filter input, .adv-filter select { padding: 9px 11px; border: 1px solid var(--border); border-radius: 8px; font-size: 13px; font-family: 'Vazirmatn', sans-serif; width: 100%; }
+.adv-filter .fbtn { padding: 9px 16px; border: none; border-radius: 8px; font-family: 'Vazirmatn', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; white-space: nowrap; }
+.adv-filter .fbtn.primary { background: linear-gradient(135deg, var(--primary), #7c3aed); color: white; }
+.adv-filter .fbtn.ghost { background: #f1f5f9; color: #475569; }
+.adv-filter.tech .fbtn.primary { background: linear-gradient(135deg, #0c4a6e, #0e7490); }
+@media (max-width: 820px) { .adv-filter { grid-template-columns: 1fr 1fr; } .adv-filter .fld.wide { grid-column: 1 / -1; } .adv-filter .fbtn { width: 100%; } }
+
+/* ===== FLOATING NOTES BUTTON (گزارش‌دهنده) ===== */
+#notesFab {
+  position: fixed; bottom: 26px; left: 22px; z-index: 7000;
+  width: 58px; height: 58px; border-radius: 50%; border: none; cursor: pointer;
+  background: linear-gradient(135deg, #1e40af, #7c3aed); color: white; font-size: 26px;
+  box-shadow: 0 8px 24px rgba(30,64,175,0.45); display: none;
+  align-items: center; justify-content: center; transition: transform 0.2s, box-shadow 0.2s;
+}
+#notesFab:hover { transform: translateY(-3px) scale(1.04); box-shadow: 0 12px 30px rgba(30,64,175,0.55); }
+#notesFab.has-new { animation: fabPulse 1.8s ease-in-out infinite; }
+@keyframes fabPulse {
+  0%,100% { box-shadow: 0 8px 24px rgba(30,64,175,0.45); }
+  50%     { box-shadow: 0 8px 24px rgba(30,64,175,0.45), 0 0 0 10px rgba(124,58,237,0.18); }
+}
+#notesFabBadge {
+  position: absolute; top: -4px; right: -4px; min-width: 22px; height: 22px; padding: 0 6px;
+  background: #ef4444; color: white; border: 2px solid white; border-radius: 12px;
+  font-size: 12px; font-weight: 800; display: none; align-items: center; justify-content: center;
+}
+#notesFabBadge.show { display: flex; }
+
+/* برچسب نظر فنی روی کارت نت گزارش‌دهنده */
+.note-card.technical { background: #ecfeff; border: 1.5px solid #67e8f9; }
+.note-card.technical .note-card-label { color: #0e7490; }
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 640px) {
+  #notesFab { bottom: 18px; left: 16px; width: 52px; height: 52px; font-size: 23px; }
   .stats-row   { grid-template-columns: 1fr 1fr; }
   .sig-grid    { grid-template-columns: 1fr; }
   .totals-grid { grid-template-columns: 1fr; }
@@ -422,6 +459,7 @@ tbody tr:nth-child(even) { background: #fafafa; }
   <div class="reporter-container">
     <div class="panel-tabs">
       <button class="panel-tab active" id="rtab-form" onclick="switchRepTab('form')">📝 ثبت گزارش</button>
+      <button class="panel-tab" id="rtab-myreports" onclick="switchRepTab('myreports')">📑 گزارش‌های من</button>
       <button class="panel-tab" id="rtab-notes" onclick="switchRepTab('notes')">💬 پیام‌های من <span class="badge" id="repNoteBadge" style="display:none;">0</span></button>
     </div>
 
@@ -632,6 +670,36 @@ tbody tr:nth-child(even) { background: #fafafa; }
     <br>
     </div><!-- /repFormView -->
 
+    <div id="repMyReportsView" style="display:none;">
+      <div class="adv-filter">
+        <div class="fld wide">
+          <label>جستجو در گزارش‌ها</label>
+          <input type="text" id="myrSearch" placeholder="شماره، تاریخ، شیفت..." onkeydown="if(event.key==='Enter')applyMyReportFilters()">
+        </div>
+        <div class="fld">
+          <label>شیفت کاری</label>
+          <select id="myrShift">
+            <option value="">همه شیفت‌ها</option>
+            <option>صبح</option><option>عصر</option><option>شب</option><option>24 ساعته</option>
+          </select>
+        </div>
+        <div class="fld">
+          <label>از تاریخ</label>
+          <input type="date" id="myrFrom">
+        </div>
+        <div class="fld">
+          <label>تا تاریخ</label>
+          <input type="date" id="myrTo">
+        </div>
+        <button class="fbtn ghost" onclick="clearMyReportFilters()">پاک کردن</button>
+        <button class="fbtn primary" onclick="applyMyReportFilters()">🔍 جستجو</button>
+      </div>
+      <div class="msg-count" id="myrCount"></div>
+      <div id="myReportList" class="report-list">
+        <div class="empty-state"><div class="icon">⏳</div><p>در حال بارگذاری گزارش‌های شما...</p></div>
+      </div>
+    </div><!-- /repMyReportsView -->
+
     <div id="repNotesView" style="display:none;">
       <div class="msg-search-bar">
         <div class="fld wide">
@@ -644,6 +712,7 @@ tbody tr:nth-child(even) { background: #fafafa; }
             <option value="">همه</option>
             <option value="all">📢 عمومی</option>
             <option value="me">📩 اختصاصی من</option>
+            <option value="tech">🔧 نظر فنی</option>
           </select>
         </div>
         <div class="fld">
@@ -663,6 +732,12 @@ tbody tr:nth-child(even) { background: #fafafa; }
       </div>
     </div>
   </div>
+
+  <!-- دکمهٔ شناور پیام‌ها -->
+  <button id="notesFab" onclick="openNotesFromFab()" title="پیام‌ها و نظرات">
+    💬
+    <span id="notesFabBadge">0</span>
+  </button>
 </div>
 
 <!-- ═══════════════════════ TECHNICAL PANEL ═══════════════════════ -->
@@ -692,11 +767,32 @@ tbody tr:nth-child(even) { background: #fafafa; }
 
     <!-- نمای گزارش‌ها -->
     <div id="techReportsView">
-      <div class="filter-bar">
-        <select id="techFilterProject" style="min-width:160px;"></select>
-        <input type="text" id="techFilterSearch" placeholder="جستجو: شماره، تاریخ، شیفت..." style="flex:1;min-width:160px;">
-        <button class="btn-secondary" onclick="applyTechFilters()">🔍 جستجو</button>
-        <button class="btn-secondary" onclick="loadTechnicalReports()">🔄 بروزرسانی</button>
+      <div class="adv-filter tech">
+        <div class="fld">
+          <label>پروژه</label>
+          <select id="techFilterProject"></select>
+        </div>
+        <div class="fld wide">
+          <label>جستجو (شماره، تاریخ شمسی، سرپرست...)</label>
+          <input type="text" id="techFilterSearch" placeholder="کلمه یا عبارت...">
+        </div>
+        <div class="fld">
+          <label>شیفت کاری</label>
+          <select id="techFilterShift">
+            <option value="">همه شیفت‌ها</option>
+            <option>صبح</option><option>عصر</option><option>شب</option><option>24 ساعته</option>
+          </select>
+        </div>
+        <div class="fld">
+          <label>از تاریخ</label>
+          <input type="date" id="techFilterFrom">
+        </div>
+        <div class="fld">
+          <label>تا تاریخ</label>
+          <input type="date" id="techFilterTo">
+        </div>
+        <button class="fbtn ghost" onclick="clearTechFilters()">پاک کردن</button>
+        <button class="fbtn primary" onclick="applyTechFilters()">🔍 جستجو</button>
       </div>
       <div id="techReportList" class="report-list">
         <div class="empty-state"><div class="icon">⏳</div><p>در حال بارگذاری گزارش‌ها...</p></div>
@@ -758,11 +854,32 @@ tbody tr:nth-child(even) { background: #fafafa; }
         <div class="stat-card"><div class="stat-val" id="statWeek">—</div><div class="stat-label">گزارش این هفته</div></div>
       </div>
 
-      <div class="filter-bar">
-        <select id="filterProject" style="min-width:160px;"></select>
-        <input type="text" id="filterSearch" placeholder="جستجو: شماره، تاریخ، شیفت..." style="flex:1;min-width:160px;">
-        <button class="btn-secondary" onclick="applyFilters()">🔍 جستجو</button>
-        <button class="btn-secondary" onclick="loadManagerReports()">🔄 بروزرسانی</button>
+      <div class="adv-filter">
+        <div class="fld">
+          <label>پروژه</label>
+          <select id="filterProject"></select>
+        </div>
+        <div class="fld wide">
+          <label>جستجو (شماره، تاریخ شمسی، سرپرست...)</label>
+          <input type="text" id="filterSearch" placeholder="کلمه یا عبارت...">
+        </div>
+        <div class="fld">
+          <label>شیفت کاری</label>
+          <select id="filterShift">
+            <option value="">همه شیفت‌ها</option>
+            <option>صبح</option><option>عصر</option><option>شب</option><option>24 ساعته</option>
+          </select>
+        </div>
+        <div class="fld">
+          <label>از تاریخ</label>
+          <input type="date" id="filterFrom">
+        </div>
+        <div class="fld">
+          <label>تا تاریخ</label>
+          <input type="date" id="filterTo">
+        </div>
+        <button class="fbtn ghost" onclick="clearFilters()">پاک کردن</button>
+        <button class="fbtn primary" onclick="applyFilters()">🔍 جستجو</button>
       </div>
 
       <div id="reportList" class="report-list">
@@ -895,7 +1012,7 @@ tbody tr:nth-child(even) { background: #fafafa; }
 
 <!-- ═══════════════════════ JAVASCRIPT ═══════════════════════ -->
 <script>
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbz9l0Ejx4Z5dk1MhXLy6gKcWGz57wcDnqTo3AQpeU919_FAb7E0By82KTJm6_oVDNkvMw/exec';
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbworCNEktLW9jmHHtqN9pAiF6bDCJb2F3CIwfr29deGSuAz1bM3NzXLWPz_ccszaycE0g/exec';
 const GAS_GET_URL = GAS_URL + '?';
 
 const LOGO_SRC = 'data:image/png;base64,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';
@@ -955,8 +1072,9 @@ let uploadedImages = [];
 let allReports     = [];
 let modalReportData = null;
 let _pdfData       = null;
-let mgrState = { page: 1, pages: 1, total: 0, q: '', project: '' };
-let techState = { page: 1, pages: 1, total: 0, q: '', project: '' };
+let mgrState = { page: 1, pages: 1, total: 0, q: '', project: '', shift: '', from: '', to: '' };
+let techState = { page: 1, pages: 1, total: 0, q: '', project: '', shift: '', from: '', to: '' };
+let myrState = { page: 1, pages: 1, total: 0, q: '', shift: '', from: '', to: '' };
 
 /* ════════ API ════════ */
 function apiGet(params) {
@@ -999,7 +1117,9 @@ function doLogin() {
 function doLogout() {
   currentUser = null; uploadedImages = []; allReports = [];
   _allNotes=[]; _allNotesLoaded=false; _myNotes=[]; _myNotesLoaded=false;
-  _techNotes=[]; _techNotesLoaded=false;
+  _techNotes=[]; _techNotesLoaded=false; _myReportsLoaded=false;
+  if(_notesPollTimer){ clearInterval(_notesPollTimer); _notesPollTimer=null; }
+  const fab=document.getElementById('notesFab'); if(fab){ fab.style.display='none'; fab.classList.remove('has-new'); }
   showScreen('loginScreen');
   document.getElementById('loginUser').value='';
   document.getElementById('loginPass').value='';
@@ -1159,23 +1279,145 @@ async function deleteCenterNote(id){
 
 /* ════════ REPORTER TABS ════════ */
 function switchRepTab(tab){
-  const isF=tab==='form';
-  document.getElementById('repFormView').style.display=isF?'':'none';
-  document.getElementById('repNotesView').style.display=isF?'none':'';
-  document.getElementById('rtab-form').classList.toggle('active',isF);
-  document.getElementById('rtab-notes').classList.toggle('active',!isF);
-  if(!isF&&!_myNotesLoaded) loadMyNotes();
+  const isForm=tab==='form', isMy=tab==='myreports', isNotes=tab==='notes';
+  document.getElementById('repFormView').style.display=isForm?'':'none';
+  document.getElementById('repMyReportsView').style.display=isMy?'':'none';
+  document.getElementById('repNotesView').style.display=isNotes?'':'none';
+  document.getElementById('rtab-form').classList.toggle('active',isForm);
+  document.getElementById('rtab-myreports').classList.toggle('active',isMy);
+  document.getElementById('rtab-notes').classList.toggle('active',isNotes);
+  if(isMy&&!_myReportsLoaded) loadMyReports();
+  if(isNotes){
+    if(_myNotesLoaded){ applyRepNoteFilters(); markNotesSeen(); }
+    else { refreshReporterNotes(false).then(markNotesSeen); }
+  }
 }
 let _myNotes=[]; let _myNotesLoaded=false;
-async function loadMyNotes(){
+let _notesPollTimer=null;
+
+/* مدیریت «دیده‌شده‌ها» برای شمارش پیام جدید */
+function seenKey(){ return 'azaryord_seen_notes_'+(currentUser&&currentUser.username||''); }
+function getSeen(){ try{ return new Set(JSON.parse(localStorage.getItem(seenKey())||'[]')); }catch(e){ return new Set(); } }
+function newNotesCount(){ const seen=getSeen(); return _myNotes.filter(n=>!seen.has(n.id)).length; }
+function markNotesSeen(){
+  const ids=_myNotes.map(n=>n.id);
+  localStorage.setItem(seenKey(),JSON.stringify(ids));
+  updateNoteBadges();
+}
+function updateNoteBadges(){
+  const cnt=newNotesCount();
+  const tabBadge=document.getElementById('repNoteBadge');
+  if(tabBadge){ tabBadge.textContent=toFa(cnt); tabBadge.style.display=cnt>0?'':'none'; }
+  const fab=document.getElementById('notesFab');
+  const fabBadge=document.getElementById('notesFabBadge');
+  if(fabBadge){ fabBadge.textContent=toFa(cnt); fabBadge.classList.toggle('show',cnt>0); }
+  if(fab){ fab.classList.toggle('has-new',cnt>0); }
+}
+
+/* تنها منبع حقیقت برای نت‌های گزارش‌دهنده — بنر، تب، و دکمهٔ شناور را هم‌زمان به‌روز می‌کند */
+async function refreshReporterNotes(silent){
   const list=document.getElementById('repNoteList');
-  list.innerHTML='<div class="msg-empty"><div class="icon">⏳</div><p>در حال بارگذاری...</p></div>';
+  const notesVisible=document.getElementById('repNotesView').style.display!=='none';
+  if(!silent&&notesVisible&&list) list.innerHTML='<div class="msg-empty"><div class="icon">⏳</div><p>در حال بارگذاری...</p></div>';
   try{
     const res=await apiGet({action:'getNotes',username:currentUser.username});
     if(!res||!res.success) throw new Error(res&&res.error||'خطا');
     _myNotes=(res.notes||[]).slice().sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
-    _myNotesLoaded=true; applyRepNoteFilters();
-  }catch(e){ list.innerHTML='<div class="msg-empty"><div class="icon">⚠️</div><p>خطا: '+esc(e.message)+'</p></div>'; }
+    _myNotesLoaded=true;
+    renderNoteBanner();
+    updateNoteBadges();
+    if(notesVisible){ applyRepNoteFilters(); markNotesSeen(); }
+  }catch(e){
+    if(!silent&&notesVisible&&list) list.innerHTML='<div class="msg-empty"><div class="icon">⚠️</div><p>خطا: '+esc(e.message)+'</p></div>';
+  }
+}
+/* دکمهٔ «بروزرسانی» در تب پیام‌ها */
+function loadMyNotes(){ return refreshReporterNotes(false); }
+/* بارگذاری اولیه هنگام ورود + شروع بروزرسانی خودکار */
+function loadReporterNotes(){
+  refreshReporterNotes(true);
+  if(_notesPollTimer) clearInterval(_notesPollTimer);
+  _notesPollTimer=setInterval(()=>{ if(currentUser&&currentUser.role==='reporter') refreshReporterNotes(true); },45000);
+}
+function openNotesFromFab(){ switchRepTab('notes'); }
+
+/* ════════ REPORTER — گزارش‌های من ════════ */
+let _myReportsLoaded=false;
+function applyMyReportFilters(){
+  myrState.q=document.getElementById('myrSearch').value.trim();
+  myrState.shift=document.getElementById('myrShift').value;
+  myrState.from=document.getElementById('myrFrom').value;
+  myrState.to=document.getElementById('myrTo').value;
+  myrState.page=1; loadMyReports();
+}
+function clearMyReportFilters(){
+  document.getElementById('myrSearch').value='';
+  document.getElementById('myrShift').value='';
+  document.getElementById('myrFrom').value='';
+  document.getElementById('myrTo').value='';
+  myrState={page:1,pages:1,total:0,q:'',shift:'',from:'',to:''};
+  loadMyReports();
+}
+async function loadMyReports(){
+  const list=document.getElementById('myReportList');
+  list.innerHTML='<div class="empty-state"><div class="icon">⏳</div><p>در حال بارگذاری گزارش‌های شما...</p></div>';
+  try{
+    const res=await apiGet({action:'list',page:myrState.page,project:currentUser.project,q:myrState.q,shift:myrState.shift,from:myrState.from,to:myrState.to});
+    if(!res||!res.success) throw new Error((res&&res.error)||'خطا');
+    myrState.pages=res.pages||1; myrState.total=res.total||0;
+    _myReportsLoaded=true;
+    renderMyReports(res.data||[]);
+  }catch(e){ list.innerHTML='<div class="empty-state"><div class="icon">⚠️</div><p>خطا: '+esc(e.message)+'</p></div>'; }
+}
+function renderMyReports(reports){
+  const container=document.getElementById('myReportList');
+  const cnt=document.getElementById('myrCount');
+  cnt.textContent=myrState.total?('🔎 '+toFa(myrState.total)+' گزارش ثبت‌شده'):'';
+  if(!reports.length){ container.innerHTML='<div class="empty-state"><div class="icon">📭</div><p>هنوز گزارشی ثبت نکرده‌اید</p></div>'; return; }
+  container.innerHTML='';
+  let lastDayKey=null;
+  reports.forEach(r=>{
+    const key=new Date(r.created_at).toLocaleDateString('fa-IR');
+    if(key!==lastDayKey){
+      lastDayKey=key;
+      const count=reports.filter(x=>new Date(x.created_at).toLocaleDateString('fa-IR')===key).length;
+      const weekday=new Date(r.created_at).toLocaleDateString('fa-IR',{weekday:'long'});
+      const div=document.createElement('div');
+      div.className='day-divider';
+      div.innerHTML=`<span class="day-divider-date">📅 ${esc(weekday)} ${esc(key)}</span>
+                     <span class="day-divider-count">${toFa(count)} گزارش</span>`;
+      container.appendChild(div);
+    }
+    const createdAt=new Date(r.created_at).toLocaleString('fa-IR');
+    const card=document.createElement('div');
+    card.className='report-card';
+    card.innerHTML=`
+      <div class="report-card-info">
+        <div class="report-card-title">گزارش شماره ${esc(r.reportNumber||'—')}</div>
+        <div class="report-card-meta">
+          <span>📅 ${esc(r.reportDate||'—')}</span>
+          <span>⏰ ${esc(r.workShift||'—')}</span>
+          <span>👷 ${r.laborTotal||0} نفر</span>
+          <span>🕐 ${createdAt}</span>
+        </div>
+      </div>
+      <div class="report-card-actions">
+        <button class="btn-success-sm" onclick="openReportModal('${esc(r.id)}')">مشاهده و PDF</button>
+      </div>`;
+    container.appendChild(card);
+  });
+  if(myrState.pages>1){
+    const nav=document.createElement('div'); nav.className='pagination';
+    nav.innerHTML=`<button class="btn-success-sm" ${myrState.page<=1?'disabled':''} onclick="changeMyrPage(-1)">◀ صفحه قبل</button>
+      <span>صفحه ${myrState.page} از ${myrState.pages} (کل: ${myrState.total} گزارش)</span>
+      <button class="btn-success-sm" ${myrState.page>=myrState.pages?'disabled':''} onclick="changeMyrPage(1)">صفحه بعد ▶</button>`;
+    container.appendChild(nav);
+  }
+}
+function changeMyrPage(delta){
+  const next=myrState.page+delta;
+  if(next<1||next>myrState.pages) return;
+  myrState.page=next; loadMyReports();
 }
 function clearRepNoteFilters(){
   document.getElementById('rNoteText').value='';
@@ -1184,15 +1426,18 @@ function clearRepNoteFilters(){
   document.getElementById('rNoteTo').value='';
   applyRepNoteFilters();
 }
+function isTechNote(n){ return (n&&((n.category||'')==='technical'||(n.from||'')==='arabi')); }
 function applyRepNoteFilters(){
   const q=document.getElementById('rNoteText').value.trim();
   const typ=document.getElementById('rNoteType').value;
   const from=document.getElementById('rNoteFrom').value;
   const to=document.getElementById('rNoteTo').value;
   let filtered=_myNotes.filter(n=>{
+    const tech=isTechNote(n);
     if(q&&(n.message||'').indexOf(q)===-1) return false;
     if(typ==='all'&&n.to!=='all') return false;
-    if(typ==='me'&&n.to==='all') return false;
+    if(typ==='me'&&(n.to==='all'||tech)) return false;
+    if(typ==='tech'&&!tech) return false;
     if(from&&isoDay(n.created_at)<from) return false;
     if(to&&isoDay(n.created_at)>to) return false;
     return true;
@@ -1206,9 +1451,13 @@ function renderRepNotes(notes,q){
   if(!notes.length){ list.innerHTML='<div class="msg-empty"><div class="icon">📭</div><p>پیامی یافت نشد</p></div>'; return; }
   list.innerHTML=notes.map(n=>{
     const isAll=n.to==='all';
+    const tech=isTechNote(n);
     const date=new Date(n.created_at).toLocaleString('fa-IR');
-    const tag=isAll?'<span class="msg-tag public">📢 اطلاعیهٔ عمومی</span>':'<span class="msg-tag private">📩 پیام اختصاصی</span>';
-    return `<div class="msg-item ${isAll?'is-public':''}">
+    let tag, cls;
+    if(tech){ tag='<span class="msg-tag technical">🔧 نظر بخش فنی</span>'; cls='is-technical'; }
+    else if(isAll){ tag='<span class="msg-tag public">📢 اطلاعیهٔ عمومی</span>'; cls='is-public'; }
+    else { tag='<span class="msg-tag private">📩 پیام اختصاصی</span>'; cls=''; }
+    return `<div class="msg-item ${cls}">
       <div class="msg-item-body">
         <div class="msg-item-tags">${tag}<span class="msg-tag date">📅 ${esc(date)}</span></div>
         <div class="msg-item-text">${highlight(n.message||'',q)}</div>
@@ -1218,30 +1467,25 @@ function renderRepNotes(notes,q){
 }
 
 /* ════════ REPORTER NOTES BANNER ════════ */
-async function loadReporterNotes(){
+function renderNoteBanner(){
   const banner=document.getElementById('noteBanner'); if(!banner) return;
-  try{
-    const res=await apiGet({action:'getNotes',username:currentUser.username});
-    if(!res||!res.success||!res.notes||!res.notes.length){ _myNotes=res&&res.notes?res.notes:[]; return; }
-    _myNotes=res.notes.slice().sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
-    const badge=document.getElementById('repNoteBadge');
-    if(badge){badge.textContent=toFa(_myNotes.length);badge.style.display='';}
-    banner.innerHTML='';
-    _myNotes.slice(0,3).forEach(n=>{
-      const isPublic=n.to==='all';
-      const card=document.createElement('div');
-      card.className='note-card '+(isPublic?'public':'private');
-      card.id='note-'+n.id;
-      const date=new Date(n.created_at).toLocaleString('fa-IR');
-      card.innerHTML=`<div class="note-card-body">
-        <div class="note-card-label">${isPublic?'📢 اطلاعیهٔ مدیریت':'📩 پیام اختصاصی مدیریت'}</div>
-        <div class="note-card-msg">${esc(n.message)}</div>
-        <div class="note-card-date">📅 ${date}</div>
-      </div>
-      <button class="note-dismiss" onclick="document.getElementById('note-${esc(n.id)}').remove()" title="بستن">×</button>`;
-      banner.appendChild(card);
-    });
-  }catch(e){}
+  banner.innerHTML='';
+  _myNotes.slice(0,3).forEach(n=>{
+    const tech=isTechNote(n);
+    const isPublic=n.to==='all';
+    const card=document.createElement('div');
+    card.className='note-card '+(tech?'technical':(isPublic?'public':'private'));
+    card.id='note-'+n.id;
+    const date=new Date(n.created_at).toLocaleString('fa-IR');
+    const label=tech?'🔧 نظر بخش فنی':(isPublic?'📢 اطلاعیهٔ مدیریت':'📩 پیام اختصاصی مدیریت');
+    card.innerHTML=`<div class="note-card-body">
+      <div class="note-card-label">${label}</div>
+      <div class="note-card-msg">${esc(n.message)}</div>
+      <div class="note-card-date">📅 ${date}</div>
+    </div>
+    <button class="note-dismiss" onclick="document.getElementById('note-${esc(n.id)}').remove()" title="بستن">×</button>`;
+    banner.appendChild(card);
+  });
 }
 
 /* ════════ REPORTER INIT ════════ */
@@ -1256,7 +1500,11 @@ function initReporter(){
   document.getElementById('reportTime').value=pad(now.getHours())+':'+pad(now.getMinutes());
   const [jy,jm,jd]=toJalali(now.getFullYear(),now.getMonth()+1,now.getDate());
   document.getElementById('reportDate').value=jy+'/'+pad(jm)+'/'+pad(jd);
-  updateDraftSelect(); clearForm(); _myNotesLoaded=false; switchRepTab('form'); loadReporterNotes();
+  updateDraftSelect(); clearForm();
+  _myNotesLoaded=false; _myReportsLoaded=false;
+  myrState={page:1,pages:1,total:0,q:'',shift:'',from:'',to:''};
+  const fab=document.getElementById('notesFab'); if(fab) fab.style.display='flex';
+  switchRepTab('form'); loadReporterNotes();
 }
 function clearForm(){
   ['reportNumber','futureActivities','problems','incidents','safetyEquipment','finalComments'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
@@ -1279,7 +1527,7 @@ function initTechnical(){
     const o=document.createElement('option');o.value=u.project;o.textContent=u.project;sel.appendChild(o);
   });
   document.getElementById('techFilterSearch').onkeydown=(e)=>{if(e.key==='Enter')applyTechFilters();};
-  techState={page:1,pages:1,total:0,q:'',project:''};
+  techState={page:1,pages:1,total:0,q:'',project:'',shift:'',from:'',to:''};
   _techNotesLoaded=false;
   switchTechTab('reports');
   loadTechnicalReports();
@@ -1299,18 +1547,28 @@ function switchTechTab(tab){
 function applyTechFilters(){
   techState.project=document.getElementById('techFilterProject').value;
   techState.q=document.getElementById('techFilterSearch').value.trim();
+  techState.shift=document.getElementById('techFilterShift').value;
+  techState.from=document.getElementById('techFilterFrom').value;
+  techState.to=document.getElementById('techFilterTo').value;
   techState.page=1; loadTechnicalReports();
+}
+function clearTechFilters(){
+  document.getElementById('techFilterProject').value='';
+  document.getElementById('techFilterSearch').value='';
+  document.getElementById('techFilterShift').value='';
+  document.getElementById('techFilterFrom').value='';
+  document.getElementById('techFilterTo').value='';
+  techState={page:1,pages:1,total:0,q:'',project:'',shift:'',from:'',to:''};
+  loadTechnicalReports();
 }
 
 async function loadTechnicalReports(){
   showLoading(true,'در حال بارگذاری گزارش‌ها...');
   try{
-    const res=await apiGet({action:'list',page:techState.page,project:techState.project,q:techState.q});
+    const res=await apiGet({action:'list',page:techState.page,project:techState.project,q:techState.q,shift:techState.shift,from:techState.from,to:techState.to});
     if(!res||!res.success) throw new Error((res&&res.error)||'خطا');
     const reports=res.data||[];
     techState.pages=res.pages||1; techState.total=res.total||0;
-    // برای هر گزارش بررسی می‌کنیم نظر فنی داره یا نه
-    // نت‌ها رو از کش می‌خونیم (اگر بار شده)
     renderTechReports(reports);
   }catch(e){toast('خطا: '+e.message,'error');}
   showLoading(false);
@@ -1425,18 +1683,30 @@ async function initManager(){
     const o=document.createElement('option');o.value=u.project;o.textContent=u.project;sel.appendChild(o);
   });
   document.getElementById('filterSearch').onkeydown=(e)=>{if(e.key==='Enter')applyFilters();};
-  mgrState={page:1,pages:1,total:0,q:'',project:''};
+  mgrState={page:1,pages:1,total:0,q:'',project:'',shift:'',from:'',to:''};
   _allNotesLoaded=false; switchMgrTab('reports'); await loadManagerReports();
 }
 function applyFilters(){
   mgrState.project=document.getElementById('filterProject').value;
   mgrState.q=document.getElementById('filterSearch').value.trim();
+  mgrState.shift=document.getElementById('filterShift').value;
+  mgrState.from=document.getElementById('filterFrom').value;
+  mgrState.to=document.getElementById('filterTo').value;
   mgrState.page=1; loadManagerReports();
+}
+function clearFilters(){
+  document.getElementById('filterProject').value='';
+  document.getElementById('filterSearch').value='';
+  document.getElementById('filterShift').value='';
+  document.getElementById('filterFrom').value='';
+  document.getElementById('filterTo').value='';
+  mgrState={page:1,pages:1,total:0,q:'',project:'',shift:'',from:'',to:''};
+  loadManagerReports();
 }
 async function loadManagerReports(){
   showLoading(true,'در حال بارگذاری گزارش‌ها...');
   try{
-    const res=await apiGet({action:'list',page:mgrState.page,project:mgrState.project,q:mgrState.q});
+    const res=await apiGet({action:'list',page:mgrState.page,project:mgrState.project,q:mgrState.q,shift:mgrState.shift,from:mgrState.from,to:mgrState.to});
     if(!res||!res.success) throw new Error((res&&res.error)||'خطا');
     allReports=res.data||[]; mgrState.pages=res.pages||1; mgrState.total=res.total||0;
     updateStats(); renderReports();
@@ -1522,9 +1792,9 @@ async function openReportModal(id, isTechView){
   }catch(e){ showLoading(false);toast('خطا: '+e.message,'error');return; }
   showLoading(false);
   modalReportData=d;
-  // دکمه PDF فقط برای مدیر و بخش فنی
+  // دکمهٔ PDF برای مدیر و بخش فنی (هر دو می‌توانند PDF بگیرند)
   const pdfBtn=document.getElementById('modalPdfBtn');
-  if(pdfBtn) pdfBtn.style.display=(isTechView)?'none':'';  // بخش فنی PDF نمی‌گیره (اختیاری — می‌شه فعال کرد)
+  if(pdfBtn) pdfBtn.style.display='';
   document.getElementById('modalTitle').textContent=`گزارش ${d.reportNumber||''} — ${d.projectName||''}`;
   let html=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;font-size:13px;">
     <div><b>پروژه:</b> ${esc(d.projectName||'—')}</div>
@@ -1626,7 +1896,7 @@ async function submitReport(){
       await new Promise(r=>setTimeout(r,1500));
       try{const res=await apiGet({action:'get',id});ok=!!(res&&res.success);}catch(e){}
     }
-    if(ok){toast('گزارش ثبت و تأیید شد ✅','success');clearForm();}
+    if(ok){toast('گزارش ثبت و تأیید شد ✅','success');clearForm();_myReportsLoaded=false;}
     else toast('ارسال شد ولی تأیید نشد — در داشبورد مدیر بررسی کنید','error');
   }catch(e){toast('خطا در ارسال: '+e.message,'error');}
   showLoading(false);
