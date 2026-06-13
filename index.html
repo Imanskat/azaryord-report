@@ -351,6 +351,15 @@ tbody tr:nth-child(even) { background: #fafafa; }
   * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }
 
+/* ===== ACTIVITY DISCIPLINE GROUPS ===== */
+.act-group { border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; margin-bottom: 14px; background: #fafbfc; }
+.act-group-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+.act-group-title { font-weight: 800; font-size: 14px; color: var(--text); }
+.act-group .btn-add { margin: 0; }
+.act-group.ab { border-right: 4px solid #f59e0b; }
+.act-group.me { border-right: 4px solid #0891b2; }
+.act-group.el { border-right: 4px solid #7c3aed; }
+
 /* ===== ADVANCED FILTER BAR ===== */
 .adv-filter { background: white; border-radius: var(--radius); padding: 16px 18px; margin-bottom: 20px; box-shadow: var(--shadow); display: grid; grid-template-columns: 1.6fr 2fr 1fr 1fr 1fr auto auto; gap: 10px; align-items: end; }
 .adv-filter .fld { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
@@ -528,11 +537,35 @@ tbody tr:nth-child(even) { background: #fafafa; }
 
     <div class="section-card">
       <div class="section-header">⚙️ فعالیت‌های انجام شده امروز <span class="req-star">*</span></div>
-      <button class="btn-add" style="margin-bottom:12px;" onclick="addActivity()">+ افزودن فعالیت</button>
-      <div class="table-wrap">
-        <table><thead><tr><th style="width:25%">نوع فعالیت</th><th style="width:45%">شرح عملیات</th><th style="width:18%">وضعیت</th><th style="width:12%">حذف</th></tr></thead>
-        <tbody id="activitiesTable"></tbody></table>
+      <p class="field-hint" style="margin:-4px 0 14px;">فعالیت‌ها بر اساس رشته تفکیک شده‌اند؛ نوع فعالیت را از فهرست همان بخش انتخاب کنید.</p>
+
+      <div class="act-group ab">
+        <div class="act-group-head"><span class="act-group-title">🏗️ ابنیه</span>
+          <button class="btn-add" onclick="addAbnieh()">+ افزودن فعالیت ابنیه</button></div>
+        <div class="table-wrap">
+          <table><thead><tr><th style="width:28%">نوع فعالیت</th><th style="width:44%">شرح عملیات</th><th style="width:16%">وضعیت</th><th style="width:12%">حذف</th></tr></thead>
+          <tbody id="activitiesAbniehTable"></tbody></table>
+        </div>
       </div>
+
+      <div class="act-group me">
+        <div class="act-group-head"><span class="act-group-title">🔧 مکانیکی</span>
+          <button class="btn-add" onclick="addMechanical()">+ افزودن فعالیت مکانیکی</button></div>
+        <div class="table-wrap">
+          <table><thead><tr><th style="width:28%">نوع فعالیت</th><th style="width:44%">شرح عملیات</th><th style="width:16%">وضعیت</th><th style="width:12%">حذف</th></tr></thead>
+          <tbody id="activitiesMechanicalTable"></tbody></table>
+        </div>
+      </div>
+
+      <div class="act-group el">
+        <div class="act-group-head"><span class="act-group-title">⚡ الکتریکی / الکترونیکی</span>
+          <button class="btn-add" onclick="addElectrical()">+ افزودن فعالیت برقی</button></div>
+        <div class="table-wrap">
+          <table><thead><tr><th style="width:28%">نوع فعالیت</th><th style="width:44%">شرح عملیات</th><th style="width:16%">وضعیت</th><th style="width:12%">حذف</th></tr></thead>
+          <tbody id="activitiesElectricalTable"></tbody></table>
+        </div>
+      </div>
+
       <div style="margin-top:16px;">
         <label class="field-label">برنامه فعالیت‌های آتی <span class="req-star">*</span></label>
         <textarea id="futureActivities" class="inp" rows="3" placeholder="برنامه روز آینده..."></textarea>
@@ -1512,7 +1545,7 @@ function clearForm(){
   document.getElementById('weatherCondition').value='';
   document.getElementById('temperature').value='';
   document.getElementById('safetyStatus').value='عالی';
-  ['activitiesTable','executiveLaborTable','staffLaborTable','machineryTable','companyVehiclesTable','materialsTable','neededMaterialsTable','requiredSystemsTable'].forEach(id=>{document.getElementById(id).innerHTML='';});
+  ['activitiesAbniehTable','activitiesMechanicalTable','activitiesElectricalTable','executiveLaborTable','staffLaborTable','machineryTable','companyVehiclesTable','materialsTable','neededMaterialsTable','requiredSystemsTable'].forEach(id=>{document.getElementById(id).innerHTML='';});
   uploadedImages=[]; document.getElementById('imagePreview').innerHTML=''; document.getElementById('projectImages').value='';
   ['sig1Data','sig2Data','sig3Data'].forEach(id=>{document.getElementById(id).value='';});
   ['sig1Preview','sig2Preview','sig3Preview'].forEach(id=>{document.getElementById(id).style.display='none';});
@@ -1806,8 +1839,8 @@ async function openReportModal(id, isTechView){
   </div>`;
   if(d.activities&&d.activities.length){
     html+=`<b>فعالیت‌ها:</b><table style="width:100%;border-collapse:collapse;font-size:12px;margin:8px 0;">
-      <tr style="background:#f1f5f9;"><th style="padding:6px;border:1px solid #e2e8f0;">نوع</th><th style="padding:6px;border:1px solid #e2e8f0;">شرح</th><th style="padding:6px;border:1px solid #e2e8f0;">وضعیت</th></tr>
-      ${d.activities.map(a=>`<tr><td style="padding:6px;border:1px solid #e2e8f0;">${esc(a['activity-type']||'')}</td><td style="padding:6px;border:1px solid #e2e8f0;">${esc(a['activity-desc']||'')}</td><td style="padding:6px;border:1px solid #e2e8f0;">${esc(a['activity-status']||'')}</td></tr>`).join('')}
+      <tr style="background:#f1f5f9;"><th style="padding:6px;border:1px solid #e2e8f0;">رشته</th><th style="padding:6px;border:1px solid #e2e8f0;">نوع</th><th style="padding:6px;border:1px solid #e2e8f0;">شرح</th><th style="padding:6px;border:1px solid #e2e8f0;">وضعیت</th></tr>
+      ${d.activities.map(a=>`<tr><td style="padding:6px;border:1px solid #e2e8f0;">${esc(a.category||'—')}</td><td style="padding:6px;border:1px solid #e2e8f0;">${esc(a['activity-type']||'')}</td><td style="padding:6px;border:1px solid #e2e8f0;">${esc(a['activity-desc']||'')}</td><td style="padding:6px;border:1px solid #e2e8f0;">${esc(a['activity-status']||'')}</td></tr>`).join('')}
     </table>`;
   }
   const allLabor=[...(d.executiveLabor||[]),...(d.staffLabor||[])];
@@ -1869,8 +1902,10 @@ async function submitReport(){
   if(!data.workShift) errors.push('شیفت کاری');
   if(!data.weatherCondition) errors.push('وضعیت آب و هوا');
   if(data.temperature===''||data.temperature===null||String(data.temperature).trim()==='') errors.push('دمای هوا');
-  const actRows=document.getElementById('activitiesTable').querySelectorAll('tr');
-  if(actRows.length===0) errors.push('حداقل یک فعالیت انجام‌شده');
+  const actRows=document.getElementById('activitiesAbniehTable').querySelectorAll('tr').length
+    +document.getElementById('activitiesMechanicalTable').querySelectorAll('tr').length
+    +document.getElementById('activitiesElectricalTable').querySelectorAll('tr').length;
+  if(actRows===0) errors.push('حداقل یک فعالیت انجام‌شده (ابنیه / مکانیکی / برقی)');
   if(!v('futureActivities').trim()) errors.push('برنامه فعالیت‌های آتی');
   const laborRows=document.getElementById('executiveLaborTable').querySelectorAll('tr').length+
     document.getElementById('staffLaborTable').querySelectorAll('tr').length;
@@ -1910,7 +1945,11 @@ function collectFormData(){
     futureActivities:v('futureActivities')||'ثبت نشده',problems:v('problems')||'مشکلی گزارش نشده',
     safetyStatus:v('safetyStatus'),incidents:v('incidents')||'حادثه‌ای گزارش نشده',
     safetyEquipment:v('safetyEquipment')||'ثبت نشده',finalComments:v('finalComments')||'—',
-    activities:getTableData('activitiesTable',['activity-type','activity-desc','activity-status']),
+    activities:[].concat(
+      getTableData('activitiesAbniehTable',['activity-type','activity-desc','activity-status']).map(a=>Object.assign({category:'ابنیه'},a)),
+      getTableData('activitiesMechanicalTable',['activity-type','activity-desc','activity-status']).map(a=>Object.assign({category:'مکانیکی'},a)),
+      getTableData('activitiesElectricalTable',['activity-type','activity-desc','activity-status']).map(a=>Object.assign({category:'الکتریکی/الکترونیکی'},a))
+    ),
     executiveLabor:getTableData('executiveLaborTable',['labor-fullname','labor-position','labor-hours','labor-attendance','labor-notes']),
     staffLabor:getTableData('staffLaborTable',['labor-fullname','labor-position','labor-hours','labor-attendance','labor-notes']),
     laborTotals:{
@@ -1932,13 +1971,24 @@ function collectFormData(){
 function v(id){return (document.getElementById(id)||{}).value||'';}
 
 /* ════════ TABLE FUNCTIONS ════════ */
-function addActivity(){
-  const r=document.getElementById('activitiesTable').insertRow();
-  r.innerHTML=`<td><select class="inp-sm activity-type"><option value="">انتخاب کنید</option><option>خاکبرداری</option><option>بتن‌ریزی</option><option>قالب‌بندی</option><option>آرماتوربندی</option><option>آسفالت</option><option>حفاری</option><option>تأسیسات</option><option>برق‌کشی</option><option>جوشکاری</option><option>سایر</option></select></td>
+const ACTIVITY_TYPES = {
+  abnieh: ['خاکبرداری','خاکریزی','حفاری','تسطیح و رگلاژ','بتن مگر','آرماتوربندی','قالب‌بندی','بتن‌ریزی','اسکلت فلزی','جوشکاری سازه','بنایی و دیوارچینی','گچ و خاک','کاشی و سرامیک','سنگ و کف‌سازی','عایق‌کاری','نقاشی','درب و پنجره','آسفالت و محوطه','سایر ابنیه'],
+  mechanical: ['لوله‌کشی آب','لوله‌کشی فاضلاب','لوله‌کشی گاز','تأسیسات گرمایشی','تأسیسات سرمایشی','کانال‌کشی هوا (داکت)','نصب رادیاتور و فن‌کویل','نصب پمپ','نصب چیلر','نصب دیگ / بویلر','نصب هواساز','سیستم اطفاء حریق','عایق لوله و کانال','تست و راه‌اندازی','سایر مکانیکی'],
+  electrical: ['لوله و داکت برق','سینی و نردبان کابل','کابل‌کشی فشار ضعیف','کابل‌کشی فشار متوسط','سیم‌کشی روشنایی','سیم‌کشی پریز','نصب تابلو برق','نصب روشنایی','سیستم ارتینگ','نصب ترانس / ژنراتور','جریان ضعیف','شبکه و دیتا','دوربین مداربسته (CCTV)','سیستم اعلام حریق','کنترل و اتوماسیون (BMS)','تست و راه‌اندازی برقی','سایر برقی']
+};
+function addActivityRow(tableId, typeKey){
+  const opts=['<option value="">انتخاب کنید</option>'].concat(ACTIVITY_TYPES[typeKey].map(t=>`<option>${t}</option>`)).join('');
+  const r=document.getElementById(tableId).insertRow();
+  r.innerHTML=`<td><select class="inp-sm activity-type">${opts}</select></td>
   <td><input type="text" class="inp-sm activity-desc" placeholder="شرح عملیات"></td>
   <td><select class="inp-sm activity-status"><option>انجام شده</option><option>در حال انجام</option><option>متوقف</option></select></td>
   <td><button class="btn-danger-sm" onclick="deleteRow(this)">حذف</button></td>`;
 }
+function addAbnieh(){ addActivityRow('activitiesAbniehTable','abnieh'); }
+function addMechanical(){ addActivityRow('activitiesMechanicalTable','mechanical'); }
+function addElectrical(){ addActivityRow('activitiesElectricalTable','electrical'); }
+/* سازگاری با کدهای قدیمی */
+function addActivity(){ addAbnieh(); }
 function addLaborRow(tableId){
   const isExec=tableId==='executiveLaborTable';
   const opts=(isExec?EXECUTIVE_POSITIONS:STAFF_POSITIONS).map(p=>`<option>${p}</option>`).join('');
@@ -2117,7 +2167,18 @@ function applyFormData(data){
   f('futureActivities',data.futureActivities);f('problems',data.problems);
   f('safetyStatus',data.safetyStatus);f('incidents',data.incidents);
   f('safetyEquipment',data.safetyEquipment);f('finalComments',data.finalComments);
-  loadTableData('activitiesTable',data.activities||[],addActivity,['activity-type','activity-desc','activity-status']);
+  (function(){
+    const acts=data.activities||[];
+    const cls=['activity-type','activity-desc','activity-status'];
+    const isMech=c=>String(c).indexOf('مکانیک')!==-1;
+    const isElec=c=>{c=String(c);return c.indexOf('برق')!==-1||c.indexOf('الکتر')!==-1;};
+    const ab=acts.filter(a=>!isMech(a.category)&&!isElec(a.category)); // قدیمی‌ها (بدون رشته) هم در ابنیه
+    const me=acts.filter(a=>isMech(a.category));
+    const el=acts.filter(a=>isElec(a.category));
+    loadTableData('activitiesAbniehTable',ab,addAbnieh,cls);
+    loadTableData('activitiesMechanicalTable',me,addMechanical,cls);
+    loadTableData('activitiesElectricalTable',el,addElectrical,cls);
+  })();
   loadTableData('executiveLaborTable',data.executiveLabor||[],addExecutiveLabor,['labor-fullname','labor-position','labor-hours','labor-attendance','labor-notes']);
   loadTableData('staffLaborTable',data.staffLabor||[],addStaffLabor,['labor-fullname','labor-position','labor-hours','labor-attendance','labor-notes']);
   loadTableData('machineryTable',data.machinery||[],addMachinery,['machine-name','machine-model','machine-status','machine-hours','machine-notes']);
@@ -2161,7 +2222,12 @@ async function downloadPdfFile(){
 function buildPDF(data){
   if(!data)return;_pdfData=data;
   const tbl=(rows,cols,hdrs)=>rows.length?`<table class="pdf-table"><thead><tr>${hdrs.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${cols.map(c=>`<td>${esc(r[c]||'')}</td>`).join('')}</tr>`).join('')}</tbody></table>`:'';
-  const activitiesHTML=tbl(data.activities||[],['activity-type','activity-desc','activity-status'],['نوع فعالیت','شرح عملیات','وضعیت']);
+  const _isMechC=c=>String(c).indexOf('مکانیک')!==-1;
+  const _isElecC=c=>{c=String(c);return c.indexOf('برق')!==-1||c.indexOf('الکتر')!==-1;};
+  const _grpAct=(label,fn)=>{const rows=(data.activities||[]).filter(fn);return rows.length?`<div style="font-weight:700;margin:8px 0 4px;font-size:12px;color:#334155;">${label}</div>`+tbl(rows,['activity-type','activity-desc','activity-status'],['نوع فعالیت','شرح عملیات','وضعیت']):'';};
+  const activitiesHTML=_grpAct('ابنیه',a=>!_isMechC(a.category)&&!_isElecC(a.category))
+    +_grpAct('مکانیکی',a=>_isMechC(a.category))
+    +_grpAct('الکتریکی / الکترونیکی',a=>_isElecC(a.category));
   const execLaborHTML=tbl(data.executiveLabor||[],['labor-fullname','labor-position','labor-hours','labor-attendance','labor-notes'],['نام','سمت','ساعت','حضور','توضیحات']);
   const staffLaborHTML=tbl(data.staffLabor||[],['labor-fullname','labor-position','labor-hours','labor-attendance','labor-notes'],['نام','سمت','ساعت','حضور','توضیحات']);
   const machineryHTML=tbl(data.machinery||[],['machine-name','machine-model','machine-status','machine-hours'],['دستگاه','مدل','وضعیت','ساعت']);
