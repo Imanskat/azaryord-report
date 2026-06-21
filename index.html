@@ -143,6 +143,9 @@ tbody td { padding: 8px 10px; border: 1px solid var(--border); }
 tbody tr:nth-child(even) { background: #fafafa; }
 .inp-sm { padding: 6px 10px; font-size: 13px; border: 1px solid var(--border); border-radius: 6px; width: 100%; min-width: 80px; font-family: 'Vazirmatn', sans-serif; }
 .inp-sm:focus { outline: none; border-color: var(--primary); }
+.hm-wrap { display: flex; align-items: center; justify-content: center; gap: 3px; }
+.hm-wrap .hm-num { width: 48px; min-width: 0; text-align: center; padding: 6px 4px; }
+.hm-wrap .hm-unit { font-size: 11px; color: var(--text-muted); font-weight: 600; }
 
 /* Labor totals */
 .totals-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
@@ -155,6 +158,8 @@ tbody tr:nth-child(even) { background: #fafafa; }
 .sig-box  { border: 2px dashed var(--border); border-radius: 10px; padding: 16px; text-align: center; }
 .sig-box p { font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 10px; }
 .sig-upload-btn { display: inline-block; background: #eff6ff; color: var(--primary); padding: 7px 14px; border-radius: 7px; font-size: 13px; cursor: pointer; font-weight: 600; }
+.sig-clear-btn { display: inline-block; margin-top: 8px; background: #fef2f2; color: var(--danger); border: 1px solid #fecaca; padding: 5px 12px; border-radius: 7px; font-size: 12px; cursor: pointer; font-weight: 600; font-family: 'Vazirmatn', sans-serif; transition: all 0.2s; }
+.sig-clear-btn:hover { background: #fee2e2; }
 
 /* Action bar */
 .action-bar { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 8px; }
@@ -676,19 +681,19 @@ tbody tr:nth-child(even) { background: #fafafa; }
       <div class="sig-grid">
         <div class="sig-box">
           <p>امضای سرپرست کارگاه</p>
-          <div id="sig1Preview" style="display:none;margin-bottom:8px;"><img id="sig1Img" src="" style="max-height:80px;max-width:100%;border-radius:6px;"></div>
+          <div id="sig1Preview" style="display:none;margin-bottom:8px;"><img id="sig1Img" src="" style="max-height:80px;max-width:100%;border-radius:6px;display:block;margin:0 auto;"><button type="button" class="sig-clear-btn" onclick="clearSig('sig1Img','sig1Preview','sig1Data')">🗑 حذف امضا</button></div>
           <label class="sig-upload-btn">📎 آپلود امضا<input type="file" accept="image/*" style="display:none" onchange="handleSigUpload(event,'sig1Img','sig1Preview','sig1Data')"></label>
           <input type="hidden" id="sig1Data">
         </div>
         <div class="sig-box">
           <p>امضای مهندس ناظر</p>
-          <div id="sig2Preview" style="display:none;margin-bottom:8px;"><img id="sig2Img" src="" style="max-height:80px;max-width:100%;border-radius:6px;"></div>
+          <div id="sig2Preview" style="display:none;margin-bottom:8px;"><img id="sig2Img" src="" style="max-height:80px;max-width:100%;border-radius:6px;display:block;margin:0 auto;"><button type="button" class="sig-clear-btn" onclick="clearSig('sig2Img','sig2Preview','sig2Data')">🗑 حذف امضا</button></div>
           <label class="sig-upload-btn">📎 آپلود امضا<input type="file" accept="image/*" style="display:none" onchange="handleSigUpload(event,'sig2Img','sig2Preview','sig2Data')"></label>
           <input type="hidden" id="sig2Data">
         </div>
         <div class="sig-box">
           <p>مهر شرکت / پیمانکار</p>
-          <div id="sig3Preview" style="display:none;margin-bottom:8px;"><img id="sig3Img" src="" style="max-height:80px;max-width:100%;border-radius:6px;"></div>
+          <div id="sig3Preview" style="display:none;margin-bottom:8px;"><img id="sig3Img" src="" style="max-height:80px;max-width:100%;border-radius:6px;display:block;margin:0 auto;"><button type="button" class="sig-clear-btn" onclick="clearSig('sig3Img','sig3Preview','sig3Data')">🗑 حذف مهر</button></div>
           <label class="sig-upload-btn">📎 آپلود مهر<input type="file" accept="image/*" style="display:none" onchange="handleSigUpload(event,'sig3Img','sig3Preview','sig3Data')"></label>
           <input type="hidden" id="sig3Data">
         </div>
@@ -1972,7 +1977,7 @@ function v(id){return (document.getElementById(id)||{}).value||'';}
 
 /* ════════ TABLE FUNCTIONS ════════ */
 const ACTIVITY_TYPES = {
-  abnieh: ['خاکبرداری','خاکریزی','حفاری','تسطیح و رگلاژ','بتن مگر','آرماتوربندی','قالب‌بندی','بتن‌ریزی','اسکلت فلزی','جوشکاری سازه','بنایی و دیوارچینی','گچ و خاک','کاشی و سرامیک','سنگ و کف‌سازی','عایق‌کاری','نقاشی','درب و پنجره','آسفالت و محوطه','سایر ابنیه'],
+  abnieh: ['خاکبرداری','خاکریزی','حفاری','تسطیح و رگلاژ','بتن مگر','آرماتوربندی','قالب‌بندی','بتن‌ریزی','اسکلت فلزی','جوشکاری سازه','بنایی و دیوارچینی','گچ و خاک','سیمان‌کاری','نماکاری','کاشی و سرامیک','سنگ و کف‌سازی','عایق‌کاری','نقاشی','درب و پنجره','آسفالت و محوطه','سایر ابنیه'],
   mechanical: ['لوله‌کشی آب','لوله‌کشی فاضلاب','لوله‌کشی گاز','تأسیسات گرمایشی','تأسیسات سرمایشی','کانال‌کشی هوا (داکت)','نصب رادیاتور و فن‌کویل','نصب پمپ','نصب چیلر','نصب دیگ / بویلر','نصب هواساز','سیستم اطفاء حریق','عایق لوله و کانال','تست و راه‌اندازی','سایر مکانیکی'],
   electrical: ['لوله و داکت برق','سینی و نردبان کابل','کابل‌کشی فشار ضعیف','کابل‌کشی فشار متوسط','سیم‌کشی روشنایی','سیم‌کشی پریز','نصب تابلو برق','نصب روشنایی','سیستم ارتینگ','نصب ترانس / ژنراتور','جریان ضعیف','شبکه و دیتا','دوربین مداربسته (CCTV)','سیستم اعلام حریق','کنترل و اتوماسیون (BMS)','تست و راه‌اندازی برقی','سایر برقی']
 };
@@ -1989,16 +1994,58 @@ function addMechanical(){ addActivityRow('activitiesMechanicalTable','mechanical
 function addElectrical(){ addActivityRow('activitiesElectricalTable','electrical'); }
 /* سازگاری با کدهای قدیمی */
 function addActivity(){ addAbnieh(); }
+/* ساعت/دقیقه نیروی انسانی */
+function fmtHM_(h,m){
+  h=parseInt(h,10);m=parseInt(m,10);
+  if(isNaN(h)||h<0)h=0;if(isNaN(m)||m<0)m=0;
+  if(m>59){h+=Math.floor(m/60);m=m%60;}
+  if(h===0&&m===0)return '';
+  if(m===0)return h+' ساعت';
+  if(h===0)return m+' دقیقه';
+  return h+' ساعت '+m+' دقیقه';
+}
+function parseHM_(str){
+  str=String(str==null?'':str).trim();
+  if(!str)return {h:'',m:''};
+  let c=str.match(/^(\d+)\s*:\s*(\d+)$/);
+  if(c)return {h:c[1],m:String(parseInt(c[2],10)||0)};
+  if(/^\d+([.,]\d+)?$/.test(str)){
+    const f=parseFloat(str.replace(',','.'));
+    const h=Math.floor(f);const m=Math.round((f-h)*60);
+    return {h:String(h),m:m?String(m):'0'};
+  }
+  const hM=str.match(/(\d+)\s*ساعت/);
+  const mM=str.match(/(\d+)\s*دقیقه/);
+  return {h:hM?hM[1]:'0',m:mM?mM[1]:'0'};
+}
+function syncHM_(el){
+  if(!el)return;
+  const td=el.closest('td');if(!td)return;
+  const h=(td.querySelector('.labor-h')||{}).value;
+  const m=(td.querySelector('.labor-m')||{}).value;
+  const hidden=td.querySelector('.labor-hours');
+  if(hidden)hidden.value=fmtHM_(h,m);
+}
+function hydrateLaborHM_(tableId){
+  const t=document.getElementById(tableId);if(!t)return;
+  t.querySelectorAll('tr').forEach(function(row){
+    const hidden=row.querySelector('.labor-hours');
+    const hi=row.querySelector('.labor-h');
+    const mi=row.querySelector('.labor-m');
+    if(hidden&&hi&&mi){const p=parseHM_(hidden.value);hi.value=p.h;mi.value=p.m;}
+  });
+}
 function addLaborRow(tableId){
   const isExec=tableId==='executiveLaborTable';
   const opts=(isExec?EXECUTIVE_POSITIONS:STAFF_POSITIONS).map(p=>`<option>${p}</option>`).join('');
   const r=document.getElementById(tableId).insertRow();
   r.innerHTML=`<td><input type="text" class="inp-sm labor-fullname" placeholder="نام و نام خانوادگی"></td>
   <td><select class="inp-sm labor-position"><option value="">انتخاب سمت</option>${opts}</select></td>
-  <td><input type="number" class="inp-sm labor-hours" value="8" style="width:60px;"></td>
+  <td><div class="hm-wrap"><input type="number" min="0" class="inp-sm hm-num labor-h" value="8" oninput="syncHM_(this)" placeholder="0"><span class="hm-unit">س</span><input type="number" min="0" max="59" class="inp-sm hm-num labor-m" value="0" oninput="syncHM_(this)" placeholder="0"><span class="hm-unit">د</span></div><input type="hidden" class="labor-hours"></td>
   <td><select class="inp-sm labor-attendance"><option>حاضر</option><option>غایب</option><option>تأخیر</option><option>مرخصی</option></select></td>
   <td><input type="text" class="inp-sm labor-notes" placeholder="توضیحات"></td>
   <td><button class="btn-danger-sm" onclick="deleteRow(this)">حذف</button></td>`;
+  syncHM_(r.querySelector('.labor-h'));
   updateLaborTotals();
 }
 function addExecutiveLabor(){addLaborRow('executiveLaborTable');}
@@ -2134,6 +2181,13 @@ function handleSigUpload(event,imgId,previewId,dataId){
   };
   reader.readAsDataURL(file);
 }
+function clearSig(imgId,previewId,dataId){
+  const img=document.getElementById(imgId);if(img)img.src='';
+  const prev=document.getElementById(previewId);if(prev)prev.style.display='none';
+  const data=document.getElementById(dataId);if(data)data.value='';
+  const box=prev&&prev.closest('.sig-box');
+  if(box){const f=box.querySelector('input[type=file]');if(f)f.value='';}
+}
 
 /* ════════ DRAFTS ════════ */
 function draftKey(){return 'azaryord_drafts_'+(currentUser&&currentUser.username||'');}
@@ -2181,6 +2235,7 @@ function applyFormData(data){
   })();
   loadTableData('executiveLaborTable',data.executiveLabor||[],addExecutiveLabor,['labor-fullname','labor-position','labor-hours','labor-attendance','labor-notes']);
   loadTableData('staffLaborTable',data.staffLabor||[],addStaffLabor,['labor-fullname','labor-position','labor-hours','labor-attendance','labor-notes']);
+  hydrateLaborHM_('executiveLaborTable');hydrateLaborHM_('staffLaborTable');
   loadTableData('machineryTable',data.machinery||[],addMachinery,['machine-name','machine-model','machine-status','machine-hours','machine-notes']);
   loadTableData('companyVehiclesTable',data.companyVehicles||[],addCompanyVehicle,['vehicle-name','vehicle-driver','vehicle-status','vehicle-notes']);
   loadTableData('materialsTable',data.materials||[],addMaterial,['material-name','material-amount','material-unit','material-notes']);
