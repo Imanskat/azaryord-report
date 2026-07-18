@@ -169,6 +169,8 @@ tbody tr:nth-child(even) { background: #fafafa; }
 .btn-pdf:hover { background: #047857; }
 .btn-print { background: #d97706; color: white; border: none; padding: 12px 28px; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Vazirmatn', sans-serif; transition: all 0.2s; }
 .btn-print:hover { background: #b45309; }
+.btn-excel { background: #217346; color: white; border: none; padding: 12px 28px; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Vazirmatn', sans-serif; transition: all 0.2s; }
+.btn-excel:hover { background: #1a5c37; }
 
 /* Drafts */
 .draft-bar { background: #f0fdf4; border: 1px solid #a7f3d0; border-radius: 10px; padding: 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
@@ -702,6 +704,7 @@ tbody tr:nth-child(even) { background: #fafafa; }
 
     <div class="action-bar">
       <button class="btn-pdf" onclick="downloadPDF()">📥 دانلود PDF (با عکس)</button>
+      <button class="btn-excel" onclick="downloadExcelFromForm()">📊 دانلود اکسل (Excel)</button>
       <button class="btn-print" onclick="printReport()">🖨️ چاپ (بدون عکس پروژه)</button>
       <button class="btn-submit" onclick="submitReport()">📤 ثبت و ارسال گزارش</button>
     </div>
@@ -1021,6 +1024,7 @@ tbody tr:nth-child(even) { background: #fafafa; }
       <div class="modal-title" id="modalTitle">جزئیات گزارش</div>
       <div style="display:flex;gap:8px;">
         <button class="btn-success-sm" id="modalPdfBtn" onclick="generatePDFFromModal()">📄 PDF</button>
+        <button class="btn-success-sm" id="modalExcelBtn" style="background:#217346;" onclick="downloadExcelFromModal()">📊 اکسل</button>
         <button class="modal-close" onclick="closeModal()">✕</button>
       </div>
     </div>
@@ -1032,6 +1036,7 @@ tbody tr:nth-child(even) { background: #fafafa; }
 <div id="pdfView">
   <div class="pdf-toolbar">
     <button class="dl-btn" onclick="downloadPdfFile()">📥 دانلود PDF (با عکس‌ها)</button>
+    <button class="dl-btn" style="background:#217346;border-color:#1a5c37;" onclick="downloadExcel(_pdfData)">📊 دانلود اکسل</button>
     <button class="print-btn" onclick="window.print()">🖨️ چاپ (بدون عکس پروژه)</button>
     <button onclick="closePdfView()">← برگشت</button>
   </div>
@@ -2348,6 +2353,148 @@ function buildPDF(data){
   window.scrollTo(0,0);
 }
 function closePdfView(){document.getElementById('pdfView').style.display='none';}
+
+/* ════════ EXCEL ════════ */
+function downloadExcelFromForm(){ downloadExcel(collectFormData()); }
+function downloadExcelFromModal(){ closeModal(); downloadExcel(modalReportData); }
+function ensureXLSX(){
+  return new Promise(function(resolve,reject){
+    if(window.XLSX){resolve();return;}
+    const s=document.createElement('script');
+    s.src='https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js';
+    s.onload=function(){resolve();};s.onerror=function(){reject(new Error('کتابخانهٔ اکسل بارگذاری نشد'));};
+    document.head.appendChild(s);
+  });
+}
+/* ── استایل‌های مشترک سلول (راست‌چین) ── */
+const XL_BORDER = {style:'thin',color:{rgb:'FFD1D5DB'}};
+const XL_ALL_BORDERS = {top:XL_BORDER,bottom:XL_BORDER,left:XL_BORDER,right:XL_BORDER};
+function xlTitleStyle(){return{font:{name:'Vazirmatn',sz:14,bold:true,color:{rgb:'FFFFFFFF'}},fill:{fgColor:{rgb:'FF1E40AF'}},alignment:{horizontal:'right',vertical:'center',wrapText:true,readingOrder:2},border:XL_ALL_BORDERS};}
+function xlHeaderStyle(){return{font:{name:'Vazirmatn',sz:11,bold:true,color:{rgb:'FF1E40AF'}},fill:{fgColor:{rgb:'FFE0E7FF'}},alignment:{horizontal:'right',vertical:'center',wrapText:true,readingOrder:2},border:XL_ALL_BORDERS};}
+function xlCellStyle(alt){return{font:{name:'Vazirmatn',sz:10,color:{rgb:'FF374151'}},fill:{fgColor:{rgb:alt?'FFF9FAFB':'FFFFFFFF'}},alignment:{horizontal:'right',vertical:'center',wrapText:true,readingOrder:2},border:XL_ALL_BORDERS};}
+function xlLabelStyle(){return{font:{name:'Vazirmatn',sz:10,bold:true,color:{rgb:'FF1E40AF'}},fill:{fgColor:{rgb:'FFF3F4F6'}},alignment:{horizontal:'right',vertical:'center',wrapText:true,readingOrder:2},border:XL_ALL_BORDERS};}
+/* یک شیت جدولی: عنوان + سرستون + ردیف‌ها */
+function xlTable(wb,sheetName,title,headers,rows,widths){
+  const XLSX=window.XLSX;
+  const aoa=[[title],headers].concat(rows.length?rows:[headers.map(()=> '—')]);
+  const ws=XLSX.utils.aoa_to_sheet(aoa);
+  const ncol=headers.length;
+  ws['!merges']=[{s:{r:0,c:0},e:{r:0,c:ncol-1}}];
+  ws['!cols']=(widths||headers.map(()=>({wch:20}))).map(w=>typeof w==='number'?{wch:w}:w);
+  ws['!rows']=[{hpt:26}];
+  for(let r=0;r<aoa.length;r++){
+    for(let c=0;c<ncol;c++){
+      const ref=XLSX.utils.encode_cell({r:r,c:c});
+      if(!ws[ref])ws[ref]={t:'s',v:''};
+      if(r===0)ws[ref].s=xlTitleStyle();
+      else if(r===1)ws[ref].s=xlHeaderStyle();
+      else ws[ref].s=xlCellStyle(r%2===0);
+    }
+  }
+  XLSX.utils.book_append_sheet(wb,ws,sheetName);
+}
+/* شیت کلید/مقدار (اطلاعات) */
+function xlKeyValue(wb,sheetName,title,pairs){
+  const XLSX=window.XLSX;
+  const aoa=[[title,''],['عنوان','مقدار']].concat(pairs.map(p=>[p[0],p[1]]));
+  const ws=XLSX.utils.aoa_to_sheet(aoa);
+  ws['!merges']=[{s:{r:0,c:0},e:{r:0,c:1}}];
+  ws['!cols']=[{wch:28},{wch:55}];
+  ws['!rows']=[{hpt:26}];
+  for(let r=0;r<aoa.length;r++){
+    for(let c=0;c<2;c++){
+      const ref=XLSX.utils.encode_cell({r:r,c:c});
+      if(!ws[ref])ws[ref]={t:'s',v:''};
+      if(r===0)ws[ref].s=xlTitleStyle();
+      else if(r===1)ws[ref].s=xlHeaderStyle();
+      else if(c===0)ws[ref].s=xlLabelStyle();
+      else ws[ref].s=xlCellStyle(r%2===0);
+    }
+  }
+  XLSX.utils.book_append_sheet(wb,ws,sheetName);
+}
+async function downloadExcel(dataArg){
+  const data=dataArg||_pdfData||(typeof collectFormData==='function'?collectFormData():null);
+  if(!data){toast('داده‌ای برای خروجی اکسل یافت نشد','error');return;}
+  showLoading(true,'در حال ساخت فایل اکسل...');
+  try{
+    await ensureXLSX();
+    const XLSX=window.XLSX;
+    const wb=XLSX.utils.book_new();
+    wb.Workbook={Views:[{RTL:true}]}; /* کل کارپوشه راست‌به‌چپ */
+    const S=v=>v==null?'':String(v);
+
+    /* ۱) اطلاعات گزارش و پروژه */
+    xlKeyValue(wb,'اطلاعات گزارش','اطلاعات گزارش و پروژه',[
+      ['شماره گزارش',S(data.reportNumber)||'—'],
+      ['تاریخ',S(data.reportDate)||'—'],
+      ['ساعت',S(data.reportTime)||'—'],
+      ['نام پروژه',S(data.projectName)||'—'],
+      ['نام کارگاه',S(data.siteLocation)||'—'],
+      ['کارفرما',S(data.employer)||'—'],
+      ['پیمانکار',S(data.contractor)||'شرکت آذریورد تبریز'],
+      ['سرپرست',S(data.supervisor)||'—'],
+      ['شیفت کاری',S(data.workShift)||'—'],
+      ['وضعیت آب‌وهوا',S(data.weatherCondition)||'—'],
+      ['دما (°C)',S(data.temperature)||'—'],
+    ]);
+
+    /* ۲) فعالیت‌های انجام شده */
+    const acts=(data.activities||[]).map(a=>[S(a.category),S(a['activity-type']),S(a['activity-desc']),S(a['activity-status'])]);
+    xlTable(wb,'فعالیت‌ها','فعالیت‌های انجام شده',
+      ['دسته','نوع فعالیت','شرح عملیات','وضعیت'],acts,[{wch:18},{wch:24},{wch:45},{wch:16}]);
+
+    /* ۳) نیروی انسانی (اجرایی + ستادی) */
+    const labor=[].concat(
+      (data.executiveLabor||[]).map(l=>['اجرایی',S(l['labor-fullname']),S(l['labor-position']),S(l['labor-hours']),S(l['labor-attendance']),S(l['labor-notes'])]),
+      (data.staffLabor||[]).map(l=>['ستادی',S(l['labor-fullname']),S(l['labor-position']),S(l['labor-hours']),S(l['labor-attendance']),S(l['labor-notes'])])
+    );
+    xlTable(wb,'نیروی انسانی','نیروی انسانی (اجرایی + ستادی)',
+      ['نوع نیرو','نام و نام خانوادگی','سمت','ساعت','حضور','توضیحات'],labor,[{wch:14},{wch:26},{wch:22},{wch:14},{wch:14},{wch:30}]);
+
+    /* ۴) ماشین‌آلات */
+    const mach=(data.machinery||[]).map(m=>[S(m['machine-name']),S(m['machine-model']),S(m['machine-status']),S(m['machine-hours']),S(m['machine-notes'])]);
+    xlTable(wb,'ماشین‌آلات','ماشین‌آلات',
+      ['دستگاه','مدل','وضعیت','ساعت کارکرد','توضیحات'],mach,[{wch:26},{wch:20},{wch:16},{wch:16},{wch:30}]);
+
+    /* ۵) خودروهای شرکتی */
+    const veh=(data.companyVehicles||[]).map(v=>[S(v['vehicle-name']),S(v['vehicle-driver']),S(v['vehicle-status']),S(v['vehicle-notes'])]);
+    xlTable(wb,'خودروها','خودروهای شرکتی',
+      ['خودرو','راننده','وضعیت','توضیحات'],veh,[{wch:26},{wch:24},{wch:16},{wch:30}]);
+
+    /* ۶) مصالح مصرفی */
+    const mats=(data.materials||[]).map(m=>[S(m['material-name']),S(m['material-amount']),S(m['material-unit']),S(m['material-notes'])]);
+    xlTable(wb,'مصالح مصرفی','مصالح مصرفی',
+      ['نوع مصالح','مقدار','واحد','توضیحات'],mats,[{wch:28},{wch:16},{wch:14},{wch:30}]);
+
+    /* ۷) مصالح مورد نیاز */
+    const need=(data.neededMaterials||[]).map(n=>[S(n['needed-name']),S(n['needed-amount']),S(n['needed-unit']),S(n['needed-stock']),S(n['needed-shortage']),S(n['needed-priority']),S(n['needed-notes'])]);
+    xlTable(wb,'مصالح مورد نیاز','مصالح مورد نیاز (کسری و کمبود)',
+      ['نوع مصالح','مقدار نیاز','واحد','موجودی','کسری','اولویت','توضیحات'],need,[{wch:26},{wch:14},{wch:12},{wch:12},{wch:12},{wch:14},{wch:28}]);
+
+    /* ۸) سیستم‌های مورد نیاز */
+    const sys=(data.requiredSystems||[]).map(s=>[S(s['system-type']),S(s['system-desc']),S(s['system-supply-status']),S(s['system-priority']),S(s['system-notes'])]);
+    xlTable(wb,'سیستم‌ها','سیستم‌های مورد نیاز',
+      ['نوع سیستم','مشخصات','وضعیت تأمین','اولویت','توضیحات'],sys,[{wch:24},{wch:32},{wch:18},{wch:14},{wch:28}]);
+
+    /* ۹) ایمنی و توضیحات نهایی */
+    xlKeyValue(wb,'ایمنی و توضیحات','گزارش ایمنی (HSE) و توضیحات',[
+      ['وضعیت ایمنی',S(data.safetyStatus)||'—'],
+      ['حوادث',S(data.incidents)||'—'],
+      ['تجهیزات ایمنی',S(data.safetyEquipment)||'—'],
+      ['فعالیت‌های آتی',S(data.futureActivities)||'—'],
+      ['مشکلات و تأخیرات',S(data.problems)||'—'],
+      ['توضیحات نهایی',S(data.finalComments)||'—'],
+    ]);
+
+    const num=S(data.reportNumber)||'report';
+    const date=S(data.reportDate).replace(/\//g,'-');
+    const filename='گزارش-'+num+(date?'-'+date:'')+'.xlsx';
+    XLSX.writeFile(wb,filename);
+    toast('فایل اکسل دانلود شد ✅','success');
+  }catch(e){toast('خطا در ساخت اکسل: '+e.message,'error');}
+  showLoading(false);
+}
 
 /* ════════ JALALI ════════ */
 function toJalali(gy,gm,gd){
