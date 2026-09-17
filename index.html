@@ -804,6 +804,7 @@ tbody tr:nth-child(even) { background: #fafafa; }
     <div class="panel-tabs">
       <button class="panel-tab active tech-active" id="ttab-reports" onclick="switchTechTab('reports')">📋 گزارش‌ها</button>
       <button class="panel-tab" id="ttab-notes" onclick="switchTechTab('notes')">🔧 نظرات فنی من</button>
+      <button class="panel-tab" id="ttab-export" onclick="switchTechTab('export')">📦 خروجی بازه‌ای</button>
     </div>
 
     <!-- نمای گزارش‌ها -->
@@ -861,6 +862,37 @@ tbody tr:nth-child(even) { background: #fafafa; }
       <div class="msg-count" id="tNoteCount"></div>
       <div id="techNoteList">
         <div class="msg-empty"><div class="icon">⏳</div><p>در حال بارگذاری...</p></div>
+      </div>
+    </div>
+
+    <!-- نمای خروجی بازه‌ای (زیپ گزارش‌ها) -->
+    <div id="techExportView" style="display:none;">
+      <div class="adv-filter tech" style="grid-template-columns:1.3fr 1fr 1fr 1.3fr auto auto auto;">
+        <div class="fld">
+          <label>پروژه</label>
+          <select id="techExportProject"></select>
+        </div>
+        <div class="fld">
+          <label>از تاریخ (شمسی)</label>
+          <input type="text" id="techExportFromJalali" class="inp" placeholder="1403/01/01">
+        </div>
+        <div class="fld">
+          <label>تا تاریخ (شمسی)</label>
+          <input type="text" id="techExportToJalali" class="inp" placeholder="1403/01/31">
+        </div>
+        <div class="fld">
+          <label>نوع خروجی</label>
+          <select id="techExportFormat">
+            <option value="pdf">📄 PDF هر گزارش (فایل زیپ)</option>
+            <option value="excel">📊 اکسل جامع (چند شیت، یک فایل)</option>
+          </select>
+        </div>
+        <button class="fbtn ghost" onclick="setExportRange(7,'tech')">۷ روز اخیر</button>
+        <button class="fbtn ghost" onclick="setExportRange(30,'tech')">۳۰ روز اخیر</button>
+        <button class="fbtn primary" onclick="runBulkExport('tech')">📥 دریافت و دانلود</button>
+      </div>
+      <div id="techExportStatus" style="background:white;border-radius:var(--radius);padding:16px 20px;box-shadow:var(--shadow);font-size:13px;color:var(--text-muted);">
+        بازهٔ تاریخ (شمسی) و نوع خروجی را انتخاب کنید و روی «دریافت و دانلود» کلیک کنید. برای بازه‌های بزرگ ممکن است دریافت چند دقیقه طول بکشد.
       </div>
     </div>
   </div>
@@ -1606,25 +1638,31 @@ function clearForm(){
 function initTechnical(){
   const sel=document.getElementById('techFilterProject');
   sel.innerHTML='<option value="">همه پروژه‌ها</option>';
+  const esel=document.getElementById('techExportProject');
+  esel.innerHTML='<option value="">همه پروژه‌ها</option>';
   Object.values(USERS).filter(u=>u.role==='reporter').forEach(u=>{
     const o=document.createElement('option');o.value=u.project;o.textContent=u.project;sel.appendChild(o);
+    const oe=document.createElement('option');oe.value=u.project;oe.textContent=u.project;esel.appendChild(oe);
   });
   document.getElementById('techFilterSearch').onkeydown=(e)=>{if(e.key==='Enter')applyTechFilters();};
   techState={page:1,pages:1,total:0,q:'',project:'',shift:'',from:'',to:''};
   _techNotesLoaded=false;
   switchTechTab('reports');
   loadTechnicalReports();
+  setExportRange(30,'tech');
 }
 
 function switchTechTab(tab){
-  const isR=tab==='reports';
-  document.getElementById('techReportsView').style.display=isR?'':'none';
-  document.getElementById('techNotesView').style.display=isR?'none':'';
-  document.getElementById('ttab-reports').classList.toggle('active',isR);
-  document.getElementById('ttab-reports').classList.toggle('tech-active',isR);
-  document.getElementById('ttab-notes').classList.toggle('active',!isR);
-  document.getElementById('ttab-notes').classList.toggle('tech-active',!isR);
-  if(!isR&&!_techNotesLoaded) loadTechNotes();
+  document.getElementById('techReportsView').style.display=tab==='reports'?'':'none';
+  document.getElementById('techNotesView').style.display=tab==='notes'?'':'none';
+  document.getElementById('techExportView').style.display=tab==='export'?'':'none';
+  document.getElementById('ttab-reports').classList.toggle('active',tab==='reports');
+  document.getElementById('ttab-reports').classList.toggle('tech-active',tab==='reports');
+  document.getElementById('ttab-notes').classList.toggle('active',tab==='notes');
+  document.getElementById('ttab-notes').classList.toggle('tech-active',tab==='notes');
+  document.getElementById('ttab-export').classList.toggle('active',tab==='export');
+  document.getElementById('ttab-export').classList.toggle('tech-active',tab==='export');
+  if(tab==='notes'&&!_techNotesLoaded) loadTechNotes();
 }
 
 function applyTechFilters(){
@@ -2727,16 +2765,19 @@ function buildExcelBlob(reports){
   const out=XLSX.write(wb,{type:'array',bookType:'xlsx'});
   return new Blob([out],{type:'application/octet-stream'});
 }
-function setExportRange(days){
+/** پیشوند شناسه‌های DOM بر اساس پنل: مدیر (پیش‌فرض) یا فنی. */
+function expEl(scope,suffix){ return document.getElementById((scope==='tech'?'techExport':'export')+suffix); }
+function setExportRange(days,scope){
   const now=new Date();
   const from=new Date(Date.now()-(days-1)*864e5);
   const[ty,tm,td]=toJalali(now.getFullYear(),now.getMonth()+1,now.getDate());
   const[fy,fm,fd]=toJalali(from.getFullYear(),from.getMonth()+1,from.getDate());
-  document.getElementById('exportToJalali').value=ty+'/'+pad(tm)+'/'+pad(td);
-  document.getElementById('exportFromJalali').value=fy+'/'+pad(fm)+'/'+pad(fd);
+  expEl(scope,'ToJalali').value=ty+'/'+pad(tm)+'/'+pad(td);
+  expEl(scope,'FromJalali').value=fy+'/'+pad(fm)+'/'+pad(fd);
 }
-function disableExportUI(disabled){
-  document.querySelectorAll('#mgrExportView button, #mgrExportView select, #mgrExportView input')
+function disableExportUI(disabled,scope){
+  const containerId=scope==='tech'?'techExportView':'mgrExportView';
+  document.querySelectorAll('#'+containerId+' button, #'+containerId+' select, #'+containerId+' input')
     .forEach(el=>{el.disabled=disabled;});
 }
 function parseJalaliInput(s,label){
@@ -2747,22 +2788,22 @@ function parseJalaliInput(s,label){
   return g;
 }
 function fail_(msg){ const e=new Error(msg); throw e; }
-async function runBulkExport(){
-  const statusEl=document.getElementById('exportStatus');
+async function runBulkExport(scope){
+  const statusEl=expEl(scope,'Status');
   let fromG,toG;
   try{
-    fromG=parseJalaliInput(document.getElementById('exportFromJalali').value,'تاریخ شروع');
-    toG=parseJalaliInput(document.getElementById('exportToJalali').value,'تاریخ پایان');
+    fromG=parseJalaliInput(expEl(scope,'FromJalali').value,'تاریخ شروع');
+    toG=parseJalaliInput(expEl(scope,'ToJalali').value,'تاریخ پایان');
   }catch(e){ toast(e.message,'error'); return; }
   const fromISO=fromG[0]+'-'+pad(fromG[1])+'-'+pad(fromG[2]);
   const toISO=toG[0]+'-'+pad(toG[1])+'-'+pad(toG[2]);
   if(fromISO>toISO){ toast('تاریخ شروع نمی‌تواند بعد از تاریخ پایان باشد','error'); return; }
-  const project=document.getElementById('exportProject').value;
-  const format=document.getElementById('exportFormat').value;
-  const fromLabel=document.getElementById('exportFromJalali').value.trim().replace(/\//g,'-');
-  const toLabel=document.getElementById('exportToJalali').value.trim().replace(/\//g,'-');
+  const project=expEl(scope,'Project').value;
+  const format=expEl(scope,'Format').value;
+  const fromLabel=expEl(scope,'FromJalali').value.trim().replace(/\//g,'-');
+  const toLabel=expEl(scope,'ToJalali').value.trim().replace(/\//g,'-');
 
-  disableExportUI(true);
+  disableExportUI(true,scope);
   statusEl.textContent='⏳ در حال دریافت فهرست گزارش‌های این بازه...';
   try{
     let page=1,pages=1;const summaries=[];
@@ -2775,10 +2816,10 @@ async function runBulkExport(){
 
     if(!summaries.length){
       statusEl.textContent='📭 هیچ گزارشی در این بازه یافت نشد.';
-      disableExportUI(false);return;
+      disableExportUI(false,scope);return;
     }
     if(summaries.length>200 && !confirm('تعداد گزارش‌های این بازه '+summaries.length+' مورد است و دریافت کامل آن ممکن است چند دقیقه طول بکشد. ادامه می‌دهید؟')){
-      statusEl.textContent='';disableExportUI(false);return;
+      statusEl.textContent='';disableExportUI(false,scope);return;
     }
 
     const full=[];
@@ -2790,7 +2831,7 @@ async function runBulkExport(){
       }
       await sleep(150);
     }
-    if(!full.length){ statusEl.textContent='⚠️ دریافت جزئیات گزارش‌ها ناموفق بود.'; disableExportUI(false); return; }
+    if(!full.length){ statusEl.textContent='⚠️ دریافت جزئیات گزارش‌ها ناموفق بود.'; disableExportUI(false,scope); return; }
 
     if(format==='excel'){
       statusEl.textContent='📊 در حال ساخت فایل اکسل...';
@@ -2819,7 +2860,7 @@ async function runBulkExport(){
     statusEl.textContent='⚠️ خطا: '+e.message;
     toast('خطا: '+e.message,'error');
   }
-  disableExportUI(false);
+  disableExportUI(false,scope);
 }
 
 function setLogos(){
