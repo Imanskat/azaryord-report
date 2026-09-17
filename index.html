@@ -2609,14 +2609,9 @@ async function buildPdfBlobFor(data){
   const pdf=await worker.toPdf().get('pdf');
   return pdf.output('blob');
 }
-function addExcelSheet(wb,name,rows){
-  const ws=rows.length?XLSX.utils.json_to_sheet(rows):XLSX.utils.aoa_to_sheet([['موردی برای این بازه ثبت نشده است']]);
-  ws['!cols']=Object.keys(rows[0]||{}).map(()=>({wch:18}));
-  XLSX.utils.book_append_sheet(wb,ws,name);
-}
 /** نام شیت اکسل حداکثر ۳۱ نویسه و بدون \/?*[] است؛ در صورت تکرار عدد اضافه می‌شود. */
 function safeSheetName(name,used){
-  const clean=String(name||'پروژه').replace(/[\\\/\?\*\[\]:]/g,' ').trim()||'پروژه';
+  const clean=String(name||'روز').replace(/[\\\/\?\*\[\]:]/g,'-').trim()||'روز';
   const base=clean.slice(0,28);
   let candidate=clean.slice(0,31);
   let i=2;
@@ -2627,48 +2622,108 @@ function safeSheetName(name,used){
   used.add(candidate);
   return candidate;
 }
+/**
+ * یک شیت پیوسته می‌سازد: بخش‌ها (کلید/مقدار یا جدول) پشت‌سرهم و به‌همان
+ * سبک رنگی/کادربندی دانلود اکسل تک‌گزارش، ولی همه در یک صفحه به‌جای چند شیت.
+ */
+function xlWriteContinuousSheet(wb,sheetName,blocks){
+  const XLSX=window.XLSX;
+  const aoa=[]; const styleAt={}; let maxCols=2; let r=0; const merges=[];
+  const setStyle=(row,col,style)=>{styleAt[row+','+col]=style;};
+
+  blocks.forEach(block=>{
+    if(block.type==='kv'){
+      const ncol=2; maxCols=Math.max(maxCols,ncol);
+      aoa[r]=[block.title,'']; merges.push({s:{r,c:0},e:{r,c:ncol-1}});
+      setStyle(r,0,xlTitleStyle());setStyle(r,1,xlTitleStyle()); r++;
+      aoa[r]=['عنوان','مقدار']; setStyle(r,0,xlHeaderStyle());setStyle(r,1,xlHeaderStyle()); r++;
+      const pairs=block.pairs.length?block.pairs:[['—','—']];
+      pairs.forEach((p,i)=>{ aoa[r]=[p[0],p[1]]; setStyle(r,0,xlLabelStyle()); setStyle(r,1,xlCellStyle(i%2===0)); r++; });
+    }else{
+      const ncol=block.headers.length; maxCols=Math.max(maxCols,ncol);
+      aoa[r]=[block.title].concat(new Array(ncol-1).fill(''));
+      merges.push({s:{r,c:0},e:{r,c:ncol-1}});
+      for(let c=0;c<ncol;c++) setStyle(r,c,xlTitleStyle());
+      r++;
+      aoa[r]=block.headers.slice();
+      for(let c=0;c<ncol;c++) setStyle(r,c,xlHeaderStyle());
+      r++;
+      const rows=block.rows.length?block.rows:[block.headers.map(()=>'—')];
+      rows.forEach((row,i)=>{ aoa[r]=row.slice(); for(let c=0;c<ncol;c++) setStyle(r,c,xlCellStyle(i%2===0)); r++; });
+    }
+    r++; /* ردیف خالی جداکننده بین بخش‌ها */
+  });
+
+  for(let i=0;i<aoa.length;i++){
+    if(!aoa[i]) aoa[i]=[];
+    while(aoa[i].length<maxCols) aoa[i].push('');
+  }
+  const ws=XLSX.utils.aoa_to_sheet(aoa);
+  ws['!merges']=merges;
+  ws['!cols']=new Array(maxCols).fill(0).map((_,c)=>({wch:c===0?24:26}));
+  Object.keys(styleAt).forEach(key=>{
+    const parts=key.split(','); const rr=Number(parts[0]),cc=Number(parts[1]);
+    const ref=XLSX.utils.encode_cell({r:rr,c:cc});
+    if(!ws[ref]) ws[ref]={t:'s',v:''};
+    ws[ref].s=styleAt[key];
+  });
+  XLSX.utils.book_append_sheet(wb,ws,sheetName);
+}
+/** بخش‌های یک روز/گزارش، دقیقاً هم‌ارز با ساختار downloadExcel تک‌گزارش. */
+function buildDayBlocks(data){
+  const S=v=>v==null?'':String(v);
+  const blocks=[];
+  blocks.push({type:'kv',title:'اطلاعات گزارش و پروژه',pairs:[
+    ['شماره گزارش',S(data.reportNumber)||'—'],
+    ['تاریخ',S(data.reportDate)||'—'],
+    ['ساعت',S(data.reportTime)||'—'],
+    ['نام پروژه',S(data.projectName)||'—'],
+    ['نام کارگاه',S(data.siteLocation)||'—'],
+    ['کارفرما',S(data.employer)||'—'],
+    ['سرپرست',S(data.supervisor)||'—'],
+    ['شیفت کاری',S(data.workShift)||'—'],
+    ['وضعیت آب‌وهوا',S(data.weatherCondition)||'—'],
+    ['دما (°C)',S(data.temperature)||'—'],
+  ]});
+  blocks.push({type:'table',title:'فعالیت‌های انجام شده',headers:['دسته','نوع فعالیت','شرح عملیات','وضعیت'],
+    rows:(data.activities||[]).map(a=>[S(a.category),S(a['activity-type']),S(a['activity-desc']),S(a['activity-status'])])});
+  const labor=[].concat(
+    (data.executiveLabor||[]).map(l=>['اجرایی',S(l['labor-fullname']),S(l['labor-position']),S(l['labor-hours']),S(l['labor-attendance']),S(l['labor-notes'])]),
+    (data.staffLabor||[]).map(l=>['ستادی',S(l['labor-fullname']),S(l['labor-position']),S(l['labor-hours']),S(l['labor-attendance']),S(l['labor-notes'])])
+  );
+  blocks.push({type:'table',title:'نیروی انسانی (اجرایی + ستادی)',headers:['نوع نیرو','نام و نام خانوادگی','سمت','ساعت','حضور','توضیحات'],rows:labor});
+  blocks.push({type:'table',title:'ماشین‌آلات',headers:['دستگاه','مدل','وضعیت','ساعت کارکرد','توضیحات'],
+    rows:(data.machinery||[]).map(m=>[S(m['machine-name']),S(m['machine-model']),S(m['machine-status']),S(m['machine-hours']),S(m['machine-notes'])])});
+  blocks.push({type:'table',title:'خودروهای شرکتی',headers:['خودرو','راننده','وضعیت','توضیحات'],
+    rows:(data.companyVehicles||[]).map(v=>[S(v['vehicle-name']),S(v['vehicle-driver']),S(v['vehicle-status']),S(v['vehicle-notes'])])});
+  blocks.push({type:'table',title:'مصالح مصرفی',headers:['نوع مصالح','مقدار','واحد','توضیحات'],
+    rows:(data.materials||[]).map(m=>[S(m['material-name']),S(m['material-amount']),S(m['material-unit']),S(m['material-notes'])])});
+  blocks.push({type:'table',title:'مصالح مورد نیاز (کسری و کمبود)',headers:['نوع مصالح','مقدار نیاز','واحد','موجودی','کسری','اولویت','توضیحات'],
+    rows:(data.neededMaterials||[]).map(n=>[S(n['needed-name']),S(n['needed-amount']),S(n['needed-unit']),S(n['needed-stock']),S(n['needed-shortage']),S(n['needed-priority']),S(n['needed-notes'])])});
+  blocks.push({type:'table',title:'سیستم‌های مورد نیاز',headers:['نوع سیستم','مشخصات','وضعیت تأمین','اولویت','توضیحات'],
+    rows:(data.requiredSystems||[]).map(s=>[S(s['system-type']),S(s['system-desc']),S(s['system-supply-status']),S(s['system-priority']),S(s['system-notes'])])});
+  blocks.push({type:'kv',title:'ایمنی (HSE) و توضیحات نهایی',pairs:[
+    ['وضعیت ایمنی',S(data.safetyStatus)||'—'],
+    ['حوادث',S(data.incidents)||'—'],
+    ['تجهیزات ایمنی',S(data.safetyEquipment)||'—'],
+    ['فعالیت‌های آتی',S(data.futureActivities)||'—'],
+    ['مشکلات و تأخیرات',S(data.problems)||'—'],
+    ['توضیحات نهایی',S(data.finalComments)||'—'],
+  ]});
+  return blocks;
+}
 function buildExcelBlob(reports){
   const wb=XLSX.utils.book_new();
   wb.Workbook={Views:[{RTL:true}]};
-
-  const byProject={};
-  reports.forEach(d=>{
-    const key=d.projectName||'نامشخص';
-    (byProject[key]=byProject[key]||[]).push(d);
-  });
-
   const usedNames=new Set();
-  Object.keys(byProject).sort().forEach(projectName=>{
-    const rows=byProject[projectName]
-      .slice()
-      .sort((a,b)=>String(a._created_at||'').localeCompare(String(b._created_at||'')))
-      .map(d=>({
-        'تاریخ (شمسی)':d.reportDate||'',
-        'شماره گزارش':d.reportNumber||'',
-        'شیفت':d.workShift||'',
-        'کارگاه':d.siteLocation||'',
-        'کارفرما':d.employer||'',
-        'سرپرست':d.supervisor||'',
-        'آب و هوا':d.weatherCondition||'',
-        'دما (°C)':d.temperature||'',
-        'نیروی اجرایی':(d.laborTotals&&d.laborTotals.executive)||0,
-        'نیروی ستادی':(d.laborTotals&&d.laborTotals.staff)||0,
-        'کل نیروی انسانی':(d.laborTotals&&d.laborTotals.total)||0,
-        'تعداد ماشین‌آلات':(d.machinery||[]).length,
-        'تعداد خودرو':(d.companyVehicles||[]).length,
-        'اقلام مصالح مصرفی':(d.materials||[]).length,
-        'اقلام مصالح کسری':(d.neededMaterials||[]).length,
-        'فعالیت‌های انجام‌شده':(d.activities||[]).map(a=>a['activity-desc']).filter(Boolean).join(' | '),
-        'وضعیت ایمنی':d.safetyStatus||'',
-        'حوادث':d.incidents||'',
-        'مشکلات و تأخیرات':d.problems||'',
-        'برنامه آتی':d.futureActivities||'',
-        'توضیحات نهایی':d.finalComments||'',
-        'ثبت در سیستم':d._created_at?new Date(d._created_at).toLocaleString('fa-IR'):''
-      }));
-    addExcelSheet(wb,safeSheetName(projectName,usedNames),rows);
-  });
-
+  reports
+    .slice()
+    .sort((a,b)=>String(a._created_at||'').localeCompare(String(b._created_at||'')))
+    .forEach(d=>{
+      const dateLabel=(d.reportDate||'').replace(/\//g,'-')||(d._created_at?new Date(d._created_at).toISOString().slice(0,10):'روز');
+      const projHint=d.projectName?' '+d.projectName.slice(0,10):'';
+      xlWriteContinuousSheet(wb,safeSheetName(dateLabel+projHint,usedNames),buildDayBlocks(d));
+    });
   const out=XLSX.write(wb,{type:'array',bookType:'xlsx'});
   return new Blob([out],{type:'application/octet-stream'});
 }
