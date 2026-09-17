@@ -885,6 +885,7 @@ tbody tr:nth-child(even) { background: #fafafa; }
     <div class="panel-tabs">
       <button class="panel-tab active" id="mtab-reports" onclick="switchMgrTab('reports')">📋 گزارش‌ها</button>
       <button class="panel-tab" id="mtab-notes" onclick="switchMgrTab('notes')">💬 پیام‌ها و نت‌ها</button>
+      <button class="panel-tab" id="mtab-export" onclick="switchMgrTab('export')">📦 خروجی بازه‌ای</button>
     </div>
 
     <div id="mgrReportsView">
@@ -973,6 +974,37 @@ tbody tr:nth-child(even) { background: #fafafa; }
       <div class="msg-count" id="mNoteCount"></div>
       <div id="mgrNoteList">
         <div class="msg-empty"><div class="icon">⏳</div><p>در حال بارگذاری...</p></div>
+      </div>
+    </div>
+
+    <!-- نمای خروجی بازه‌ای (زیپ گزارش‌ها) -->
+    <div id="mgrExportView" style="display:none;">
+      <div class="adv-filter" style="grid-template-columns:1.3fr 1fr 1fr 1.3fr auto auto auto;">
+        <div class="fld">
+          <label>پروژه</label>
+          <select id="exportProject"></select>
+        </div>
+        <div class="fld">
+          <label>از تاریخ (شمسی)</label>
+          <input type="text" id="exportFromJalali" class="inp" placeholder="1403/01/01">
+        </div>
+        <div class="fld">
+          <label>تا تاریخ (شمسی)</label>
+          <input type="text" id="exportToJalali" class="inp" placeholder="1403/01/31">
+        </div>
+        <div class="fld">
+          <label>نوع خروجی</label>
+          <select id="exportFormat">
+            <option value="pdf">📄 PDF هر گزارش (فایل زیپ)</option>
+            <option value="excel">📊 اکسل جامع (چند شیت، یک فایل)</option>
+          </select>
+        </div>
+        <button class="fbtn ghost" onclick="setExportRange(7)">۷ روز اخیر</button>
+        <button class="fbtn ghost" onclick="setExportRange(30)">۳۰ روز اخیر</button>
+        <button class="fbtn primary" onclick="runBulkExport()">📥 دریافت و دانلود</button>
+      </div>
+      <div id="exportStatus" style="background:white;border-radius:var(--radius);padding:16px 20px;box-shadow:var(--shadow);font-size:13px;color:var(--text-muted);">
+        بازهٔ تاریخ (شمسی) و نوع خروجی را انتخاب کنید و روی «دریافت و دانلود» کلیک کنید. برای بازه‌های بزرگ ممکن است دریافت چند دقیقه طول بکشد.
       </div>
     </div>
   </div>
@@ -1120,7 +1152,7 @@ let techState = { page: 1, pages: 1, total: 0, q: '', project: '', shift: '', fr
 let myrState = { page: 1, pages: 1, total: 0, q: '', shift: '', from: '', to: '' };
 
 /* ════════ API ════════ */
-function apiGet(params) {
+function apiGet(params, _isRetry) {
   return new Promise((resolve, reject) => {
     const cbName = 'cb_' + Date.now() + '_' + Math.floor(Math.random() * 1e6);
     const qs = Object.keys(params).map(k => encodeURIComponent(k)+'='+encodeURIComponent(params[k])).join('&');
@@ -1129,7 +1161,14 @@ function apiGet(params) {
     const cleanup = () => { delete window[cbName]; if (script.parentNode) script.parentNode.removeChild(script); };
     window[cbName] = (data) => { cleanup(); resolve(data); };
     script.onerror = () => { cleanup(); reject(new Error('خطا در اتصال به سرور')); };
-    setTimeout(() => { if (window[cbName]) { cleanup(); reject(new Error('timeout')); } }, 20000);
+    // اسکریپت گوگل گاهی بیش از ۲۰ ثانیه (به‌خصوص روی شیت‌های پرحجم) طول می‌کشد؛
+    // قبل از شکست قطعی یک بار دیگر (با مهلت طولانی‌تر) تلاش می‌کنیم.
+    setTimeout(() => {
+      if (!window[cbName]) return;
+      cleanup();
+      if (!_isRetry) apiGet(params, true).then(resolve, reject);
+      else reject(new Error('timeout'));
+    }, _isRetry ? 45000 : 30000);
     document.head.appendChild(script);
   });
 }
@@ -1238,12 +1277,13 @@ async function sendTechNote(){
 
 /* ════════ MANAGER TABS ════════ */
 function switchMgrTab(tab){
-  const isR=tab==='reports';
-  document.getElementById('mgrReportsView').style.display=isR?'':'none';
-  document.getElementById('mgrNotesView').style.display=isR?'none':'';
-  document.getElementById('mtab-reports').classList.toggle('active',isR);
-  document.getElementById('mtab-notes').classList.toggle('active',!isR);
-  if(!isR&&!_allNotesLoaded) loadAllNotes();
+  document.getElementById('mgrReportsView').style.display=tab==='reports'?'':'none';
+  document.getElementById('mgrNotesView').style.display=tab==='notes'?'':'none';
+  document.getElementById('mgrExportView').style.display=tab==='export'?'':'none';
+  document.getElementById('mtab-reports').classList.toggle('active',tab==='reports');
+  document.getElementById('mtab-notes').classList.toggle('active',tab==='notes');
+  document.getElementById('mtab-export').classList.toggle('active',tab==='export');
+  if(tab==='notes'&&!_allNotesLoaded) loadAllNotes();
 }
 
 let _allNotes=[]; let _allNotesLoaded=false;
@@ -1722,12 +1762,16 @@ function applyTechNoteFilters(){
 async function initManager(){
   const sel=document.getElementById('filterProject');
   sel.innerHTML='<option value="">همه پروژه‌ها</option>';
+  const esel=document.getElementById('exportProject');
+  esel.innerHTML='<option value="">همه پروژه‌ها</option>';
   Object.values(USERS).filter(u=>u.role==='reporter').forEach(u=>{
     const o=document.createElement('option');o.value=u.project;o.textContent=u.project;sel.appendChild(o);
+    const oe=document.createElement('option');oe.value=u.project;oe.textContent=u.project;esel.appendChild(oe);
   });
   document.getElementById('filterSearch').onkeydown=(e)=>{if(e.key==='Enter')applyFilters();};
   mgrState={page:1,pages:1,total:0,q:'',project:'',shift:'',from:'',to:''};
   _allNotesLoaded=false; switchMgrTab('reports'); await loadManagerReports();
+  setExportRange(30);
 }
 function applyFilters(){
   mgrState.project=document.getElementById('filterProject').value;
@@ -2280,7 +2324,13 @@ async function downloadPdfFile(){
   showLoading(false);
 }
 function buildPDF(data){
-  if(!data)return;_pdfData=data;
+  if(!data)return;
+  renderPdfHtml(data);
+  document.getElementById('pdfView').style.display='block';
+  window.scrollTo(0,0);
+}
+function renderPdfHtml(data){
+  _pdfData=data;
   const tbl=(rows,cols,hdrs)=>rows.length?`<table class="pdf-table"><thead><tr>${hdrs.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${cols.map(c=>`<td>${esc(r[c]||'')}</td>`).join('')}</tr>`).join('')}</tbody></table>`:'';
   const _isMechC=c=>String(c).indexOf('مکانیک')!==-1;
   const _isElecC=c=>{c=String(c);return c.indexOf('برق')!==-1||c.indexOf('الکتر')!==-1;};
@@ -2349,8 +2399,6 @@ function buildPDF(data){
         این گزارش توسط سیستم گزارش‌دهی شرکت آذریورد تبریز تولید شده است
       </div>
     </div>`;
-  document.getElementById('pdfView').style.display='block';
-  window.scrollTo(0,0);
 }
 function closePdfView(){document.getElementById('pdfView').style.display='none';}
 
@@ -2508,12 +2556,216 @@ function toJalali(gy,gm,gd){
   const jd=1+((days<186)?(days%31):((days-186)%30));
   return[jy,jm,jd];
 }
+/**
+ * برعکسِ toJalali، با جست‌وجوی خطی روی همان تابع (نه فرمول جدا) تا با آن
+ * صد‌درصد سازگار بماند و در مرز سال‌ها/کبیسه‌ها اختلاف نیفتد.
+ */
+function toGregorian(jy,jm,jd){
+  const approxGy=jy+621;
+  const d=new Date(Date.UTC(approxGy-1,10,1));
+  const guard=new Date(Date.UTC(approxGy+1,3,10));
+  while(d<=guard){
+    const[cy,cm,cd]=toJalali(d.getUTCFullYear(),d.getUTCMonth()+1,d.getUTCDate());
+    if(cy===jy&&cm===jm&&cd===jd) return[d.getUTCFullYear(),d.getUTCMonth()+1,d.getUTCDate()];
+    d.setUTCDate(d.getUTCDate()+1);
+  }
+  return null;
+}
 
 /* ════════ UTILS ════════ */
 function pad(n){return String(n).padStart(2,'0');}
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function showLoading(show,text){document.getElementById('loadingOverlay').classList.toggle('show',show);if(text)document.getElementById('loadingText').textContent=text;}
 function toast(msg,type){const t=document.getElementById('toast');t.textContent=msg;t.className=type?'show '+type:'show';setTimeout(()=>{t.className='';},3500);}
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+function downloadBlob(blob,filename){
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download=filename;
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),4000);
+}
+
+/* ════════ خروجی بازه‌ای (زیپ گزارش‌ها برای مدیر) ════════ */
+function ensureJSZip(){
+  return new Promise((resolve,reject)=>{
+    if(window.JSZip){resolve();return;}
+    const s=document.createElement('script');
+    s.src='https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js';
+    s.onload=()=>resolve();s.onerror=()=>reject(new Error('کتابخانهٔ فشرده‌سازی بارگذاری نشد'));
+    document.head.appendChild(s);
+  });
+}
+/** مثل downloadPdfFile ولی به‌جای دانلود مستقیم، Blob برمی‌گرداند و pdfView را نشان نمی‌دهد. */
+async function buildPdfBlobFor(data){
+  renderPdfHtml(data);
+  await ensureHtml2pdf();
+  const el=document.getElementById('pdfContainer');
+  const worker=html2pdf().set({margin:[8,8,10,8],image:{type:'jpeg',quality:0.92},
+    html2canvas:{scale:2,useCORS:true,allowTaint:true,scrollY:0},
+    jsPDF:{unit:'mm',format:'a4',orientation:'portrait'},
+    pagebreak:{mode:['css','legacy'],avoid:['.pdf-section','tr','.pdf-signature-box']}
+  }).from(el);
+  const pdf=await worker.toPdf().get('pdf');
+  return pdf.output('blob');
+}
+function addExcelSheet(wb,name,rows){
+  const ws=rows.length?XLSX.utils.json_to_sheet(rows):XLSX.utils.aoa_to_sheet([['موردی برای این بازه ثبت نشده است']]);
+  ws['!cols']=Object.keys(rows[0]||{}).map(()=>({wch:18}));
+  XLSX.utils.book_append_sheet(wb,ws,name);
+}
+/** نام شیت اکسل حداکثر ۳۱ نویسه و بدون \/?*[] است؛ در صورت تکرار عدد اضافه می‌شود. */
+function safeSheetName(name,used){
+  const clean=String(name||'پروژه').replace(/[\\\/\?\*\[\]:]/g,' ').trim()||'پروژه';
+  const base=clean.slice(0,28);
+  let candidate=clean.slice(0,31);
+  let i=2;
+  while(used.has(candidate)){
+    candidate=(base.slice(0,25)+' '+i).slice(0,31);
+    i++;
+  }
+  used.add(candidate);
+  return candidate;
+}
+function buildExcelBlob(reports){
+  const wb=XLSX.utils.book_new();
+  wb.Workbook={Views:[{RTL:true}]};
+
+  const byProject={};
+  reports.forEach(d=>{
+    const key=d.projectName||'نامشخص';
+    (byProject[key]=byProject[key]||[]).push(d);
+  });
+
+  const usedNames=new Set();
+  Object.keys(byProject).sort().forEach(projectName=>{
+    const rows=byProject[projectName]
+      .slice()
+      .sort((a,b)=>String(a._created_at||'').localeCompare(String(b._created_at||'')))
+      .map(d=>({
+        'تاریخ (شمسی)':d.reportDate||'',
+        'شماره گزارش':d.reportNumber||'',
+        'شیفت':d.workShift||'',
+        'کارگاه':d.siteLocation||'',
+        'کارفرما':d.employer||'',
+        'سرپرست':d.supervisor||'',
+        'آب و هوا':d.weatherCondition||'',
+        'دما (°C)':d.temperature||'',
+        'نیروی اجرایی':(d.laborTotals&&d.laborTotals.executive)||0,
+        'نیروی ستادی':(d.laborTotals&&d.laborTotals.staff)||0,
+        'کل نیروی انسانی':(d.laborTotals&&d.laborTotals.total)||0,
+        'تعداد ماشین‌آلات':(d.machinery||[]).length,
+        'تعداد خودرو':(d.companyVehicles||[]).length,
+        'اقلام مصالح مصرفی':(d.materials||[]).length,
+        'اقلام مصالح کسری':(d.neededMaterials||[]).length,
+        'فعالیت‌های انجام‌شده':(d.activities||[]).map(a=>a['activity-desc']).filter(Boolean).join(' | '),
+        'وضعیت ایمنی':d.safetyStatus||'',
+        'حوادث':d.incidents||'',
+        'مشکلات و تأخیرات':d.problems||'',
+        'برنامه آتی':d.futureActivities||'',
+        'توضیحات نهایی':d.finalComments||'',
+        'ثبت در سیستم':d._created_at?new Date(d._created_at).toLocaleString('fa-IR'):''
+      }));
+    addExcelSheet(wb,safeSheetName(projectName,usedNames),rows);
+  });
+
+  const out=XLSX.write(wb,{type:'array',bookType:'xlsx'});
+  return new Blob([out],{type:'application/octet-stream'});
+}
+function setExportRange(days){
+  const now=new Date();
+  const from=new Date(Date.now()-(days-1)*864e5);
+  const[ty,tm,td]=toJalali(now.getFullYear(),now.getMonth()+1,now.getDate());
+  const[fy,fm,fd]=toJalali(from.getFullYear(),from.getMonth()+1,from.getDate());
+  document.getElementById('exportToJalali').value=ty+'/'+pad(tm)+'/'+pad(td);
+  document.getElementById('exportFromJalali').value=fy+'/'+pad(fm)+'/'+pad(fd);
+}
+function disableExportUI(disabled){
+  document.querySelectorAll('#mgrExportView button, #mgrExportView select, #mgrExportView input')
+    .forEach(el=>{el.disabled=disabled;});
+}
+function parseJalaliInput(s,label){
+  const m=String(s||'').trim().match(/^(\d{3,4})\/(\d{1,2})\/(\d{1,2})$/);
+  if(!m) fail_(label+' باید به شکل 1403/01/01 باشد');
+  const g=toGregorian(Number(m[1]),Number(m[2]),Number(m[3]));
+  if(!g) fail_(label+' نامعتبر است');
+  return g;
+}
+function fail_(msg){ const e=new Error(msg); throw e; }
+async function runBulkExport(){
+  const statusEl=document.getElementById('exportStatus');
+  let fromG,toG;
+  try{
+    fromG=parseJalaliInput(document.getElementById('exportFromJalali').value,'تاریخ شروع');
+    toG=parseJalaliInput(document.getElementById('exportToJalali').value,'تاریخ پایان');
+  }catch(e){ toast(e.message,'error'); return; }
+  const fromISO=fromG[0]+'-'+pad(fromG[1])+'-'+pad(fromG[2]);
+  const toISO=toG[0]+'-'+pad(toG[1])+'-'+pad(toG[2]);
+  if(fromISO>toISO){ toast('تاریخ شروع نمی‌تواند بعد از تاریخ پایان باشد','error'); return; }
+  const project=document.getElementById('exportProject').value;
+  const format=document.getElementById('exportFormat').value;
+  const fromLabel=document.getElementById('exportFromJalali').value.trim().replace(/\//g,'-');
+  const toLabel=document.getElementById('exportToJalali').value.trim().replace(/\//g,'-');
+
+  disableExportUI(true);
+  statusEl.textContent='⏳ در حال دریافت فهرست گزارش‌های این بازه...';
+  try{
+    let page=1,pages=1;const summaries=[];
+    do{
+      const res=await apiGet({action:'list',page,project,q:'',shift:'',from:fromISO,to:toISO});
+      if(!res||!res.success) throw new Error((res&&res.error)||'خطا در دریافت فهرست گزارش‌ها');
+      (res.data||[]).forEach(r=>summaries.push(r));
+      pages=res.pages||1;page++;
+    }while(page<=pages);
+
+    if(!summaries.length){
+      statusEl.textContent='📭 هیچ گزارشی در این بازه یافت نشد.';
+      disableExportUI(false);return;
+    }
+    if(summaries.length>200 && !confirm('تعداد گزارش‌های این بازه '+summaries.length+' مورد است و دریافت کامل آن ممکن است چند دقیقه طول بکشد. ادامه می‌دهید؟')){
+      statusEl.textContent='';disableExportUI(false);return;
+    }
+
+    const full=[];
+    for(let i=0;i<summaries.length;i++){
+      statusEl.textContent='⏳ در حال دریافت جزئیات گزارش‌ها... ('+(i+1)+' از '+summaries.length+')';
+      const res=await apiGet({action:'get',id:summaries[i].id});
+      if(res&&res.success&&res.report){
+        full.push(Object.assign({},res.report.report_data,{_created_at:summaries[i].created_at}));
+      }
+      await sleep(150);
+    }
+    if(!full.length){ statusEl.textContent='⚠️ دریافت جزئیات گزارش‌ها ناموفق بود.'; disableExportUI(false); return; }
+
+    if(format==='excel'){
+      statusEl.textContent='📊 در حال ساخت فایل اکسل...';
+      await ensureXLSX();
+      const blob=buildExcelBlob(full);
+      downloadBlob(blob,'گزارش‌ها-'+fromLabel+'_تا_'+toLabel+'.xlsx');
+    }else{
+      statusEl.textContent='📦 در حال ساخت فایل‌های PDF... (0 از '+full.length+')';
+      await ensureJSZip();await ensureHtml2pdf();
+      const zip=new JSZip();
+      for(let i=0;i<full.length;i++){
+        statusEl.textContent='📦 در حال ساخت فایل‌های PDF... ('+(i+1)+' از '+full.length+')';
+        const blob=await buildPdfBlobFor(full[i]);
+        const num=full[i].reportNumber||('گزارش-'+(i+1));
+        const date=String(full[i].reportDate||'').replace(/\//g,'-');
+        zip.file('گزارش-'+num+(date?'-'+date:'')+'.pdf',blob);
+      }
+      document.getElementById('pdfView').style.display='none';
+      statusEl.textContent='🗜️ در حال فشرده‌سازی فایل‌ها...';
+      const zipBlob=await zip.generateAsync({type:'blob'});
+      downloadBlob(zipBlob,'گزارش‌ها-'+fromLabel+'_تا_'+toLabel+'.zip');
+    }
+    statusEl.textContent='✅ '+full.length+' گزارش با موفقیت دانلود شد.';
+    toast('دانلود بستهٔ گزارش‌ها با موفقیت انجام شد ✅','success');
+  }catch(e){
+    statusEl.textContent='⚠️ خطا: '+e.message;
+    toast('خطا: '+e.message,'error');
+  }
+  disableExportUI(false);
+}
 
 function setLogos(){
   if(!HAS_LOGO){document.querySelectorAll('img.brand-logo').forEach(function(img){img.style.display='none';});return;}
