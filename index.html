@@ -1120,7 +1120,6 @@ tbody tr:nth-child(even) { background: #fafafa; }
 <!-- ═══════════════════════ JAVASCRIPT ═══════════════════════ -->
 <script>
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbworCNEktLW9jmHHtqN9pAiF6bDCJb2F3CIwfr29deGSuAz1bM3NzXLWPz_ccszaycE0g/exec';
-const GAS_GET_URL = GAS_URL + '?';
 
 const LOGO_SRC = 'data:image/png;base64,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';
 const HAS_LOGO = LOGO_SRC.indexOf('data:image') === 0;
@@ -1184,22 +1183,52 @@ let techState = { page: 1, pages: 1, total: 0, q: '', project: '', shift: '', fr
 let myrState = { page: 1, pages: 1, total: 0, q: '', shift: '', from: '', to: '' };
 
 /* ════════ API ════════ */
-function apiGet(params, _isRetry) {
+async function apiGet(params, _isRetry) {
+  const qs = Object.keys(params).map(k => encodeURIComponent(k)+'='+encodeURIComponent(params[k])).join('&');
+  const url = GAS_URL + '?' + qs;
+
+  // روش ۱: fetch مستقیم با حذف کوکی‌های گوگل (جلوگیری از خطای تداخل چند اکانت و خطاهای مرورگر)
+  try {
+    const controller = new AbortController();
+    const timeoutMs = _isRetry ? 45000 : 30000;
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+    const res = await fetch(url, {
+      method: 'GET',
+      mode: 'cors',
+      credentials: 'omit',
+      redirect: 'follow',
+      signal: controller.signal
+    });
+    clearTimeout(timeoutId);
+    if (res.ok) {
+      const data = await res.json();
+      return data;
+    }
+  } catch (fetchErr) {
+    console.warn('Fetch request failed or blocked, falling back to JSONP:', fetchErr);
+  }
+
+  // روش ۲: پشتیبان با JSONP (در صورت مسدود بودن fetch در مرورگرهای قدیمی)
   return new Promise((resolve, reject) => {
     const cbName = 'cb_' + Date.now() + '_' + Math.floor(Math.random() * 1e6);
-    const qs = Object.keys(params).map(k => encodeURIComponent(k)+'='+encodeURIComponent(params[k])).join('&');
     const script = document.createElement('script');
-    script.src = GAS_GET_URL + '&' + qs + '&callback=' + cbName;
+    script.crossOrigin = 'anonymous';
+    script.src = url + '&callback=' + cbName;
     const cleanup = () => { delete window[cbName]; if (script.parentNode) script.parentNode.removeChild(script); };
     window[cbName] = (data) => { cleanup(); resolve(data); };
-    script.onerror = () => { cleanup(); reject(new Error('خطا در اتصال به سرور')); };
-    // اسکریپت گوگل گاهی بیش از ۲۰ ثانیه (به‌خصوص روی شیت‌های پرحجم) طول می‌کشد؛
-    // قبل از شکست قطعی یک بار دیگر (با مهلت طولانی‌تر) تلاش می‌کنیم.
+    script.onerror = () => {
+      cleanup();
+      if (!_isRetry) {
+        apiGet(params, true).then(resolve, reject);
+      } else {
+        reject(new Error('خطا در اتصال به سرور (لطفاً اتصال اینترنت/فیلترشکن یا افزونه‌های مسدودکننده مرورگر را بررسی کنید)'));
+      }
+    };
     setTimeout(() => {
       if (!window[cbName]) return;
       cleanup();
       if (!_isRetry) apiGet(params, true).then(resolve, reject);
-      else reject(new Error('timeout'));
+      else reject(new Error('پاسخ سرور زمان‌بر شد (timeout). مجدداً تلاش کنید.'));
     }, _isRetry ? 45000 : 30000);
     document.head.appendChild(script);
   });
@@ -1255,6 +1284,18 @@ function highlight(text, q){
 }
 function isoDay(iso){ return new Date(iso).toISOString().slice(0,10); }
 function toFa(n){ return String(n).replace(/[0-9]/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d]); }
+function formatReportDate(val){
+  if(!val) return '—';
+  val = String(val).trim();
+  if(val.includes('T')) val = val.split('T')[0];
+  return val.replace(/-/g, '/');
+}
+function formatReportNumber(val){
+  if(!val) return '—';
+  val = String(val).trim();
+  if(val.includes('T') && val.includes('-')) return val.split('T')[0].replace(/-/g, '/');
+  return val;
+}
 
 /* ════════ MANAGER NOTES ════════ */
 let _noteTarget='all';
@@ -1508,9 +1549,9 @@ function renderMyReports(reports){
     card.className='report-card';
     card.innerHTML=`
       <div class="report-card-info">
-        <div class="report-card-title">گزارش شماره ${esc(r.reportNumber||'—')}</div>
+        <div class="report-card-title">گزارش شماره ${esc(formatReportNumber(r.reportNumber))}</div>
         <div class="report-card-meta">
-          <span>📅 ${esc(r.reportDate||'—')}</span>
+          <span>📅 ${esc(formatReportDate(r.reportDate))}</span>
           <span>⏰ ${esc(r.workShift||'—')}</span>
           <span>👷 ${r.laborTotal||0} نفر</span>
           <span>🕐 ${createdAt}</span>
@@ -1718,9 +1759,9 @@ function renderTechReports(reports){
     card.style.borderRightColor='#0e7490';
     card.innerHTML=`
       <div class="report-card-info">
-        <div class="report-card-title">${esc(r.projectName||'—')} — گزارش شماره ${esc(r.reportNumber||'—')}</div>
+        <div class="report-card-title">${esc(r.projectName||'—')} — گزارش شماره ${esc(formatReportNumber(r.reportNumber))}</div>
         <div class="report-card-meta">
-          <span>📅 ${esc(r.reportDate||'—')}</span>
+          <span>📅 ${esc(formatReportDate(r.reportDate))}</span>
           <span>⏰ ${esc(r.workShift||'—')}</span>
           <span>👷 ${r.laborTotal||0} نفر</span>
           <span>🕐 ${createdAt}</span>
@@ -1876,9 +1917,9 @@ function renderReports(){
     card.className='report-card';
     card.innerHTML=`
       <div class="report-card-info">
-        <div class="report-card-title">${esc(r.projectName||'—')} — گزارش شماره ${esc(r.reportNumber||'—')}${techBadge}</div>
+        <div class="report-card-title">${esc(r.projectName||'—')} — گزارش شماره ${esc(formatReportNumber(r.reportNumber))}${techBadge}</div>
         <div class="report-card-meta">
-          <span>📅 ${esc(r.reportDate||'—')}</span>
+          <span>📅 ${esc(formatReportDate(r.reportDate))}</span>
           <span>⏰ ${esc(r.workShift||'—')}</span>
           <span>👷 ${r.laborTotal||0} نفر</span>
           <span>🕐 ${createdAt}</span>
@@ -1920,11 +1961,11 @@ async function openReportModal(id, isTechView){
   // دکمهٔ PDF برای مدیر و بخش فنی (هر دو می‌توانند PDF بگیرند)
   const pdfBtn=document.getElementById('modalPdfBtn');
   if(pdfBtn) pdfBtn.style.display='';
-  document.getElementById('modalTitle').textContent=`گزارش ${d.reportNumber||''} — ${d.projectName||''}`;
+  document.getElementById('modalTitle').textContent=`گزارش ${formatReportNumber(d.reportNumber)} — ${d.projectName||''}`;
   let html=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;font-size:13px;">
     <div><b>پروژه:</b> ${esc(d.projectName||'—')}</div>
     <div><b>کارگاه:</b> ${esc(d.siteLocation||'—')}</div>
-    <div><b>تاریخ:</b> ${esc(d.reportDate||'—')}</div>
+    <div><b>تاریخ:</b> ${esc(formatReportDate(d.reportDate))}</div>
     <div><b>شیفت:</b> ${esc(d.workShift||'—')}</div>
     <div><b>آب‌وهوا:</b> ${esc(d.weatherCondition||'—')} / ${esc(d.temperature||'—')}°C</div>
     <div><b>ایمنی:</b> ${esc(d.safetyStatus||'—')}</div>
@@ -2391,7 +2432,7 @@ function renderPdfHtml(data){
     <div class="pdf-header">
       <div class="pdf-logo">${logoHTML}</div>
       <div class="pdf-company-info"><div class="pdf-company-name">شرکت آذریورد تبریز</div><div class="pdf-report-title">گزارش روزانه پروژه عمرانی</div></div>
-      <div class="pdf-meta"><div>گزارش شماره: <strong>${esc(data.reportNumber||'—')}</strong></div><div>تاریخ: <strong>${esc(data.reportDate||'—')}</strong></div><div>ساعت: <strong>${esc(data.reportTime||'—')}</strong></div></div>
+      <div class="pdf-meta"><div>گزارش شماره: <strong>${esc(formatReportNumber(data.reportNumber))}</strong></div><div>تاریخ: <strong>${esc(formatReportDate(data.reportDate))}</strong></div><div>ساعت: <strong>${esc(data.reportTime||'—')}</strong></div></div>
     </div>
     <div class="pdf-section"><div class="pdf-section-title">اطلاعات پروژه</div>
       <div class="pdf-info-grid">
