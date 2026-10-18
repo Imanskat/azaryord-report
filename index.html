@@ -547,8 +547,8 @@ tbody tr:nth-child(even) { background: #fafafa; }
       <p class="field-hint" style="margin:-4px 0 14px;">فعالیت‌ها بر اساس رشته تفکیک شده‌اند؛ نوع فعالیت را از فهرست همان بخش انتخاب کنید.</p>
 
       <div class="act-group ab">
-        <div class="act-group-head"><span class="act-group-title">🏗️ ابنیه</span>
-          <button class="btn-add" onclick="addAbnieh()">+ افزودن فعالیت ابنیه</button></div>
+        <div class="act-group-head"><span class="act-group-title">🏗️ ابنیه و کناف</span>
+          <button class="btn-add" onclick="addAbnieh()">+ افزودن فعالیت ابنیه و کناف</button></div>
         <div class="table-wrap">
           <table><thead><tr><th style="width:28%">نوع فعالیت</th><th style="width:44%">شرح عملیات</th><th style="width:16%">وضعیت</th><th style="width:12%">حذف</th></tr></thead>
           <tbody id="activitiesAbniehTable"></tbody></table>
@@ -1161,7 +1161,7 @@ const EXECUTIVE_POSITIONS = [
   'بنا','استادکار','کارگر ساده','آرماتوربند','قالب‌بند','بتن‌ریز','اپراتور پمپ بتن',
   'نماکار','داربست‌بند','سنگ‌کار','سفتکار','نازک‌کار','کف‌کار / موزاییک‌کار','سیمان‌کار',
   'عایق‌کار (ایزوگام / قیرگونی)','آسفالت‌کار','اسکلت‌بند فلزی / مونتاژکار','جوشکار',
-  'برق‌کار','لوله‌کش','تأسیسات‌کار مکانیکی','کانال‌کش','گچ‌کار','کناف‌کار','کاشی‌کار',
+  'برق‌کار','لوله‌کش','تأسیسات‌کار مکانیکی','کانال‌کش','گچ‌کار','کناف‌کار','رابیتس‌کار','کاشی‌کار',
   'نقاش','شیشه‌کار','آلومینیوم‌کار / درب و پنجره','محوطه‌کار / فضای سبز','چاه‌کن / حفار',
   'راننده','اپراتور ماشین‌آلات','نگهبان کارگاه','سایر'
 ];
@@ -2105,7 +2105,7 @@ function v(id){return (document.getElementById(id)||{}).value||'';}
 
 /* ════════ TABLE FUNCTIONS ════════ */
 const ACTIVITY_TYPES = {
-  abnieh: ['خاکبرداری','خاکریزی','حفاری','تسطیح و رگلاژ','بتن مگر','آرماتوربندی','قالب‌بندی','بتن‌ریزی','اسکلت فلزی','جوشکاری سازه','بنایی و دیوارچینی','گچ و خاک','سیمان‌کاری','نماکاری','کاشی و سرامیک','سنگ و کف‌سازی','عایق‌کاری','نقاشی','درب و پنجره','آسفالت و محوطه','سایر ابنیه'],
+  abnieh: ['اجرای کناف','اجرای زیرسازی کناف','اجرای رابیتس','تولید','تمیزکاری','حمل مصالح','رفع نواقص','خاکبرداری','خاکریزی','حفاری','تسطیح و رگلاژ','بتن مگر','آرماتوربندی','قالب‌بندی','بتن‌ریزی','اسکلت فلزی','جوشکاری سازه','بنایی و دیوارچینی','گچ و خاک','سیمان‌کاری','نماکاری','کاشی و سرامیک','سنگ و کف‌سازی','عایق‌کاری','نقاشی','درب و پنجره','آسفالت و محوطه','سایر ابنیه'],
   mechanical: ['لوله‌کشی آب','لوله‌کشی فاضلاب','لوله‌کشی گاز','تأسیسات گرمایشی','تأسیسات سرمایشی','کانال‌کشی هوا (داکت)','نصب رادیاتور و فن‌کویل','نصب پمپ','نصب چیلر','نصب دیگ / بویلر','نصب هواساز','سیستم اطفاء حریق','عایق لوله و کانال','تست و راه‌اندازی','سایر مکانیکی'],
   electrical: ['لوله و داکت برق','سینی و نردبان کابل','کابل‌کشی فشار ضعیف','کابل‌کشی فشار متوسط','سیم‌کشی روشنایی','سیم‌کشی پریز','نصب تابلو برق','نصب روشنایی','سیستم ارتینگ','نصب ترانس / ژنراتور','جریان ضعیف','شبکه و دیتا','دوربین مداربسته (CCTV)','سیستم اعلام حریق','کنترل و اتوماسیون (BMS)','تست و راه‌اندازی برقی','سایر برقی']
 };
@@ -2201,7 +2201,7 @@ function addMaterial(){
   const r=document.getElementById('materialsTable').insertRow();
   r.innerHTML=`<td><input type="text" class="inp-sm material-name" placeholder="نوع مصالح"></td>
   <td><input type="number" class="inp-sm material-amount" placeholder="مقدار" style="width:80px;"></td>
-  <td><select class="inp-sm material-unit"><option>کیلوگرم</option><option>تن</option><option>متر مکعب</option><option>متر</option><option>عدد</option><option>لیتر</option></select></td>
+  <td><select class="inp-sm material-unit"><option>متر مربع</option><option>شاخه</option><option>عدد</option><option>بست</option><option>پاکت</option><option>کیلوگرم</option><option>تن</option><option>متر مکعب</option><option>متر</option><option>لیتر</option></select></td>
   <td><input type="text" class="inp-sm material-notes" placeholder="توضیحات"></td>
   <td><button class="btn-danger-sm" onclick="deleteRow(this)">حذف</button></td>`;
 }
