@@ -550,7 +550,7 @@ tbody tr:nth-child(even) { background: #fafafa; }
         <div class="act-group-head"><span class="act-group-title">🏗️ ابنیه و کناف</span>
           <button class="btn-add" onclick="addAbnieh()">+ افزودن فعالیت ابنیه و کناف</button></div>
         <div class="table-wrap">
-          <table><thead><tr><th style="width:28%">نوع فعالیت</th><th style="width:44%">شرح عملیات</th><th style="width:16%">وضعیت</th><th style="width:12%">حذف</th></tr></thead>
+          <table><thead><tr><th style="width:22%">نوع فعالیت</th><th style="width:18%">محل اجرا (طبقه/فضا)</th><th style="width:28%">شرح عملیات</th><th style="width:14%">متراژ / مقدار</th><th style="width:11%">وضعیت</th><th style="width:7%">حذف</th></tr></thead>
           <tbody id="activitiesAbniehTable"></tbody></table>
         </div>
       </div>
@@ -559,7 +559,7 @@ tbody tr:nth-child(even) { background: #fafafa; }
         <div class="act-group-head"><span class="act-group-title">🔧 مکانیکی</span>
           <button class="btn-add" onclick="addMechanical()">+ افزودن فعالیت مکانیکی</button></div>
         <div class="table-wrap">
-          <table><thead><tr><th style="width:28%">نوع فعالیت</th><th style="width:44%">شرح عملیات</th><th style="width:16%">وضعیت</th><th style="width:12%">حذف</th></tr></thead>
+          <table><thead><tr><th style="width:22%">نوع فعالیت</th><th style="width:18%">محل اجرا (طبقه/فضا)</th><th style="width:28%">شرح عملیات</th><th style="width:14%">متراژ / مقدار</th><th style="width:11%">وضعیت</th><th style="width:7%">حذف</th></tr></thead>
           <tbody id="activitiesMechanicalTable"></tbody></table>
         </div>
       </div>
@@ -568,7 +568,7 @@ tbody tr:nth-child(even) { background: #fafafa; }
         <div class="act-group-head"><span class="act-group-title">⚡ الکتریکی / الکترونیکی</span>
           <button class="btn-add" onclick="addElectrical()">+ افزودن فعالیت برقی</button></div>
         <div class="table-wrap">
-          <table><thead><tr><th style="width:28%">نوع فعالیت</th><th style="width:44%">شرح عملیات</th><th style="width:16%">وضعیت</th><th style="width:12%">حذف</th></tr></thead>
+          <table><thead><tr><th style="width:22%">نوع فعالیت</th><th style="width:18%">محل اجرا (طبقه/فضا)</th><th style="width:28%">شرح عملیات</th><th style="width:14%">متراژ / مقدار</th><th style="width:11%">وضعیت</th><th style="width:7%">حذف</th></tr></thead>
           <tbody id="activitiesElectricalTable"></tbody></table>
         </div>
       </div>
@@ -1972,8 +1972,8 @@ async function openReportModal(id, isTechView){
   </div>`;
   if(d.activities&&d.activities.length){
     html+=`<b>فعالیت‌ها:</b><table style="width:100%;border-collapse:collapse;font-size:12px;margin:8px 0;">
-      <tr style="background:#f1f5f9;"><th style="padding:6px;border:1px solid #e2e8f0;">رشته</th><th style="padding:6px;border:1px solid #e2e8f0;">نوع</th><th style="padding:6px;border:1px solid #e2e8f0;">شرح</th><th style="padding:6px;border:1px solid #e2e8f0;">وضعیت</th></tr>
-      ${d.activities.map(a=>`<tr><td style="padding:6px;border:1px solid #e2e8f0;">${esc(a.category||'—')}</td><td style="padding:6px;border:1px solid #e2e8f0;">${esc(a['activity-type']||'')}</td><td style="padding:6px;border:1px solid #e2e8f0;">${esc(a['activity-desc']||'')}</td><td style="padding:6px;border:1px solid #e2e8f0;">${esc(a['activity-status']||'')}</td></tr>`).join('')}
+      <tr style="background:#f1f5f9;"><th style="padding:6px;border:1px solid #e2e8f0;">رشته</th><th style="padding:6px;border:1px solid #e2e8f0;">نوع</th><th style="padding:6px;border:1px solid #e2e8f0;">محل اجرا</th><th style="padding:6px;border:1px solid #e2e8f0;">شرح</th><th style="padding:6px;border:1px solid #e2e8f0;">متراژ / مقدار</th><th style="padding:6px;border:1px solid #e2e8f0;">وضعیت</th></tr>
+      ${d.activities.map(a=>`<tr><td style="padding:6px;border:1px solid #e2e8f0;">${esc(a.category||'—')}</td><td style="padding:6px;border:1px solid #e2e8f0;">${esc(a['activity-type']||'')}</td><td style="padding:6px;border:1px solid #e2e8f0;">${esc(a['activity-location']||'—')}</td><td style="padding:6px;border:1px solid #e2e8f0;">${esc(a['activity-desc']||'')}</td><td style="padding:6px;border:1px solid #e2e8f0;">${esc(a['activity-amount']||'—')}</td><td style="padding:6px;border:1px solid #e2e8f0;">${esc(a['activity-status']||'')}</td></tr>`).join('')}
     </table>`;
   }
   const allLabor=[...(d.executiveLabor||[]),...(d.staffLabor||[])];
@@ -2079,9 +2079,9 @@ function collectFormData(){
     safetyStatus:v('safetyStatus'),incidents:v('incidents')||'حادثه‌ای گزارش نشده',
     safetyEquipment:v('safetyEquipment')||'ثبت نشده',finalComments:v('finalComments')||'—',
     activities:[].concat(
-      getTableData('activitiesAbniehTable',['activity-type','activity-desc','activity-status']).map(a=>Object.assign({category:'ابنیه'},a)),
-      getTableData('activitiesMechanicalTable',['activity-type','activity-desc','activity-status']).map(a=>Object.assign({category:'مکانیکی'},a)),
-      getTableData('activitiesElectricalTable',['activity-type','activity-desc','activity-status']).map(a=>Object.assign({category:'الکتریکی/الکترونیکی'},a))
+      getTableData('activitiesAbniehTable',['activity-type','activity-location','activity-desc','activity-amount','activity-status']).map(a=>Object.assign({category:'ابنیه'},a)),
+      getTableData('activitiesMechanicalTable',['activity-type','activity-location','activity-desc','activity-amount','activity-status']).map(a=>Object.assign({category:'مکانیکی'},a)),
+      getTableData('activitiesElectricalTable',['activity-type','activity-location','activity-desc','activity-amount','activity-status']).map(a=>Object.assign({category:'الکتریکی/الکترونیکی'},a))
     ),
     executiveLabor:getTableData('executiveLaborTable',['labor-fullname','labor-position','labor-hours','labor-attendance','labor-notes']),
     staffLabor:getTableData('staffLaborTable',['labor-fullname','labor-position','labor-hours','labor-attendance','labor-notes']),
@@ -2113,7 +2113,9 @@ function addActivityRow(tableId, typeKey){
   const opts=['<option value="">انتخاب کنید</option>'].concat(ACTIVITY_TYPES[typeKey].map(t=>`<option>${t}</option>`)).join('');
   const r=document.getElementById(tableId).insertRow();
   r.innerHTML=`<td><select class="inp-sm activity-type">${opts}</select></td>
+  <td><input type="text" class="inp-sm activity-location" placeholder="طبقه / بلوک / فضا"></td>
   <td><input type="text" class="inp-sm activity-desc" placeholder="شرح عملیات"></td>
+  <td><input type="text" class="inp-sm activity-amount" placeholder="مثال: ۵۰ م۲"></td>
   <td><select class="inp-sm activity-status"><option>انجام شده</option><option>در حال انجام</option><option>متوقف</option></select></td>
   <td><button class="btn-danger-sm" onclick="deleteRow(this)">حذف</button></td>`;
 }
@@ -2351,7 +2353,7 @@ function applyFormData(data){
   f('safetyEquipment',data.safetyEquipment);f('finalComments',data.finalComments);
   (function(){
     const acts=data.activities||[];
-    const cls=['activity-type','activity-desc','activity-status'];
+    const cls=['activity-type','activity-location','activity-desc','activity-amount','activity-status'];
     const isMech=c=>String(c).indexOf('مکانیک')!==-1;
     const isElec=c=>{c=String(c);return c.indexOf('برق')!==-1||c.indexOf('الکتر')!==-1;};
     const ab=acts.filter(a=>!isMech(a.category)&&!isElec(a.category)); // قدیمی‌ها (بدون رشته) هم در ابنیه
@@ -2413,7 +2415,7 @@ function renderPdfHtml(data){
   const tbl=(rows,cols,hdrs)=>rows.length?`<table class="pdf-table"><thead><tr>${hdrs.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${cols.map(c=>`<td>${esc(r[c]||'')}</td>`).join('')}</tr>`).join('')}</tbody></table>`:'';
   const _isMechC=c=>String(c).indexOf('مکانیک')!==-1;
   const _isElecC=c=>{c=String(c);return c.indexOf('برق')!==-1||c.indexOf('الکتر')!==-1;};
-  const _grpAct=(label,fn)=>{const rows=(data.activities||[]).filter(fn);return rows.length?`<div style="font-weight:700;margin:8px 0 4px;font-size:12px;color:#334155;">${label}</div>`+tbl(rows,['activity-type','activity-desc','activity-status'],['نوع فعالیت','شرح عملیات','وضعیت']):'';};
+  const _grpAct=(label,fn)=>{const rows=(data.activities||[]).filter(fn);return rows.length?`<div style="font-weight:700;margin:8px 0 4px;font-size:12px;color:#334155;">${label}</div>`+tbl(rows,['activity-type','activity-location','activity-desc','activity-amount','activity-status'],['نوع فعالیت','محل اجرا','شرح عملیات','متراژ / مقدار','وضعیت']):'';};
   const activitiesHTML=_grpAct('ابنیه',a=>!_isMechC(a.category)&&!_isElecC(a.category))
     +_grpAct('مکانیکی',a=>_isMechC(a.category))
     +_grpAct('الکتریکی / الکترونیکی',a=>_isElecC(a.category));
@@ -2567,9 +2569,9 @@ async function downloadExcel(dataArg){
     ]);
 
     /* ۲) فعالیت‌های انجام شده */
-    const acts=(data.activities||[]).map(a=>[S(a.category),S(a['activity-type']),S(a['activity-desc']),S(a['activity-status'])]);
+    const acts=(data.activities||[]).map(a=>[S(a.category),S(a['activity-type']),S(a['activity-location']),S(a['activity-desc']),S(a['activity-amount']),S(a['activity-status'])]);
     xlTable(wb,'فعالیت‌ها','فعالیت‌های انجام شده',
-      ['دسته','نوع فعالیت','شرح عملیات','وضعیت'],acts,[{wch:18},{wch:24},{wch:45},{wch:16}]);
+      ['دسته','نوع فعالیت','محل اجرا','شرح عملیات','متراژ / مقدار','وضعیت'],acts,[{wch:18},{wch:24},{wch:22},{wch:45},{wch:18},{wch:16}]);
 
     /* ۳) نیروی انسانی (اجرایی + ستادی) */
     const labor=[].concat(
@@ -2764,8 +2766,8 @@ function buildDayBlocks(data){
     ['وضعیت آب‌وهوا',S(data.weatherCondition)||'—'],
     ['دما (°C)',S(data.temperature)||'—'],
   ]});
-  blocks.push({type:'table',title:'فعالیت‌های انجام شده',headers:['دسته','نوع فعالیت','شرح عملیات','وضعیت'],
-    rows:(data.activities||[]).map(a=>[S(a.category),S(a['activity-type']),S(a['activity-desc']),S(a['activity-status'])])});
+  blocks.push({type:'table',title:'فعالیت‌های انجام شده',headers:['دسته','نوع فعالیت','محل اجرا','شرح عملیات','متراژ / مقدار','وضعیت'],
+    rows:(data.activities||[]).map(a=>[S(a.category),S(a['activity-type']),S(a['activity-location']),S(a['activity-desc']),S(a['activity-amount']),S(a['activity-status'])])});
   const labor=[].concat(
     (data.executiveLabor||[]).map(l=>['اجرایی',S(l['labor-fullname']),S(l['labor-position']),S(l['labor-hours']),S(l['labor-attendance']),S(l['labor-notes'])]),
     (data.staffLabor||[]).map(l=>['ستادی',S(l['labor-fullname']),S(l['labor-position']),S(l['labor-hours']),S(l['labor-attendance']),S(l['labor-notes'])])
